@@ -28,7 +28,7 @@ SyDES is a free open source content management framework for various small or me
 
 Apache, PHP 5.3, PDO with sqlite driver, mod_rewrite, JSON, url_fopen or cURL, ZipArchive.
 
-Upload [check.php]{check.php} to the server to check the requirements
+Upload [check.php](check.php) to the server to check the requirements
 
 ## Third-party software
 
