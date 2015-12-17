@@ -20,7 +20,7 @@ class Response {
     public $body;
     public $status = 200;
     public $mime = 'html';
-    public $cookies;
+    public $cookies = array();
 
     public function __construct() {
         if (isset($_SESSION['alerts'])) {
@@ -172,7 +172,7 @@ class Response {
         $this->flush();
     }
 
-    public function flush() {
+    public function send() {
         if (!empty($this->notify)) {
             if (App::request()->is_ajax) {
                 $this->body['notify'] = $this->notify;

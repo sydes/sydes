@@ -14,15 +14,35 @@ class App extends Registry {
      *
      */
     public function init() {
-        $this->response = new Response();
-        $this->request = new HttpRequest();
         $this->load = new Loader();
 
-        // загрузить общий конфиг и доступные языки.
+        // load main config and languages
 
         $this->cache = new Cache(DIR_CACHE);
 
-        // определить домен и найти сайт
-        // загрузить конфиг сайта
+        // find site by domain
+        // load site config
     }
+
+    public function handle($request) {
+        $this->request = $request;
+
+        try {
+            // send Request Through Router
+            //$response = run($request);
+            //throw new Exception('not good');
+            $response = new Response;
+            $response->body = 'hello world';
+            
+        } catch (Exception $e) {
+            $response = $this->renderException($request, $e);
+        }
+
+        return $response;
+    }
+
+    public function renderException($request, $e) {
+        return ExceptionHandler::render($request, $e);
+    }
+
 }

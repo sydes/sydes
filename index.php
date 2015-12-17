@@ -11,6 +11,11 @@
 define('VERSION', '3.0.0-a');
 define('SYDES_START', microtime(true));
 
-require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/system/config.php';
+require DIR_VENDOR.'/autoload.php';
 
-echo 'OK';
+$app = App::instance();
+$app->init();
+
+$response = $app->handle(new HttpRequest);
+$response->send();

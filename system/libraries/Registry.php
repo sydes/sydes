@@ -16,7 +16,7 @@ class Registry {
     private function __clone() {}
     private function __wakeup() {}
 
-    public static function getInstance() {
+    public static function instance() {
         if (empty(self::$instance)) {
             self::$instance = new static();
         }
