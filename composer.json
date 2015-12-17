@@ -1,0 +1,30 @@
+{
+    "name": "sydes/sydes",
+    "description": "SyDES - Lightweight CMF for a simple sites with SQLite database",
+    "keywords": ["cms", "cmf", "sydes"],
+    "homepage": "http://sydes.ru",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "ArtyGrand",
+            "email": "artygrand@gmail.com",
+            "homepage": "http://artygrand.ru",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "docs": "http://sydes.ru/en/docs/v3"
+    },
+    "type": "project",
+    "require": {
+        "php": ">=5.3.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "system/libraries/"
+        },
+        "files": [
+            "system/functions.php"
+        ]
+    }
+}

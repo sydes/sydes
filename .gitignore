@@ -1,0 +1,13 @@
+nbproject/
+
+/app/*
+!/app/.gitkeep
+
+/upload/_thumbs/Images/*
+/upload/images/*
+!/upload/images/no-image.jpg
+!.gitkeep
+
+/vendor/*
+!/vendor/composer/
+!/vendor/autoload.php
