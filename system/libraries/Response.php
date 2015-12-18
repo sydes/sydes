@@ -161,15 +161,16 @@ class Response {
         if (App::request()->is_ajax) {
             $this->body['redirect'] = $url;
         } else {
-            $host = $_SERVER['HTTP_HOST'] . '/';
-            $this->addHeader('Location', App::request()->scheme . '://' . $host . $url);
+            $host = $_SERVER['HTTP_HOST'].'/';
+            $this->addHeader('Location', App::request()->scheme.'://'.$host.$url);
+            $this->status = 301;
         }
-        $this->flush();
+        $this->send();
     }
 
     public function reload() {
         $this->body['reload'] = 1;
-        $this->flush();
+        $this->send();
     }
 
     public function send() {
@@ -194,4 +195,5 @@ class Response {
         $response->send();
         die;
     }
+
 }

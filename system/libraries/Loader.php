@@ -11,14 +11,14 @@ class Loader {
 
     public function model($module) {
         $part = strpos($module, '/') !== false ? explode('/', $module) : array($module, $module);
-        $file = findPath('module', $part[0]) . '/model/' . $part[1] . '.php';
+        $file = findPath('module', $part[0]).'/model/'.$part[1].'.php';
 
         if (!file_exists($file)) {
             throw new BaseException(sprintf(t('error_file_not_found'), $file));
         }
 
         include_once $file;
-        $class = ucfirst($part[1]) . 'Model';
+        $class = ucfirst($part[1]).'Model';
 
         return new $class();
     }
@@ -31,8 +31,8 @@ class Loader {
 
         // TODO event before.render.partial with &$template & &$data
 
-        $file_override = DIR_THEME . '/' . App::config()->site['theme'] . '/module/' . $template . '.php';
-        $file = findPath('module', $part[0]) . '/view/' . $part[1] . '.php';
+        $file_override = DIR_THEME.'/'.App::config()->site['theme'].'/module/'.$template.'.php';
+        $file = findPath('module', $part[0]).'/view/'.$part[1].'.php';
         if (file_exists($file_override)) {
             $html = render($file_override, $data);
         } elseif (file_exists($file)) {
@@ -76,4 +76,5 @@ class Loader {
     public function config($model) {
         return new Config($model, App::db());
     }
+
 }

@@ -14,6 +14,9 @@ class App extends Registry {
      *
      */
     public function init() {
+        $this->request = new HttpRequest;
+        $this->response = new Response;
+
         $this->load = new Loader();
 
         // load main config and languages
@@ -24,16 +27,13 @@ class App extends Registry {
         // load site config
     }
 
-    public function handle($request) {
-        $this->request = $request;
-
+    public function run() {
         try {
             // send Request Through Router
             //$response = run($request);
             //throw new Exception('not good');
             $response = new Response;
             $response->body = 'hello world';
-            
         } catch (Exception $e) {
             $response = $this->renderException($request, $e);
         }

@@ -95,7 +95,7 @@ class HttpRequest {
 
     public function __construct() {
         if (!isset($_SERVER['HTTP_HOST'])) {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+            header($_SERVER['SERVER_PROTOCOL'].' 400 Bad Request');
             trigger_error('', E_USER_ERROR);
         }
 
@@ -145,6 +145,36 @@ class HttpRequest {
     }
 
     /**
+     * Determine if the request contains a non-empty value for an input item.
+     *
+     * @param string|array $key
+     * @return bool
+     */
+    public function has($key) {
+        $keys = is_array($key) ? $key : func_get_args();
+
+        foreach ($keys as $value) {
+            if ($this->isEmptyString($value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Determine if the given input key is an empty string for "has".
+     *
+     * @param  string $key
+     * @return bool
+     */
+    protected function isEmptyString($key) {
+        $value = $this->get($key);
+        $boolOrArray = is_bool($value) || is_array($value);
+        return !$boolOrArray && trim((string) $value) === '';
+    }
+
+    /**
      * Gets a required "parameter" value from request or throws Exception.
      *
      * @param string $key     the key
@@ -167,7 +197,7 @@ class HttpRequest {
      */
     public function only($keys) {
         $keys = is_array($keys) ? $keys : func_get_args();
-        $results = [];
+        $results = array();
         $input = $this->all();
         foreach ($keys as $key) {
             $results[$key] = isset($input[$key]) ? $input[$key] : null;
@@ -224,7 +254,7 @@ class HttpRequest {
                         if ($i === 0) {
                             $lang = strtolower($codes[0]);
                         } else {
-                            $lang .= '_' . strtoupper($codes[$i]);
+                            $lang .= '_'.strtoupper($codes[$i]);
                         }
                     }
                 }
@@ -263,4 +293,5 @@ class HttpRequest {
         $prefLangs = array_values(array_intersect($extPrefLangs, $locales));
         return isset($prefLangs[0]) ? $prefLangs[0] : $locales[0];
     }
+
 }

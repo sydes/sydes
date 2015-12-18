@@ -17,5 +17,9 @@ require DIR_VENDOR.'/autoload.php';
 $app = App::instance();
 $app->init();
 
-$response = $app->handle(new HttpRequest);
+if (!file_exists(DIR_APP.'/config.php')) {
+    return $app->response->redirect('install/');
+}
+
+$response = $app->run();
 $response->send();

@@ -58,7 +58,7 @@ class Cache {
      * @param  int    $seconds
      */
     public function put($key, $value, $seconds = 2678400) {
-        $value = $this->expiration($seconds) . serialize($value);
+        $value = $this->expiration($seconds).serialize($value);
 
         $path = $this->path($key);
 
@@ -94,7 +94,7 @@ class Cache {
      */
     public function flush() {
         if (file_exists($this->directory)) {
-            foreach (glob($this->directory . '/*') as $file) {
+            foreach (glob($this->directory.'/*') as $file) {
                 unlink($file);
             }
         }
@@ -125,7 +125,7 @@ class Cache {
      * @return string
      */
     protected function path($key) {
-        return $this->directory . '/' . md5($key) . '.cache';
+        return $this->directory.'/'.md5($key).'.cache';
     }
 
     /**
@@ -140,4 +140,5 @@ class Cache {
         }
         return time() + $seconds;
     }
+
 }

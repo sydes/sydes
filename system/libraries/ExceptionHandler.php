@@ -8,10 +8,11 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 class ExceptionHandler {
+
     public static function render($request, Exception $e) {
         $response = new Response;
 
-        if (DEBUG){
+        if (App::config('debug')) {
             $response->alert('Err, this is error: '.$e->getMessage());
         } else {
             $response->alert('Something went wrong');
@@ -21,4 +22,5 @@ class ExceptionHandler {
 
         return $response;
     }
+
 }

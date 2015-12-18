@@ -114,7 +114,7 @@ class HttpResponse {
 
     public function __construct($content = '', $status = 200, $headers = array(), $cookies = array()) {
         $this->content = $content;
-        $this->status = $status . ' ' . self::$statusTexts[$status];
+        $this->status = $status.' '.self::$statusTexts[$status];
         $this->headers = $headers;
         $this->cookies = $cookies;
     }
@@ -139,11 +139,11 @@ class HttpResponse {
             return;
         }
         // status
-        header('HTTP/1.0 ' . $this->status);
+        header('HTTP/1.0 '.$this->status);
         // headers
         foreach ($this->headers as $name => $values) {
             foreach ($values as $value) {
-                header($name . ': ' . $value, false);
+                header($name.': '.$value, false);
             }
         }
         // cookies
@@ -153,4 +153,5 @@ class HttpResponse {
             setcookie($cookie['name'], $value, $expire, '/');
         }
     }
+
 }

@@ -28,14 +28,14 @@ class Database {
             return;
 
         $this->db = new PDO(
-                'sqlite:' . DIR_SITE . '/' . $site . '/database.db', null, null, array(
+                'sqlite:'.DIR_SITE.'/'.$site.'/database.db', null, null, array(
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                 )
         );
 
         $this->db->exec('SET NAMES "utf8"');
-        $this->db->exec('SET time_zone = "' . date_default_timezone_get() . '"');
+        $this->db->exec('SET time_zone = "'.date_default_timezone_get().'"');
     }
 
     /**
@@ -54,4 +54,5 @@ class Database {
     public function __call($name, array $args) {
         return $this->db->$name($args);
     }
+
 }

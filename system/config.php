@@ -25,5 +25,3 @@ define('DIR_THUMB',    DIR_APP.'/thumbs');
 
 define('ADMIN', 'admin'); //wanna rename folder?
 define('DEFAULT_ADMIN_ROUTE', 'pages');
-
-define('DEBUG', true);
