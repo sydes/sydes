@@ -10,6 +10,13 @@
 
 $app = App::getInstance();
 
+$app['exception_handler'] = function () {
+    return new ExceptionHandler;
+};
+
+require DIR_SYSTEM.'/libraries/Exceptions/Handler.php';
+$handler = new Handler;
+
 $app['request'] = function () {
     return new HttpRequest;
 };

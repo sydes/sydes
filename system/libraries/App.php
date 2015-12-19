@@ -36,26 +36,19 @@ class App extends Pimple\Container {
         
         $this['config'] = include DIR_APP.'/config.php';
 
-        date_default_timezone_set($this['config']['admin']['time_zone']);
+        date_default_timezone_set($this['config']['app']['time_zone']);
         mb_internal_encoding('UTF-8');
     }
 
     public function run() {
-        try {
-            // send Request Through Router
-            //$response = run($request);
-            //throw new Exception('not good');
-            $response = new Response;
-            $response->body = 'hello world '. print_r($response, true);
-        } catch (Exception $e) {
-            $response = $this->renderException($e);
-        }
+        // send Request Through Router
+        //$response = run($request);
+        //throw new BaseException('not good');
+        //strpos();
+        $response = new Response;
+        $response->body = 'hello world '. print_r($response, true);
 
         return $response;
-    }
-
-    public function renderException($e) {
-        return ExceptionHandler::render($e);
     }
 
 }

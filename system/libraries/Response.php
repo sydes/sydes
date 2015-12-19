@@ -165,12 +165,10 @@ class Response {
             $this->addHeader('Location', app('request')->scheme.'://'.$host.$url);
             $this->status = 301;
         }
-        $this->send();
     }
 
     public function reload() {
         $this->body['reload'] = 1;
-        $this->send();
     }
 
     public function send() {
