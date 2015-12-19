@@ -7,17 +7,15 @@
  * @copyright 2011-2016, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-require __DIR__.'/../system/config.php';
-require DIR_VENDOR.'/autoload.php';
+
+require __DIR__.'/../vendor/autoload.php';
+$app = require DIR_SYSTEM.'/bootstrap.php';
 
 if (file_exists(DIR_APP.'/config.php')) {
     die('Delete this folder, pls');
 }
 
-$app = App::instance();
-$app->init();
-
-if ($app->request->is_post && $app->request->has('username')) {
+if ($app['request']->is_post && $app['request']->has('username')) {
     $folders = array('cache', 'iblocks', 'languages', 'logs', 'modules', 'plugins', 'sites', 'temp', 'thumbs');
     foreach ($folders as $folder) {
         if (!file_exists(DIR_APP.'/'.$folder)) {
@@ -25,7 +23,7 @@ if ($app->request->is_post && $app->request->has('username')) {
         }
     }
 
-    $post = $app->request->request;
+    $post = $app['request']->request;
     if ($post['time_zone'] >= 0) {
         $post['time_zone'] = '+'.$post['time_zone'];
     }
@@ -38,7 +36,7 @@ if ($app->request->is_post && $app->request->has('username')) {
             'email' => $post['email'],
             'autologin' => 0,
         ),
-        'admin' => array(
+        'app' => array(
             'time_zone' => 'Etc/GMT'.$post['time_zone'],
             'date_format' => 'd.m.Y',
             'check_updates' => 1,
@@ -59,8 +57,8 @@ if ($app->request->is_post && $app->request->has('username')) {
     echo 'installed';
 
     // залогиниться и ввести мастеркод
-    // $app->response->alert('Delete install folder!');
-    // $app->response->redirect('admin');
+    // $app['response']->alert('Delete install folder!');
+    // $app['response']->redirect('admin');
 } else {
     $packages = glob(DIR_LANGUAGE.'/*');
     $langs = array();

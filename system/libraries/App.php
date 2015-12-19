@@ -7,16 +7,24 @@
  * @copyright 2011-2016, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-class App extends Registry {
+class App extends Pimple\Container {
+
+    private static $instance;
+
+    private function __clone() {}
+
+    public static function getInstance() {
+        if (empty(self::$instance)) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
 
     /**
      * Initialization of application
      *
      */
     public function init() {
-        $this->request = new HttpRequest;
-        $this->response = new Response;
-
         $this->load = new Loader();
 
         // load main config and languages
@@ -25,6 +33,11 @@ class App extends Registry {
 
         // find site by domain
         // load site config
+        
+        $this['config'] = include DIR_APP.'/config.php';
+
+        date_default_timezone_set($this['config']['admin']['time_zone']);
+        mb_internal_encoding('UTF-8');
     }
 
     public function run() {
@@ -33,16 +46,16 @@ class App extends Registry {
             //$response = run($request);
             //throw new Exception('not good');
             $response = new Response;
-            $response->body = 'hello world';
+            $response->body = 'hello world '. print_r($response, true);
         } catch (Exception $e) {
-            $response = $this->renderException($request, $e);
+            $response = $this->renderException($e);
         }
 
         return $response;
     }
 
-    public function renderException($request, $e) {
-        return ExceptionHandler::render($request, $e);
+    public function renderException($e) {
+        return ExceptionHandler::render($e);
     }
 
 }

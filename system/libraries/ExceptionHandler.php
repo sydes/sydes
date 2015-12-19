@@ -9,15 +9,25 @@
  */
 class ExceptionHandler {
 
-    public static function render($request, Exception $e) {
+    public static function render(Exception $e) {
         $response = new Response;
 
-        if (App::config('debug')) {
-            $response->alert('Err, this is error: '.$e->getMessage());
+        if (app('config')['app']['debug']) {
+            if ($e instanceof BaseException) {
+                $response->body = $e->getMessage().' '.$e->status;
+                $response->alert($e->getMessage(), $e->status);
+                if (!is_null($e->redirect)) {
+                    $response->redirect($e->redirect);
+                }
+            } else {
+                $response->body = 'Err, this is error: '.$e->getMessage();
+            }
         } else {
-            $response->alert('Something went wrong');
+            $response->body = 'Something went wrong';
         }
 
+        $response->body = render(DIR_SYSTEM.'/templates/error_500.php', array($e));
+        $response->status = 500;
         // TODO set page template
 
         return $response;

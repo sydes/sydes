@@ -158,11 +158,11 @@ class Response {
             unset($this->alerts);
         }
 
-        if (App::request()->is_ajax) {
+        if (app('request')->is_ajax) {
             $this->body['redirect'] = $url;
         } else {
             $host = $_SERVER['HTTP_HOST'].'/';
-            $this->addHeader('Location', App::request()->scheme.'://'.$host.$url);
+            $this->addHeader('Location', app('request')->scheme.'://'.$host.$url);
             $this->status = 301;
         }
         $this->send();
@@ -175,7 +175,7 @@ class Response {
 
     public function send() {
         if (!empty($this->notify)) {
-            if (App::request()->is_ajax) {
+            if (app('request')->is_ajax) {
                 $this->body['notify'] = $this->notify;
             } else {
                 $this->addCookie('notify.message', $this->notify['message'], 3);

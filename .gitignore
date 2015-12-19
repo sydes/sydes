@@ -10,4 +10,5 @@ nbproject/
 
 /vendor/*
 !/vendor/composer/
+!/vendor/pimple/
 !/vendor/autoload.php

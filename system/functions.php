@@ -47,7 +47,7 @@ function token($length) {
 }
 
 function t($text) {
-    echo $text;
+    return $text;
     // TODO return isset($l[$text]) ? $l[$text] : $text;
 }
 
@@ -171,4 +171,22 @@ function extractOuterZip($destination, $archive) {
         $zip->close();
         unlink($temp);
     }
+}
+
+if (!function_exists('app')) {
+
+    /**
+     * Get the available container instance.
+     *
+     * @param  string  $key
+     * @return mixed|App
+     */
+    function app($key = null) {
+        if (is_null($key)) {
+            return App::getInstance();
+        }
+
+        return App::getInstance()[$key];
+    }
+
 }

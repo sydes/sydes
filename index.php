@@ -11,15 +11,14 @@
 define('VERSION', '3.0.0-a');
 define('SYDES_START', microtime(true));
 
-require __DIR__.'/system/config.php';
-require DIR_VENDOR.'/autoload.php';
-
-$app = App::instance();
-$app->init();
+require __DIR__.'/vendor/autoload.php';
+$app = require DIR_SYSTEM.'/bootstrap.php';
 
 if (!file_exists(DIR_APP.'/config.php')) {
-    return $app->response->redirect('install/');
+    $app['response']->redirect('install/');
 }
+
+$app->init();
 
 $response = $app->run();
 $response->send();

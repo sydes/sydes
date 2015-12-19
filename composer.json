@@ -17,13 +17,15 @@
     },
     "type": "project",
     "require": {
-        "php": ">=5.3.9"
+        "php": ">=5.4.0",
+        "pimple/pimple": "~3.0"
     },
     "autoload": {
         "psr-4": {
             "": "system/libraries/"
         },
         "files": [
+            "system/config.php",
             "system/functions.php"
         ]
     }
