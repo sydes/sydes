@@ -10,7 +10,7 @@
 class Loader {
 
     public function model($module) {
-        $part = strpos($module, '/') !== false ? explode('/', $module) : array($module, $module);
+        $part = strpos($module, '/') !== false ? explode('/', $module) : [$module, $module];
         $file = findPath('module', $part[0]).'/model/'.$part[1].'.php';
 
         if (!file_exists($file)) {
@@ -23,7 +23,7 @@ class Loader {
         return new $class();
     }
 
-    public function view($template, $data = array()) {
+    public function view($template, $data = []) {
         $part = explode('/', $template);
         if (count($part) != 2) {
             throw new BaseException(t('error_loadview_argument'));

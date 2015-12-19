@@ -26,7 +26,7 @@ class ExceptionHandler {
             $response->body = 'Something went wrong';
         }
 
-        $response->body = render(DIR_SYSTEM.'/templates/error_500.php', array($e));
+        $response->body = render(DIR_SYSTEM.'/templates/error_500.php', [$e]);
         $response->status = 500;
         // TODO set page template
 

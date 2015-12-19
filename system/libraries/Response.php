@@ -9,18 +9,18 @@
  */
 class Response {
 
-    public $data = array();
+    public $data = [];
     public $notify;
-    public $alerts = array();
-    public $styles = array();
-    public $scripts = array();
-    public $context_menu = array();
-    public $headers = array();
-    public $js = array('l10n' => array(), 'settings' => array());
+    public $alerts = [];
+    public $styles = [];
+    public $scripts = [];
+    public $context_menu = [];
+    public $headers = [];
+    public $js = ['l10n' => [], 'settings' => []];
     public $body;
     public $status = 200;
     public $mime = 'html';
-    public $cookies = array();
+    public $cookies = [];
 
     public function __construct() {
         if (isset($_SESSION['alerts'])) {
@@ -36,10 +36,10 @@ class Response {
      * @param string $status Any of bootstrap alert statuses
      */
     public function notify($message, $status = 'success') {
-        $this->notify = array(
+        $this->notify = [
             'message' => $message,
             'status' => $status
-        );
+        ];
     }
 
     /**
@@ -49,10 +49,10 @@ class Response {
      * @param string $status Any of bootstrap alert statuses
      */
     public function alert($message, $status = 'success') {
-        $this->alerts[] = array(
+        $this->alerts[] = [
             'message' => $message,
             'status' => $status
-        );
+        ];
     }
 
     /**
@@ -87,11 +87,11 @@ class Response {
      * @param int    $expire Ttl in seconds
      */
     public function addCookie($name, $value, $expire) {
-        $this->cookies[] = array(
+        $this->cookies[] = [
             'name' => $name,
             'value' => $value,
             'expire' => $expire
-        );
+        ];
     }
 
     /**
@@ -100,10 +100,10 @@ class Response {
      * @param string $name The cookie name
      */
     public function removeCookie($name) {
-        $this->cookies[] = array(
+        $this->cookies[] = [
             'name' => $name,
             'expire' => -2
-        );
+        ];
     }
 
     /**

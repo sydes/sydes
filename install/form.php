@@ -18,8 +18,7 @@
                 <div><input type="text" name="mastercode" placeholder="Master code" required></div>
                 <div><input type="email" name="email" placeholder="Email" required></div>
                 <div><?= HTML::select('language', app('request')->getPreferredLanguage(array_keys($result['langs'])), $result['langs']); ?></div>
-                <div class="two">&nbsp;</div>
-                <div class="two last"><button type="submit">Create account</button></div>
+                <div class="two">&nbsp;</div><div class="two last"><button type="submit">Create account</button></div>
                 <input type="hidden" id="time_zone" name="time_zone">
             <?php } ?>
         </form>

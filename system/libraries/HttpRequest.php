@@ -197,7 +197,7 @@ class HttpRequest {
      */
     public function only($keys) {
         $keys = is_array($keys) ? $keys : func_get_args();
-        $results = array();
+        $results = [];
         $input = $this->all();
         foreach ($keys as $key) {
             $results[$key] = isset($input[$key]) ? $input[$key] : null;
@@ -220,8 +220,8 @@ class HttpRequest {
      * @return array
      */
     private function getHeaders($server) {
-        $headers = array();
-        $contentHeaders = array('CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true);
+        $headers = [];
+        $contentHeaders = ['CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true];
         foreach ($server as $key => $value) {
             if (0 === strpos($key, 'HTTP_')) {
                 $headers[substr($key, 5)] = $value;
@@ -280,7 +280,7 @@ class HttpRequest {
         if (!$prefLangs) {
             return $locales[0];
         }
-        $extPrefLangs = array();
+        $extPrefLangs = [];
         foreach ($prefLangs as $language) {
             $extPrefLangs[] = $language;
             if (false !== $position = strpos($language, '_')) {

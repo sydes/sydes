@@ -16,7 +16,7 @@ if (file_exists(DIR_APP.'/config.php')) {
 }
 
 if ($app['request']->is_post && $app['request']->has('username')) {
-    $folders = array('cache', 'iblocks', 'languages', 'logs', 'modules', 'plugins', 'sites', 'temp', 'thumbs');
+    $folders = ['cache', 'iblocks', 'languages', 'logs', 'modules', 'plugins', 'sites', 'temp', 'thumbs'];
     foreach ($folders as $folder) {
         if (!file_exists(DIR_APP.'/'.$folder)) {
             mkdir(DIR_APP.'/'.$folder, 0777, true);
@@ -28,23 +28,23 @@ if ($app['request']->is_post && $app['request']->has('username')) {
         $post['time_zone'] = '+'.$post['time_zone'];
     }
 
-    $config = array(
-        'user' => array(
+    $config = [
+        'user' => [
             'username' => $post['username'],
             'password' => md5($post['password']),
             'mastercode' => md5($post['mastercode']),
             'email' => $post['email'],
             'autologin' => 0,
-        ),
-        'app' => array(
+        ],
+        'app' => [
             'time_zone' => 'Etc/GMT'.$post['time_zone'],
             'date_format' => 'd.m.Y',
             'check_updates' => 1,
             'language' => $post['language'],
             'skin' => 'black',
             'debug' => 0,
-        ),
-    );
+        ],
+    ];
 
     arr2file($config, DIR_APP.'/config.php');
 
@@ -61,7 +61,7 @@ if ($app['request']->is_post && $app['request']->has('username')) {
     // $app['response']->redirect('admin');
 } else {
     $packages = glob(DIR_LANGUAGE.'/*');
-    $langs = array();
+    $langs = [];
 
     if (empty($packages)) {
         $langs = json_decode(getContentByUrl('http://translate.sydes.ru/list'), true);
@@ -73,8 +73,8 @@ if ($app['request']->is_post && $app['request']->has('username')) {
         }
     }
 
-    echo render('form.php', array(
+    echo render('form.php', [
         'langs' => $langs,
         'errors' => checkServer()
-    ));
+    ]);
 }

@@ -12,7 +12,7 @@ class Config {
     /**
      * @var array
      */
-    private $data = array();
+    private $data = [];
 
     /**
      * @var string
@@ -97,7 +97,7 @@ class Config {
      */
     public function delete($key = null) {
         if (is_null($key)) {
-            $this->data = array();
+            $this->data = [];
         } else {
             unset($this->data[$key]);
         }
@@ -114,7 +114,7 @@ class Config {
         $this->db->exec("DELETE FROM config WHERE module = '{$this->module}'");
         $stmt = $this->db->prepare("INSERT INTO config (module, key, value) VALUES ('{$this->module}', :key, :value)");
         foreach ($this->data as $key => $value) {
-            $stmt->execute(array('key' => $key, 'value' => json_encode($value)));
+            $stmt->execute(['key' => $key, 'value' => json_encode($value)]);
         }
         $this->changed = false;
         return $this;

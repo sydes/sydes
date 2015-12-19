@@ -9,7 +9,7 @@
  */
 class HTML {
 
-    private static $extenders = array();
+    private static $extenders = [];
 
     /**
      * Adds closure to methods
@@ -43,7 +43,7 @@ class HTML {
      * @param array|string $attr Input attributes, like class
      * @return string
      */
-    public static function select($name, $value, array $source, $attr = array()) {
+    public static function select($name, $value, array $source, $attr = []) {
         if (empty($source)) {
             $source[] = t('empty');
         }
@@ -66,7 +66,7 @@ class HTML {
      * @param array $attr Input attributes, like class
      * @return string
      */
-    public static function checkbox($name, $value, array $source, $attr = array()) {
+    public static function checkbox($name, $value, array $source, $attr = []) {
         return self::optionElement('checkbox', $name, $source, $value, $attr);
     }
 
@@ -77,7 +77,7 @@ class HTML {
      * @param array $attr Input attributes, like class
      * @return string
      */
-    public static function radio($name, $value, array $source, $attr = array()) {
+    public static function radio($name, $value, array $source, $attr = []) {
         return self::optionElement('radio', $name, $source, $value, $attr);
     }
 
@@ -87,7 +87,7 @@ class HTML {
      * @return string
      */
     public static function yesNo($name, $status) {
-        return self::optionElement('radio', $name, array('1' => t('yes'), '0' => t('no')), (int) $status, array('inline' => true));
+        return self::optionElement('radio', $name, ['1' => t('yes'), '0' => t('no')], (int) $status, ['inline' => true]);
     }
 
     /**
@@ -96,7 +96,7 @@ class HTML {
      * @param array|string $attr Input attributes, like class
      * @return string
      */
-    public static function string($name, $value, $attr = array()) {
+    public static function string($name, $value, $attr = []) {
         return '<input type="text" value="'.$value.'" name="'.$name.'"'.self::attr($attr).'>';
     }
 
@@ -106,7 +106,7 @@ class HTML {
      * @param array|string $attr Input attributes, like class
      * @return string
      */
-    public static function input($name, $value, $type, $attr = array()) {
+    public static function input($name, $value, $type, $attr = []) {
         return '<input type="'.$type.'" value="'.$value.'" name="'.$name.'"'.self::attr($attr).'>';
     }
 
@@ -116,7 +116,7 @@ class HTML {
      * @param array|string $attr Input attributes, like class
      * @return string
      */
-    public static function hidden($name, $value, $attr = array()) {
+    public static function hidden($name, $value, $attr = []) {
         return '<input type="hidden" value="'.$value.'" name="'.$name.'"'.self::attr($attr).'>';
     }
 
@@ -126,7 +126,7 @@ class HTML {
      * @param array|string $attr Input attributes, like class
      * @return string
      */
-    public static function textarea($name, $value, $attr = array()) {
+    public static function textarea($name, $value, $attr = []) {
         return '<textarea name="'.$name.'"'.self::attr($attr).'>'.$value.'</textarea>';
     }
 
@@ -136,7 +136,7 @@ class HTML {
      * @param array|string $attr Input attributes, like class
      * @return string
      */
-    public static function button($label = 'Submit', $type = 'submit', $attr = array()) {
+    public static function button($label = 'Submit', $type = 'submit', $attr = []) {
         return '<button type="'.$type.'" '.self::attr($attr).'>'.$label.'</button>';
     }
 
@@ -145,7 +145,7 @@ class HTML {
      * @param array|string $attr Input attributes, like class
      * @return string
      */
-    public static function password($name, $attr = array()) {
+    public static function password($name, $attr = []) {
         return '<input type="password" name="'.$name.'"'.self::attr($attr).'>';
     }
 
@@ -155,7 +155,7 @@ class HTML {
      * @param array|string $attr Input attributes, like class
      * @return string
      */
-    public static function link($title, $href, $attr = array()) {
+    public static function link($title, $href, $attr = []) {
         return '<a href="'.$href.'"'.self::attr($attr).'>'.$title.'</a>';
     }
 
@@ -294,7 +294,7 @@ class HTML {
         return $html.'</ul>';
     }
 
-    public static function table($rows, $header = array(), $attr = '') {
+    public static function table($rows, $header = [], $attr = '') {
         $html = '<table'.self::attr($attr).'>';
         if (!empty($header)) {
             $html .= '<thead><tr>';
@@ -374,7 +374,7 @@ class HTML {
 
             $type = $input['type'];
             $attr = isset($input['attr']) ? $input['attr'] : '';
-            $list = isset($input['list']) ? $input['list'] : array();
+            $list = isset($input['list']) ? $input['list'] : [];
 
             switch ($input['type']) {
                 case 'select':
@@ -412,7 +412,7 @@ class HTML {
     }
 
     public static function parseAttr($attr_string) {
-        $attr = array();
+        $attr = [];
         $pattern = '/([\w-]+)\s*(=\s*"([^"]*)")?/';
         preg_match_all($pattern, $attr_string, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
@@ -431,7 +431,7 @@ class HTML {
 
     /* Private function */
 
-    private static function optionElement($type, $name, $data, $selected, $attr = array()) {
+    private static function optionElement($type, $name, $data, $selected, $attr = []) {
         if (!$data) {
             return '<div>'.t('empty').'</div>';
         }

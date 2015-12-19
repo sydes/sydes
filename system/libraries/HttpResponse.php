@@ -14,7 +14,7 @@ class HttpResponse {
      *
      * @var array
      */
-    public static $mimeTypes = array(
+    public static $mimeTypes = [
         'css' => 'text/css',
         'csv' => 'application/vnd.ms-excel',
         'doc' => 'application/msword',
@@ -34,7 +34,7 @@ class HttpResponse {
         'rtf' => 'text/rtf',
         'xsl' => 'text/xml',
         'xml' => 'text/xml'
-    );
+    ];
 
     /**
      * Response headers.
@@ -64,7 +64,7 @@ class HttpResponse {
      */
     public $statusCode;
 
-    public function __construct($content = '', $statusCode = 200, $headers = array(), $cookies = array()) {
+    public function __construct($content = '', $statusCode = 200, $headers = [], $cookies = []) {
         $this->content = $content;
         $this->statusCode = $statusCode;
         $this->headers = $headers;

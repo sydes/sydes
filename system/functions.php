@@ -14,32 +14,32 @@ function pre($array) {
 }
 
 function findPath($entity, $name) {
-    $path = array(
+    $path = [
         'module' => '/modules/'.$name,
         'iblock' => '/iblocks/'.$name,
-        'plugin' => '/plugins/'.$name.'.php',
-    );
+        'plugin' => '/plugins/'.$name
+    ];
 
-    foreach (array(DIR_WEB, DIR_SYS) as $place) {
+    foreach ([DIR_APP, DIR_SYS] as $place) {
         if (file_exists($place.$path[$entity])) {
             return $place.$path[$entity];
         }
     }
 }
 
-function render($file, $result = array()) {
+function render($file, $result = []) {
     ob_start();
     include $file;
     return ob_get_clean();
 }
 
 function token($length) {
-    $chars = array(
+    $chars = [
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
         'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm',
         'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-        '1', '2', '3', '4', '5', '6', '7', '8', '9');
+        '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     if ($length < 0 || $length > 58)
         return null;
     shuffle($chars);
@@ -54,7 +54,7 @@ function t($text) {
 function convertToAscii($str, $strict = true) {
     $add = $strict ? '' : '\./';
     if (preg_match('![^\w-'.$add.']!', $str)) {
-        $utf8 = array(
+        $utf8 = [
             'à' => 'a', 'ô' => 'o', 'ď' => 'd', 'ḟ' => 'f', 'ë' => 'e', 'š' => 's', 'ơ' => 'o',
             'ß' => 'ss', 'ă' => 'a', 'ř' => 'r', 'ț' => 't', 'ň' => 'n', 'ā' => 'a', 'ķ' => 'k',
             'ŝ' => 's', 'ỳ' => 'y', 'ņ' => 'n', 'ĺ' => 'l', 'ħ' => 'h', 'ṗ' => 'p', 'ó' => 'o',
@@ -95,7 +95,7 @@ function convertToAscii($str, $strict = true) {
             'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch',
             'ш' => 'sh', 'щ' => 'sch', 'ъ' => '', 'ы' => 'y', 'ь' => '', 'э' => 'e', 'ю' => 'yu',
             'я' => 'ya', 'і' => 'i', 'є' => 'e', 'ї' => 'ji', ' ' => '-', '*' => '-', '+' => '-'
-        );
+        ];
         $str = str_replace(array_keys($utf8), array_values($utf8), $str);
         $str = preg_replace('![^\w-'.$add.']!', '', $str);
         $str = preg_replace('!-+!', '-', $str);
@@ -105,8 +105,8 @@ function convertToAscii($str, $strict = true) {
 
 function checkServer() {
     $wr = '';
-    foreach (array('/app', '/themes/default', '/upload/images', '/upload/files', '/upload/_thumbs/Images', '/upload/_thumbs/Files') as $path) {
-        if (!is_writable(DIR_ROOT.$path)) {
+    foreach (['app', 'themes/default', 'upload/images', 'upload/files', 'upload/_thumbs/Images', 'upload/_thumbs/Files'] as $path) {
+        if (!is_writable(DIR_ROOT.'/'.$path)) {
             $wr .= "<li>{$path}</li>";
         }
     }
@@ -115,14 +115,14 @@ function checkServer() {
     }
 
     $req_pdo = class_exists('PDO', false);
-    $pdo_drv = $req_pdo ? PDO::getAvailableDrivers() : array();
+    $pdo_drv = $req_pdo ? PDO::getAvailableDrivers() : [];
     $req_sqlite = in_array('sqlite', $pdo_drv);
     $req_json = function_exists('json_encode');
     $req_rewrite = function_exists('apache_get_modules') ? in_array('mod_rewrite', apache_get_modules()) : true;
     $req_outer_content = ((function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen')) || function_exists('curl_init')) ? true : false;
     $req_zip = class_exists('ZipArchive', false);
 
-    $errors = version_compare(PHP_VERSION, '5.3.0') < 0 ? '<li>php older than 5.3</li>' : '';
+    $errors = version_compare(PHP_VERSION, '5.4.0') < 0 ? '<li>php older than 5.4</li>' : '';
     $errors .=!$req_pdo ? '<li>PDO not supported</li>' : '';
     $errors .=!$req_sqlite ? '<li>SQLite driver for PDO not found</li>' : '';
     $errors .=!$req_json ? '<li>Json not supported</li>' : '';
@@ -134,7 +134,7 @@ function checkServer() {
         $errors = 'Server is not supported: <ul>'.$errors.'</ul>';
     }
 
-    return array($errors, $wr);
+    return [$errors, $wr];
 }
 
 function arr2file($array, $filename) {
