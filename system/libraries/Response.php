@@ -165,6 +165,8 @@ class Response {
             $this->addHeader('Location', app('request')->scheme.'://'.$host.$url);
             $this->status = 301;
         }
+
+        return $this;
     }
 
     public function reload() {
