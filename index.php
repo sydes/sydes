@@ -15,8 +15,8 @@ require __DIR__.'/vendor/autoload.php';
 $app = require DIR_SYSTEM.'/bootstrap.php';
 
 if (!file_exists(DIR_APP.'/config.php')) {
-	header('Location: install/');
-	exit;
+    header('Location: install/');
+    exit;
 }
 
 $app->init();
