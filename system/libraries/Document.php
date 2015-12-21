@@ -15,6 +15,7 @@ class Document {
     public $meta = [];
     public $notify;
     public $alerts = [];
+    public $links = [];
     public $scripts = [];
     public $internal_scripts = [];
     public $styles = [];
@@ -103,6 +104,28 @@ class Document {
      */
     public function removeStyle($key) {
         unset($this->styles[$key], $this->internal_styles[$key]);
+    }
+
+    /**
+     * Adds a link
+     *
+     * @param string $key   For removing
+     * @param array  $attrs ['rel' => '...', 'href' => '...', 'type' => '...']
+     */
+    public function addLink($key, $attrs) {
+        if (!isset($attrs['href'])){
+            return;
+        }
+        $this->links[$key] = $attrs;
+    }
+
+    /**
+     * Removes a link
+     *
+     * @param string $key
+     */
+    public function removeLink($key) {
+        unset($this->links[$key]);
     }
 
     /**
