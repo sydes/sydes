@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "": "system/libraries/"
+            "App\\": "system/libraries/"
         },
         "files": [
             "system/config.php",

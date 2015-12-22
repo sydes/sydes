@@ -7,6 +7,9 @@
  * @copyright 2011-2016, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
+namespace App\Exception;
+
 class Handler {
 
     public function __construct() {
@@ -17,7 +20,7 @@ class Handler {
 
     public function handleError($level, $message, $file = '', $line = 0) {
         if (error_reporting() & $level) {
-            throw new ErrorException($message, 0, $level, $file, $line);
+            throw new \ErrorException($message, 0, $level, $file, $line);
         }
     }
 

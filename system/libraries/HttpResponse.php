@@ -7,6 +7,9 @@
  * @copyright 2011-2016, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
+namespace App;
+
 class HttpResponse {
 
     /**
@@ -33,22 +36,9 @@ class HttpResponse {
         'xhtml' => 'application/xhtml+xml',
         'rtf' => 'text/rtf',
         'xsl' => 'text/xml',
-        'xml' => 'text/xml'
+        'xml' => 'text/xml',
+        'binary' => 'application/octet-stream',
     ];
-
-    /**
-     * Response headers.
-     *
-     * @var array
-     */
-    public $headers;
-
-    /**
-     * Response cookies.
-     *
-     * @var array
-     */
-    public $cookies;
 
     /**
      * Response content.
@@ -57,12 +47,10 @@ class HttpResponse {
      */
     public $content;
 
-    /**
-     * Status code for the current web response.
-     *
-     * @var string
-     */
-    public $statusCode;
+    private $statusCode;
+    private $headers;
+    private $cookies;
+    private $mime;
 
     public function __construct($content = '', $statusCode = 200, $headers = [], $cookies = []) {
         $this->content = $content;
@@ -77,6 +65,11 @@ class HttpResponse {
      * @return void
      */
     public function send() {
+        if (is_null($this->mime)){
+            $this->mime = 'html';
+        }
+        $this->addHeader('Content-type', self::$mimeTypes[$this->mime]);
+
         $this->sendHeaders();
         echo $this->content;
     }
@@ -104,6 +97,86 @@ class HttpResponse {
             $expire = isset($cookie['expire']) ? time() + $cookie['expire'] : 0;
             setcookie($cookie['name'], $value, $expire, '/');
         }
+    }
+
+    /**
+     * Sets a header by name.
+     *
+     * @param string       $key    The key
+     * @param string|array $values The value or an array of values
+     * @return \HttpResponse
+     */
+    public function addHeader($key, $values) {
+        $values = array_values((array) $values);
+        if (!isset($this->headers[$key])) {
+            $this->headers[$key] = $values;
+        } else {
+            $this->headers[$key] = array_merge($this->headers[$key], $values);
+        }
+        return $this;
+    }
+
+    /**
+     * Removes a header.
+     *
+     * @param string $key The HTTP header name
+     * @return \HttpResponse
+     */
+    public function removeHeader($key) {
+        unset($this->headers[$key]);
+        return $this;
+    }
+
+    /**
+     * Sets a cookie
+     *
+     * @param string $name
+     * @param string $value
+     * @param int    $expire Ttl in seconds
+     */
+    public function addCookie($name, $value, $expire) {
+        $this->cookies[] = [
+            'name' => $name,
+            'value' => $value,
+            'expire' => $expire
+        ];
+    }
+
+    /**
+     * Removes a cookie.
+     *
+     * @param string $name The cookie name
+     */
+    public function removeCookie($name) {
+        $this->cookies[] = [
+            'name' => $name,
+            'expire' => -2
+        ];
+    }
+
+    /**
+     * Sets a content type of response
+     *
+     * @param string $type
+     * @return \HttpResponse
+     */
+    public function withMime($type) {
+        $this->mime = in_array($type, self::$mimeTypes) ? $type : 'txt';
+        return $this;
+    }
+
+    /**
+     * Create a new file download response.
+     *
+     * @param type $filename
+     * @return \HttpResponse
+     */
+    public function download($filename) {
+        if (is_null($this->mime)){
+            $this->mime = 'binary';
+        }
+        $this->addHeader('Content-Disposition', 'attachment; filename="'.toSlug($filename, false).'"');
+        return $this;
     }
 
 }

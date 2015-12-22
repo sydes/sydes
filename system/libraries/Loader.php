@@ -7,6 +7,9 @@
  * @copyright 2011-2016, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
+namespace App;
+
 class Loader {
 
     public function model($module) {
