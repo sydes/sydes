@@ -12,13 +12,17 @@ class TestController {
 
     public function page($id) {
         $d = document();
-        $d->data = ['content' => 'some content'];
+        $d->data = [
+            'content' => 'some content',
+            'page_id' => $id,
+        ];
         $d->addScript('my', '$(document).ready(function(){console.log(\'worked!\')})');
+        $d->alert('You are got message');
         return $d;
     }
 
     public function notfound() {
-        abort(404);
+        abort(404, 'Try Another Castle');
     }
 
     public function forbidden() {
@@ -32,7 +36,17 @@ class TestController {
     }
 
     public function string() {
-        return 'this is simple string';
+        $content = 'this is simple string';
+        return response($content)->withMime('txt');
+    }
+
+    public function export() {
+        $content = '"id";"title"'."\r\n".'"1";"Test page"';
+        return response($content)->withMime('csv')->download('export.'.time().'.csv');
+    }
+
+    public function html() {
+        return '<strong>this is just compiled string</strong>';
     }
 
     public function nool() {
@@ -43,14 +57,17 @@ class TestController {
     }
 
     public function moved() {
-        return redirect('/page');
+        return redirect('/page/42');
     }
 
     public function update() {
+        notify('Updated', 'info');
         return redirect()->back();
     }
 
     public function store() {
-        return redirect('/')->with('alert', 'This is stored', 'info');
+        alert('This is stored', 'info');
+        return redirect('/');
     }
+
 }
