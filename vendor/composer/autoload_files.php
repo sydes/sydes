@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    $vendorDir . '/nikic/fast-route/src/functions.php',
     $baseDir . '/system/config.php',
     $baseDir . '/system/functions.php',
 );

@@ -11,4 +11,5 @@
 /vendor/*
 !/vendor/composer/
 !/vendor/pimple/
+!/vendor/nikic/
 !/vendor/autoload.php
