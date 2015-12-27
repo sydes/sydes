@@ -1,4 +1,4 @@
-nbproject/
+.idea
 
 /app/*
 !/app/.gitkeep
