@@ -57,17 +57,24 @@ class TestController {
     }
 
     public function moved() {
-        return redirect('/page/42');
+        return redirect('page/42');
     }
 
     public function update() {
-        notify('Updated', 'info');
-        return redirect()->back();
+        document()->notify('Updated', 'info');
+        return back();
     }
 
     public function store() {
-        alert('This is stored', 'info');
-        return redirect('/');
+        document()->alert('This is stored');
+        return redirect('');
     }
 
+    public function ajaxupdate() {
+        return document()->notify('Updated', 'info');
+    }
+
+    public function ajaxstore() {
+        return document()->alert('This is stored', 'info');
+    }
 }

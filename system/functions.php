@@ -7,32 +7,57 @@
  * @copyright 2011-2016, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
+/**
+ * Print formatted array
+ *
+ * @param $array
+ */
 function pre($array) {
-    echo '<pre>';
-    print_r($array);
-    echo '</pre>';
+    echo '<pre>', print_r($array, true), '</pre>';
 }
 
-function findPath($entity, $name) {
+/**
+ * Find path to extension in default or custom folders
+ *
+ * @param $extension
+ * @param $name
+ * @return null|string
+ */
+function findPath($extension, $name) {
     $path = [
         'module' => '/modules/'.$name,
         'iblock' => '/iblocks/'.$name,
         'plugin' => '/plugins/'.$name
     ];
 
-    foreach ([DIR_APP, DIR_SYS] as $place) {
-        if (file_exists($place.$path[$entity])) {
-            return $place.$path[$entity];
+    foreach ([DIR_APP, DIR_SYSTEM] as $place) {
+        if (file_exists($place.$path[$extension])) {
+            return $place.$path[$extension];
         }
     }
+    return null;
 }
 
+/**
+ * Load and execute file with given data
+ *
+ * @param string $file
+ * @param array  $result
+ * @return string
+ */
 function render($file, $result = []) {
     ob_start();
     include $file;
     return ob_get_clean();
 }
 
+/**
+ * Generate random string
+ *
+ * @param int $length
+ * @return null|string
+ */
 function token($length) {
     $chars = [
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
@@ -47,11 +72,24 @@ function token($length) {
     return implode('', array_slice($chars, 0, $length));
 }
 
+/**
+ * Translate string
+ *
+ * @param string $text
+ * @return mixed
+ */
 function t($text) {
     return $text;
     // TODO return isset($l[$text]) ? $l[$text] : $text;
 }
 
+/**
+ * Make a slug from the string
+ *
+ * @param string $str
+ * @param bool   $strict
+ * @return string
+ */
 function toSlug($str, $strict = true) {
     $charsArray = [
         'a' => [
@@ -188,6 +226,11 @@ function toSlug($str, $strict = true) {
     return trim($str, '-');
 }
 
+/**
+ * Check server for system requirements
+ *
+ * @return array
+ */
 function checkServer() {
     $wr = '';
     foreach (['app', 'themes/default', 'upload/images', 'upload/files', 'upload/_thumbs/Images', 'upload/_thumbs/Files'] as $path) {
@@ -222,6 +265,12 @@ function checkServer() {
     return [$errors, $wr];
 }
 
+/**
+ * Print array to file for include
+ *
+ * @param array  $array
+ * @param string $filename
+ */
 function arr2file($array, $filename) {
     $string = '<?php return '.var_export($array, true).';';
     file_put_contents($filename, $string, LOCK_EX);
@@ -258,20 +307,66 @@ function extractOuterZip($destination, $archive) {
     }
 }
 
-if (!function_exists('app')) {
+/**
+ * Get the available container instance.
+ *
+ * @param  string $key
+ * @return mixed|App\App
+ */
+function app($key = null) {
+    if (is_null($key)) {
+        return App\App::getInstance();
+    }
+    return App\App::getInstance()[$key];
+}
 
-    /**
-     * Get the available container instance.
-     *
-     * @param  string  $key
-     * @return mixed|App
-     */
-    function app($key = null) {
-        if (is_null($key)) {
-            return App::getInstance();
-        }
-
-        return App::getInstance()[$key];
+/**
+ * Get the document instance
+ *
+ * @param bool $empty
+ * @return App\Document
+ */
+function document($empty = false) {
+    $d = new App\Document;
+    if ($empty){
+        return $d;
     }
 
+    $d->addStyle('core', '/system/assets/css/core.css');
+    //TODO add other data
+
+    return $d;
+}
+
+
+/**
+ * Throw an HttpException with the given data.
+ *
+ * @param int $code
+ * @param string $message
+ * @throws App\Exception\HttpException
+ */
+function abort($code, $message = '') {
+    App\App::getInstance()->abort($code, $message);
+}
+
+/**
+ * Get the response instance
+ *
+ * @param string $content
+ * @param int $statusCode
+ * @param array $headers
+ * @return App\Http\Response
+ */
+function response($content = '', $statusCode = 200, $headers = []) {
+    return new App\Http\Response($content, $statusCode, $headers);
+}
+
+function redirect($to, $status = 301) {
+    return (new App\Http\Response('', $status))->withRedirect($to, $status);
+}
+
+function back() {
+    $to = app('request')->headers['REFERER'] ?: '/';
+    return (new App\Http\Response)->withRedirect($to);
 }

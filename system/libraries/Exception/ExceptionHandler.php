@@ -7,24 +7,29 @@
  * @copyright 2011-2016, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
+namespace App\Exception;
+
 class ExceptionHandler {
 
-    public function report(Exception $e) {
+    public function report(\Exception $e) {
         // TODO fire event
         return $this;
     }
 
-    public function render(Exception $e) {
-        $response = app('response');
-
-        if ($e instanceof BaseException) {
-            return $this->renderBusinessException($e, $response);
-        } else {
-            return $this->renderErrorException($e, $response);
-        }
+    public function render(\Exception $e) {
+        pre($e->getMessage());
+        $response = response();
+        /*
+                if ($e instanceof BaseException) {
+                    return $this->renderBusinessException($e, $response);
+                } else {
+                    return $this->renderErrorException($e, $response);
+                }*/
+        return $response;
     }
 
-    private function renderBusinessException($e, $response) {
+    private function renderBusinessException(\Exception $e, $response) {
         $response->body = $e->getMessage().' '.$e->status;
         $response->alert($e->getMessage(), $e->status);
 
@@ -37,7 +42,7 @@ class ExceptionHandler {
         return $response;
     }
 
-    private function renderErrorException($e, $response) {
+    private function renderErrorException(\Exception $e, $response) {
         if (app('config')['app']['debug']) {
             $response->body = 'Err... this is error: '.$e->getMessage().'<br>'.nl2br($e->getTraceAsString());
             // TODO change to alert and render page template

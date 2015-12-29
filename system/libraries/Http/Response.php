@@ -8,9 +8,9 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace App;
+namespace App\Http;
 
-class HttpResponse {
+class Response {
 
     /**
      * Mime types translation table.
@@ -18,6 +18,7 @@ class HttpResponse {
      * @var array
      */
     public static $mimeTypes = [
+        'binary' => 'application/octet-stream',
         'css' => 'text/css',
         'csv' => 'application/vnd.ms-excel',
         'doc' => 'application/msword',
@@ -37,32 +38,46 @@ class HttpResponse {
         'rtf' => 'text/rtf',
         'xsl' => 'text/xml',
         'xml' => 'text/xml',
-        'binary' => 'application/octet-stream',
     ];
 
+    protected $content;
+    protected $statusCode;
+    protected $headers;
+    protected $cookies = [];
+    protected $mime;
+
     /**
-     * Response content.
+     * HttpResponse constructor.
      *
-     * @var string
+     * @param string $content
+     * @param int $statusCode
+     * @param array $headers
      */
-    public $content;
-
-    private $statusCode;
-    private $headers;
-    private $cookies;
-    private $mime;
-
-    public function __construct($content = '', $statusCode = 200, $headers = [], $cookies = []) {
-        $this->content = $content;
+    public function __construct($content = '', $statusCode = 200, $headers = []) {
+        $this->setContent($content);
         $this->statusCode = $statusCode;
         $this->headers = $headers;
-        $this->cookies = $cookies;
+    }
+
+    /**
+     * Set the content on the response.
+     *
+     * @param  mixed $content
+     * @return self
+     */
+    public function setContent($content) {
+        if (is_array($content)) {
+            $content = json_encode($content);
+            $this->mime = 'json';
+        } elseif ($content instanceof Document) {
+            $content = app('renderer')->render($content);
+        }
+        $this->content = (string) $content;
+        return $this;
     }
 
     /**
      * Sends HTTP headers and content.
-     *
-     * @return void
      */
     public function send() {
         if (is_null($this->mime)){
@@ -76,8 +91,6 @@ class HttpResponse {
 
     /**
      * Sends HTTP headers.
-     *
-     * @return void
      */
     public function sendHeaders() {
         if (headers_sent()) {
@@ -104,7 +117,7 @@ class HttpResponse {
      *
      * @param string       $key    The key
      * @param string|array $values The value or an array of values
-     * @return \HttpResponse
+     * @return self
      */
     public function addHeader($key, $values) {
         $values = array_values((array) $values);
@@ -120,7 +133,7 @@ class HttpResponse {
      * Removes a header.
      *
      * @param string $key The HTTP header name
-     * @return \HttpResponse
+     * @return self
      */
     public function removeHeader($key) {
         unset($this->headers[$key]);
@@ -133,6 +146,7 @@ class HttpResponse {
      * @param string $name
      * @param string $value
      * @param int    $expire Ttl in seconds
+     * @return self
      */
     public function addCookie($name, $value, $expire) {
         $this->cookies[] = [
@@ -140,25 +154,28 @@ class HttpResponse {
             'value' => $value,
             'expire' => $expire
         ];
+        return $this;
     }
 
     /**
      * Removes a cookie.
      *
      * @param string $name The cookie name
+     * @return self
      */
     public function removeCookie($name) {
         $this->cookies[] = [
             'name' => $name,
             'expire' => -2
         ];
+        return $this;
     }
 
     /**
      * Sets a content type of response
      *
      * @param string $type
-     * @return \HttpResponse
+     * @return self
      */
     public function withMime($type) {
         $this->mime = in_array($type, self::$mimeTypes) ? $type : 'txt';
@@ -168,14 +185,27 @@ class HttpResponse {
     /**
      * Create a new file download response.
      *
-     * @param type $filename
-     * @return \HttpResponse
+     * @param string $filename
+     * @return self
      */
     public function download($filename) {
         if (is_null($this->mime)){
             $this->mime = 'binary';
         }
         $this->addHeader('Content-Disposition', 'attachment; filename="'.toSlug($filename, false).'"');
+        return $this;
+    }
+
+    /**
+     * Prepares the response object to return an HTTP Redirect response.
+     *
+     * @param string $url
+     * @param int    $status
+     * @return self
+     */
+    public function withRedirect($url, $status = 301) {
+        $this->statusCode = $status;
+        $this->addHeader('Location', $url);
         return $this;
     }
 

@@ -8,16 +8,18 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
+session_start();
+
 $app = App\App::getInstance();
 
 $app['exception_handler'] = function () {
-    return new App\ExceptionHandler;
+    return new App\Exception\ExceptionHandler;
 };
 
 $handler = new App\Exception\Handler;
 
 $app['request'] = function () {
-    return new App\HttpRequest;
+    return App\Http\Request::capture();
 };
 
 return $app;

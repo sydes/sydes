@@ -40,17 +40,6 @@ class Response {
             }
         }
 
-        if (is_array($this->body)) {
-            $this->mime = 'json';
-        }
-
-        $content = is_array($this->body) ? json_encode($this->body) : $this->body;
-
-        $this->addHeader('Content-type', HttpResponse::$mimeTypes[$this->mime]);
-
-        $response = new HttpResponse($content, $this->status, $this->headers, $this->cookies);
-        $response->send();
-        die;
     }
 
 }

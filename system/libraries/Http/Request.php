@@ -8,40 +8,40 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace App;
+namespace App\Http;
 
-class HttpRequest {
+class Request {
 
     /**
-     * Query string parameters ($_GET)
+     * Query string parameters ($_GET).
      *
      * @var array
      */
     public $query;
 
     /**
-     * Request body parameters ($_POST)
+     * Request body parameters ($_POST).
      *
      * @var array
      */
     public $request;
 
     /**
-     * Cookies ($_COOKIE)
+     * Cookies ($_COOKIE).
      *
      * @var array
      */
-    public $cookie;
+    public $cookies;
 
     /**
-     * Uploaded files ($_FILES)
+     * Uploaded files ($_FILES).
      *
      * @var array
      */
     public $files;
 
     /**
-     * Server and execution environment parameters ($_SERVER)
+     * Server and execution environment parameters ($_SERVER).
      *
      * @var array
      */
@@ -55,7 +55,7 @@ class HttpRequest {
     public $headers;
 
     /**
-     * List of languages acceptable by the client browser
+     * List of languages acceptable by the client browser.
      *
      * @var string
      */
@@ -67,6 +67,34 @@ class HttpRequest {
      * @var string
      */
     public $scheme = 'http';
+
+    /**
+     * The request method.
+     *
+     * @var string
+     */
+    public $method;
+
+    /**
+     * The domain.
+     *
+     * @var string
+     */
+    public $domain;
+
+    /**
+     * The requested URI (path and query string).
+     *
+     * @var string
+     */
+    public $requestUri;
+
+    /**
+     * The URL without query string.
+     *
+     * @var string
+     */
+    public $url;
 
     /**
      * Gets client ip.
@@ -96,24 +124,32 @@ class HttpRequest {
      */
     public $is_secure = false;
 
-    public function __construct() {
-        if (!isset($_SERVER['HTTP_HOST'])) {
-            header($_SERVER['SERVER_PROTOCOL'].' 400 Bad Request');
+    public function __construct(array $query = array(), array $request = array(), array $cookies = array(),
+                                array $files = array(), array $server = array()) {
+        if (!isset($server['HTTP_HOST'])) {
+            http_response_code(400);
             trigger_error('', E_USER_ERROR);
         }
 
-        session_start();
+        $this->query = $query;
+        $this->request = $request;
+        $this->cookies = $cookies;
+        $this->files = $files;
+        $this->server = $server;
+        $this->headers = $this->getHeaders($server);
 
-        $this->query = $_GET;
-        $this->request = $_POST;
-        $this->cookie = $_COOKIE;
-        $this->files = $_FILES;
-        $this->server = $_SERVER;
-        $this->headers = $this->getHeaders($_SERVER);
+        $this->ip = $server['REMOTE_ADDR'];
+        $this->method = $server['REQUEST_METHOD'];
+        $this->domain = $server['HTTP_HOST'];
+        $this->requestUri = $server['REQUEST_URI'];
 
-        $this->ip = $_SERVER['REMOTE_ADDR'];
+        if ($pos = strpos($server['REQUEST_URI'], '?')) {
+            $this->url = substr($server['REQUEST_URI'], 0, $pos);
+        } else {
+            $this->url = $server['REQUEST_URI'];
+        }
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($this->method == 'POST') {
             $this->is_post = true;
         }
 
@@ -122,12 +158,21 @@ class HttpRequest {
             $this->is_ajax = true;
         }
 
-        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
-                (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
-                (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) {
+        if ((!empty($server['HTTPS']) && $server['HTTPS'] !== 'off') ||
+                (!empty($server['SERVER_PORT']) && $server['SERVER_PORT'] == 443) ||
+                (!empty($server['HTTP_X_FORWARDED_PROTO']) && $server['HTTP_X_FORWARDED_PROTO'] == 'https')) {
             $this->scheme = 'https';
             $this->is_secure = true;
         }
+    }
+
+    /**
+     * Create a new HTTP request from PHP's super globals.
+     *
+     * @return static
+     */
+    public static function capture() {
+        return new static($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER);
     }
 
     /**
@@ -180,15 +225,14 @@ class HttpRequest {
     /**
      * Gets a required "parameter" value from request or throws Exception.
      *
-     * @param string $key     the key
-     * @param mixed  $default the default value
+     * @param string $key the key
      * @return mixed
-     * @throws BaseException
+     * @throws \RuntimeException
      */
     public function getRequired($key) {
         $value = $this->get($key);
         if (is_null($value) || ($value === '')) {
-            throw new BaseException(sprintf(t('error_parameter_required'), $key));
+            throw new \RuntimeException(sprintf(t('error_parameter_required'), $key));
         }
     }
 
@@ -220,11 +264,12 @@ class HttpRequest {
     /**
      * Gets the HTTP headers.
      *
+     * @param array $server
      * @return array
      */
     private function getHeaders($server) {
         $headers = [];
-        $contentHeaders = ['CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true];
+        $contentHeaders = ['CONTENT_LENGTH' => 1, 'CONTENT_MD5' => 1, 'CONTENT_TYPE' => 1];
         foreach ($server as $key => $value) {
             if (0 === strpos($key, 'HTTP_')) {
                 $headers[substr($key, 5)] = $value;

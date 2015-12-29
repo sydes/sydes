@@ -1,6 +1,6 @@
 # [SyDES](http://sydes.ru) - Lightweight CMF for a simple sites with SQLite database
 
-[![Join the chat at https://gitter.im/artygrand/SyDES](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/artygrand/SyDES?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# WIP
 
 ## Overview
 
