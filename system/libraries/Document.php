@@ -40,12 +40,14 @@ class Document {
      *
      * @param string $message
      * @param string $status Any of bootstrap alert statuses
+     * @return $this
      */
     public function notify($message, $status = 'success') {
         $this->notify = [
             'message' => $message,
             'status' => $status
         ];
+        return $this;
     }
 
     /**
@@ -53,12 +55,14 @@ class Document {
      *
      * @param string $message
      * @param string $status Any of bootstrap alert statuses
+     * @return $this
      */
     public function alert($message, $status = 'success') {
         $this->alerts[] = [
             'message' => $message,
             'status' => $status
         ];
+        return $this;
     }
 
     /**
@@ -66,6 +70,7 @@ class Document {
      *
      * @param string       $key    Name of script
      * @param string|array $source Raw string|Absolute or relative paths
+     * @return $this
      */
     public function addScript($key, $source) {
         if (is_string($source) && !preg_match('!^(http|/)!', $source)){
@@ -74,15 +79,18 @@ class Document {
             $paths = array_values((array) $source);
             $this->scripts[$key] = $paths;
         }
+        return $this;
     }
 
     /**
      * Removes a script
      *
      * @param string $key
+     * @return $this
      */
     public function removeScript($key) {
         unset($this->scripts[$key], $this->internal_scripts[$key]);
+        return $this;
     }
 
     /**
@@ -90,6 +98,7 @@ class Document {
      *
      * @param string       $key    Name of style
      * @param string|array $source Raw string|Absolute or relative paths
+     * @return $this
      */
     public function addStyle($key, $source) {
         if (is_string($source) && !preg_match('!^(http|/)!', $source)){
@@ -98,15 +107,18 @@ class Document {
             $paths = array_values((array) $source);
             $this->styles[$key] = $paths;
         }
+        return $this;
     }
 
     /**
      * Removes a style
      *
      * @param string $key
+     * @return $this
      */
     public function removeStyle($key) {
         unset($this->styles[$key], $this->internal_styles[$key]);
+        return $this;
     }
 
     /**
@@ -114,43 +126,53 @@ class Document {
      *
      * @param string $key   For removing
      * @param array  $attrs ['rel' => '...', 'href' => '...', 'type' => '...']
+     * @return $this|null
      */
     public function addLink($key, $attrs) {
         if (!isset($attrs['href'])){
             return;
         }
         $this->links[$key] = $attrs;
+        return $this;
     }
 
     /**
      * Removes a link
      *
      * @param string $key
+     * @return $this
      */
     public function removeLink($key) {
         unset($this->links[$key]);
+        return $this;
     }
 
     /**
      * Adds array of translation strings to js modules
      * 
      * @param array $array
+     * @return $this
      */
     public function addJsL10n($array) {
         $this->js['l10n'] = array_merge($this->js['l10n'], $array);
+        return $this;
     }
 
     /**
      * Adds some settings for js modules
      *
      * @param array $array
+     * @return $this
      */
     public function addJsSettings($array) {
         $this->js['settings'] = array_merge($this->js['settings'], $array);
+        return $this;
     }
 
     /**
      * Gets title and other meta tags from data array
+     *
+     * @return $this
      */
     public function findMetaTags() {
         if (isset($this->data['meta_title'])){
@@ -167,6 +189,7 @@ class Document {
             $this->meta[substr($key, 5)] = $value;
             unset($this->data[$key]);
         }
+        return $this;
     }
 
 }
