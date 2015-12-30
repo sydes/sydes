@@ -106,12 +106,12 @@ class Cache {
     /**
      * Get an item from the cache, or store the default value.
      *
-     * @param  string  $key
-     * @param  int     $seconds
-     * @param  Closure $callback
+     * @param  string   $key
+     * @param  int      $seconds
+     * @param  \Closure $callback
      * @return mixed
      */
-    public function remember($key, Closure $callback, $seconds = 2678400) {
+    public function remember($key, \Closure $callback, $seconds = 2678400) {
         if (!is_null($value = $this->get($key))) {
             return $value;
         }
