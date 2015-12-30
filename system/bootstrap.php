@@ -9,17 +9,29 @@
  */
 
 session_start();
+mb_internal_encoding('UTF-8');
 
 $app = App\App::getInstance();
+$handler = new App\Exception\Handler;
 
 $app['exception_handler'] = function () {
     return new App\Exception\ExceptionHandler;
 };
-
-$handler = new App\Exception\Handler;
-
 $app['request'] = function () {
     return App\Http\Request::capture();
 };
+$app['cache'] = function () {
+    return new App\Cache(DIR_CACHE);
+};
+$app['load'] = function () {
+    return new App\Loader();
+};
+
+$app['renderer'] = function ($c) {
+    return (strpos($c['request']->url, ADMIN.'/') === 1) ? new App\Renderer\Admin() : new App\Renderer\Front();
+};
+
+
+
 
 return $app;
