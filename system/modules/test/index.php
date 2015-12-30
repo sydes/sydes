@@ -10,6 +10,23 @@ class TestController {
         
     }
 
+    public function index() {
+        return '<a href="page/123">page</a><br>
+<a href="notfound">notfound</a><br>
+<a href="forbidden">forbidden</a><br>
+<a href="ajax">ajax</a><br>
+<a href="string.txt">string</a><br>
+<a href="export">export</a><br>
+<a href="html">html</a><br>
+<a href="nool">nool</a><br>
+<a href="moved">moved</a><br>
+<a href="update">update</a><br>
+<a href="store">store</a><br>
+<a href="ajaxupdate">ajaxupdate</a><br>
+<a href="ajaxstore">ajaxstore</a><br>
+<a href="nope">nope</a><br>';
+    }
+
     public function page($id) {
         $d = document();
         $d->data = [
@@ -36,7 +53,7 @@ class TestController {
     }
 
     public function string() {
-        $content = 'this is simple string';
+        $content = 'this is <br> simple string';
         return response($content)->withMime('txt');
     }
 
@@ -61,20 +78,19 @@ class TestController {
     }
 
     public function update() {
-        document()->notify('Updated', 'info');
-        return back();
+        return back()->withContent(document(true)->notify('Updated', 'info'));
     }
 
     public function store() {
-        document()->alert('This is stored');
-        return redirect('');
+        return redirect('/')->withContent(document(true)->alert('This is stored'));
     }
 
     public function ajaxupdate() {
-        return document()->notify('Updated', 'info');
+        return document(true)->notify('Updated', 'info');
     }
 
     public function ajaxstore() {
-        return document()->alert('This is stored', 'info');
+        return document(true)->alert('This is stored', 'info');
     }
+
 }
