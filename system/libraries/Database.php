@@ -13,28 +13,25 @@ namespace App;
 class Database {
 
     /**
-     * @var PDO
+     * @var \PDO
      */
     protected $db;
-
-    public function __construct() {
-        // TODO что-то нужно?
-    }
 
     /**
      * Connects to database of specified site
      *
      * @param string $site site id
      */
-    public function connect($site) {
-        if (empty($site))
+    public function __construct($site) {
+        if (empty($site)){
             return;
+        }
 
-        $this->db = new PDO(
-                'sqlite:'.DIR_SITE.'/'.$site.'/database.db', null, null, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-                ]
+        $this->db = new \PDO(
+            'sqlite:'.DIR_SITE.'/'.$site.'/database.db', null, null, [
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+            ]
         );
 
         $this->db->exec('SET NAMES "utf8"');
