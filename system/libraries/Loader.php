@@ -17,7 +17,7 @@ class Loader {
         $file = findPath('module', $part[0]).'/model/'.$part[1].'.php';
 
         if (!file_exists($file)) {
-            throw new BaseException(sprintf(t('error_file_not_found'), $file));
+            throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
         }
 
         include_once $file;
@@ -29,7 +29,7 @@ class Loader {
     public function view($template, $data = []) {
         $part = explode('/', $template);
         if (count($part) != 2) {
-            throw new BaseException(t('error_loadview_argument'));
+            throw new \RuntimeException(t('error_loadview_argument'));
         }
 
         // TODO event before.render.partial with &$template & &$data
@@ -41,7 +41,7 @@ class Loader {
         } elseif (file_exists($file)) {
             $html = render($file, $data);
         } else {
-            throw new BaseException(sprintf(t('error_file_not_found'), $file));
+            throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
         }
 
         // TODO event after.render.partial with &$html
@@ -77,7 +77,7 @@ class Loader {
     }
 
     public function config($model) {
-        return new Config($model, App::db());
+        return new Config($model, app('db'));
     }
 
 }
