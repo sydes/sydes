@@ -54,7 +54,7 @@ class Response {
      * @param array $headers
      */
     public function __construct($content = '', $statusCode = 200, $headers = []) {
-        $this->setContent($content);
+        $this->withContent($content);
         $this->statusCode = $statusCode;
         $this->headers = $headers;
     }
@@ -65,15 +65,24 @@ class Response {
      * @param  mixed $content
      * @return self
      */
-    public function setContent($content) {
+    public function withContent($content) {
         if (is_array($content)) {
             $content = json_encode($content);
             $this->mime = 'json';
-        } elseif ($content instanceof Document) {
+        } elseif ($content instanceof \App\Document) {
             $content = app('renderer')->render($content);
         }
         $this->content = (string) $content;
         return $this;
+    }
+
+    /**
+     * Set status code.
+     *
+     * @param $code
+     */
+    public function withStatus($code) {
+        $this->statusCode = $code;
     }
 
     /**
