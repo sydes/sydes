@@ -18,39 +18,30 @@ class ExceptionHandler {
     }
 
     public function render(\Exception $e) {
-        pre($e->getMessage());
+        return $e instanceof \ErrorException ? $this->renderError($e) : $this->renderException($e);
+    }
+
+    private function renderError(\Exception $e) {
         $response = response();
-        /*
-                if ($e instanceof BaseException) {
-                    return $this->renderBusinessException($e, $response);
-                } else {
-                    return $this->renderErrorException($e, $response);
-                }*/
-        return $response;
-    }
-
-    private function renderBusinessException(\Exception $e, $response) {
-        $response->body = $e->getMessage().' '.$e->status;
-        $response->alert($e->getMessage(), $e->status);
-
-        if (!is_null($e->redirect)) {
-            $response->redirect($e->redirect);
-        } else {
-            // TODO render page template
-        }
-
-        return $response;
-    }
-
-    private function renderErrorException(\Exception $e, $response) {
         if (app('config')['app']['debug']) {
-            $response->body = 'Err... this is error: '.$e->getMessage().'<br>'.nl2br($e->getTraceAsString());
-            // TODO change to alert and render page template
+            $response->withContent(document()->alert('Err... this is error: '.
+                $e->getMessage().'<br>'.pre($e->getTraceAsString(), true), 'danger'
+            ));
         } else {
-            $response->body = render(DIR_SYSTEM.'/templates/error_500.php', [$e]);
-            $response->status = 500;
+            $response->withContent(render(DIR_SYSTEM.'/templates/error_500.php', [$e]));
+            $response->withStatus(500);
         }
 
+        return $response;
+    }
+
+    private function renderException(\Exception $e) {
+        $response = response(document()->alert($e->getMessage(), 'danger'));
+        if ($e instanceof NotFoundHttpException) {
+            $response->withStatus(404);
+        } elseif ($e instanceof ForbiddenHttpException) {
+            $response->withStatus(403);
+        }
         return $response;
     }
 
