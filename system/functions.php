@@ -8,6 +8,8 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
+use App\Http\Response;
+
 /**
  * Print formatted array
  *
@@ -356,17 +358,17 @@ function abort($code, $message = '') {
  * @param string $content
  * @param int $statusCode
  * @param array $headers
- * @return App\Http\Response
+ * @return Response
  */
 function response($content = '', $statusCode = 200, $headers = []) {
-    return new App\Http\Response($content, $statusCode, $headers);
+    return new Response($content, $statusCode, $headers);
 }
 
 function redirect($to, $status = 301) {
-    return (new App\Http\Response('', $status))->withRedirect($to, $status);
+    return (new Response('', $status))->withRedirect($to, $status);
 }
 
 function back() {
     $to = app('request')->headers['REFERER'] ?: '/';
-    return (new App\Http\Response)->withRedirect($to);
+    return (new Response)->withRedirect($to);
 }
