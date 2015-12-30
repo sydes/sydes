@@ -13,29 +13,35 @@ use App\Http\Response;
 /**
  * Print formatted array
  *
- * @param $array
+ * @param array $array
+ * @param bool $return
  */
-function pre($array) {
-    echo '<pre>', print_r($array, true), '</pre>';
+function pre($array, $return = false) {
+    $pre = '<pre>'.print_r($array, true).'</pre>';
+    if ($return) {
+        return $pre;
+    }
+    echo $pre;
 }
 
 /**
  * Find path to extension in default or custom folders
  *
- * @param $extension
+ * @param $type
  * @param $name
  * @return null|string
  */
-function findPath($extension, $name) {
-    $path = [
+function findPath($type, $name) {
+    $paths = [
         'module' => '/modules/'.$name,
         'iblock' => '/iblocks/'.$name,
         'plugin' => '/plugins/'.$name
     ];
 
     foreach ([DIR_APP, DIR_SYSTEM] as $place) {
-        if (file_exists($place.$path[$extension])) {
-            return $place.$path[$extension];
+        $path = $place.$paths[$type].'/index.php';
+        if (file_exists($path)) {
+            return $path;
         }
     }
     return null;
