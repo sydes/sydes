@@ -31,9 +31,18 @@ class App extends \Pimple\Container {
      *
      */
     public function init() {
+        $this['preferredLanguage'] = $this['request']->getPreferredLanguage($this['translator']->installedPackages);
+        // TODO выяснить языки админки и фронта
+        // установить основкую локаль
+        // загрузить языковые пакеты
 
+        $this['section'] = (strpos($this['request']->url, ADMIN.'/') === 1) ? 'admin' : 'front';
 
-        // load main config and languages
+        $this['renderer'] = function ($c) {
+            return $c['section'] == 'admin' ? new Renderer\Admin() : new Renderer\Front();
+        };
+
+        // load main languages
 
         // find site by domain
         // load site config
@@ -77,30 +86,27 @@ class App extends \Pimple\Container {
 
     private function sendRequestThroughRouter($request) {
         $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $r) {
-            $r->addRoute('GET', '/page/{id:[0-9]+}', 'Test@page');
-            $r->addRoute('GET', '/notfound', 'Test@notfound');
-            $r->addRoute('GET', '/forbidden', 'Test@forbidden');
-            $r->addRoute('GET', '/ajax', 'Test@ajax');
-            $r->addRoute('GET', '/string.txt', 'Test@string');
-            $r->addRoute('GET', '/export', 'Test@export');
-            $r->addRoute('GET', '/html', 'Test@html');
-            $r->addRoute('GET', '/nool', 'Test@nool');
-            $r->addRoute('GET', '/moved', 'Test@moved');
-            $r->addRoute('GET', '/update', 'Test@update');
-            $r->addRoute('GET', '/store', 'Test@store');
-            $r->addRoute('GET', '/ajaxupdate', 'Test@ajaxupdate');
-            $r->addRoute('GET', '/ajaxstore', 'Test@ajaxstore');
-            $r->addRoute('GET', '/', 'Test@index');
+            $r->addRoute('GET', '/page/{id:[0-9]+}', 'test/page');
+            $r->addRoute('GET', '/notfound', 'test/notfound');
+            $r->addRoute('GET', '/forbidden', 'test/forbidden');
+            $r->addRoute('GET', '/ajax', 'test/ajax');
+            $r->addRoute('GET', '/string.txt', 'test/string');
+            $r->addRoute('GET', '/export', 'test/export');
+            $r->addRoute('GET', '/html', 'test/html');
+            $r->addRoute('GET', '/nool', 'test/nool');
+            $r->addRoute('GET', '/moved', 'test/moved');
+            $r->addRoute('GET', '/update', 'test/update');
+            $r->addRoute('GET', '/store', 'test/store');
+            $r->addRoute('GET', '/ajaxupdate', 'test/ajaxupdate');
+            $r->addRoute('GET', '/ajaxstore', 'test/ajaxstore');
+            $r->addRoute('GET', '/', 'test/index');
         }, ['cacheFile' => DIR_CACHE.'/route.cache']);
 
         $routeInfo = $dispatcher->dispatch($request->method, $request->url);
 
         switch ($routeInfo[0]) {
             case \FastRoute\Dispatcher::FOUND:
-                $parts = explode('@', $routeInfo[1]);
-                $name = strtolower($parts[0]);
-                $class = $parts[0].'Controller';
-                $method = $parts[1];
+                $parts = explode('/', $routeInfo[1]);
                 $vars = $routeInfo[2];
                 break;
             default:
@@ -109,16 +115,17 @@ class App extends \Pimple\Container {
                     throw new NotFoundHttpException;
                 }
                 $parts = explode('/', 'test/page/42');
-                $name = $parts[0];
-                $class = ucfirst($parts[0]).'Controller';
-                $method = $parts[1];
                 $vars = array_slice($parts, 2);
         }
 
-        if (null === ($path = findPath('module', $name))) {
-            throw new \RuntimeException(t('module_folder_not_found'));
+        $name = $parts[0];
+        $class = ucfirst($parts[0]).'Controller';
+        $method = $parts[1];
+
+        if (null === ($path = findExt('module', $name))) {
+            trigger_error(sprintf(t('module_folder_not_found'), $name), E_USER_ERROR);
         }
-        include $path;
+        include $path.'/index.php';
         $instance = new $class;
         return call_user_func_array([$instance, $method], $vars);
     }

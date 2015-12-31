@@ -20,8 +20,10 @@ class Front {
         //TODO render doc or ajax response
         if (!empty($document->data)){
             $result = json_encode($document);
-        } else {
+        } elseif (!empty($document->notify)) {
             $result = json_encode($document->notify);
+        } else {
+            $result = json_encode($document->alerts);
         }
         return $result;
     }
