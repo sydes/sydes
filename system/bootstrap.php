@@ -26,9 +26,8 @@ $app['cache'] = function () {
 $app['load'] = function () {
     return new App\Loader();
 };
-
-$app['renderer'] = function ($c) {
-    return (strpos($c['request']->url, ADMIN.'/') === 1) ? new App\Renderer\Admin() : new App\Renderer\Front();
+$app['translator'] = function () {
+    return new App\Translator();
 };
 
 
