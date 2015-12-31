@@ -31,7 +31,7 @@ function pre($array, $return = false) {
  * @param $name
  * @return null|string
  */
-function findPath($type, $name) {
+function findExt($type, $name) {
     $paths = [
         'module' => '/modules/'.$name,
         'iblock' => '/iblocks/'.$name,
@@ -39,8 +39,8 @@ function findPath($type, $name) {
     ];
 
     foreach ([DIR_APP, DIR_SYSTEM] as $place) {
-        $path = $place.$paths[$type].'/index.php';
-        if (file_exists($path)) {
+        $path = $place.$paths[$type];
+        if (file_exists($path.'/index.php')) {
             return $path;
         }
     }
