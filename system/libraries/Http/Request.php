@@ -57,7 +57,7 @@ class Request {
     /**
      * List of languages acceptable by the client browser.
      *
-     * @var string
+     * @var array
      */
     public $languages;
 
@@ -127,8 +127,8 @@ class Request {
     public function __construct(array $query = array(), array $request = array(), array $cookies = array(),
                                 array $files = array(), array $server = array()) {
         if (!isset($server['HTTP_HOST'])) {
-            http_response_code(400);
-            trigger_error('', E_USER_ERROR);
+            header('HTTP/1.1 400 Bad Request');
+            die;
         }
 
         $this->query = $query;
@@ -290,7 +290,11 @@ class Request {
             return $this->languages;
         }
 
-        if (preg_match_all('/([a-z*]{1,8}(?:-[a-z]{1,8})?)(?:;q=([0-9.]+))?/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $list)) {
+        if (empty($this->headers['ACCEPT_LANGUAGE'])){
+            return $this->languages = ['en'];
+        }
+
+        if (preg_match_all('/([a-z*]{1,8}(?:-[a-z]{1,8})?)(?:;q=([0-9.]+))?/i', $this->headers['ACCEPT_LANGUAGE'], $list)) {
             $langs = array_combine($list[1], $list[2]);
             foreach ($langs as $lang => $weight) {
                 if ($lang == '*') {
