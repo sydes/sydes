@@ -87,8 +87,7 @@ function token($length) {
  * @return mixed
  */
 function t($text) {
-    return $text;
-    // TODO return isset($l[$text]) ? $l[$text] : $text;
+    return app('translator')->translate($text);
 }
 
 /**
