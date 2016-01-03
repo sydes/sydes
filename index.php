@@ -16,7 +16,7 @@ $app = require DIR_SYSTEM.'/bootstrap.php';
 
 if (!file_exists(DIR_APP.'/config.php')) {
     header('Location: install/');
-    exit;
+    die;
 }
 
 $app->init();
