@@ -24,7 +24,10 @@ class TestController {
 <a href="store">store</a><br>
 <a href="ajaxupdate">ajaxupdate</a><br>
 <a href="ajaxstore">ajaxstore</a><br>
-<a href="nope">nope</a><br>';
+<a href="refresh">refresh</a><br>
+<a href="refresh2">refresh and notify</a><br>
+<a href="random">random</a><br>
+<a href="nope">nope</a><br>' . app('contentLang') . ' ' . app('request')->url;
     }
 
     public function page($id) {
@@ -34,7 +37,7 @@ class TestController {
             'page_id' => $id,
         ];
         $d->addScript('my', '$(document).ready(function(){console.log(\'worked!\')})');
-        $d->alert('You are got message');
+        alert('You\'ve got a message', 'info');
         return $d;
     }
 
@@ -77,20 +80,51 @@ class TestController {
         return redirect('page/42');
     }
 
-    public function update() {
-        return back()->withContent(document(true)->notify('Updated', 'info'));
+    public function notifyAfterRedirect() {
+        notify('Updated');
+        return back();
     }
 
-    public function store() {
-        return redirect('/')->withContent(document(true)->alert('This is stored'));
+    public function alertAfterRedirect() {
+        alert('This is not stored', 'danger');
+        return redirect('/');
     }
 
-    public function ajaxupdate() {
-        return document(true)->notify('Updated', 'info');
+    public function ajaxNotify() {
+        return notify('Not Updated', 'warning');
     }
 
-    public function ajaxstore() {
-        return document(true)->alert('This is stored', 'info');
+    public function ajaxAlert() {
+        return alert('This is stored', 'info');
+    }
+
+    public function ajaxRefresh() {
+        return refresh();
+    }
+
+    public function refreshAndNotify() {
+        notify('Notify');
+        return refresh();
+    }
+
+    public function random() {
+        $rand = rand(0,3);
+        switch ($rand) {
+            case 0:
+                return notify('Notify');
+                break;
+            case 1:
+                return alert('Alert');
+                break;
+            case 2:
+                return refresh();
+                break;
+            case 3:
+                return redirect('/');
+                break;
+            default:
+                return null;
+        }
     }
 
 }
