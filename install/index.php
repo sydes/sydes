@@ -48,10 +48,13 @@ if ($app['request']->is_post && $app['request']->has('username')) {
 
     arr2file($config, DIR_APP.'/config.php');
 
-    $lang_dir = DIR_LANGUAGE.'/'.$post['language'];
-    if (!file_exists($lang_dir)) {
-        mkdir($lang_dir, 0777, true);
-        extractOuterZip($lang_dir, 'http://translate.sydes.ru/download?ext=core&lang='.$post['language']);
+    $langs = [$post['language'], 'en_US'];
+    foreach ($langs as $lang) {
+        $langDir = DIR_LANGUAGE.'/'.$lang;
+        if (!file_exists($langDir)) {
+            mkdir($langDir, 0777, true);
+            extractOuterZip($langDir, 'http://translate.sydes.ru/download?ext=core&lang='.$lang);
+        }
     }
 
     echo 'installed';
