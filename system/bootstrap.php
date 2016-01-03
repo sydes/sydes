@@ -24,13 +24,17 @@ $app['cache'] = function () {
     return new App\Cache(DIR_CACHE);
 };
 $app['load'] = function () {
-    return new App\Loader();
+    return new App\Loader;
 };
+
 $app['translator'] = function () {
-    return new App\Translator();
+    return new App\Translator;
 };
+$app['translator']->loadPackage();
+$app['preferredLanguage'] = $app['request']->getPreferredLanguage($app['translator']->installedPackages);
+
 $app['event'] = function () {
-    return new App\Event();
+    return new App\Event;
 };
 
 
