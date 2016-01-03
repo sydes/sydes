@@ -16,13 +16,13 @@ class Event {
 
     /**
      * @param string   $event
-     * @param string   $routes
+     * @param string   $context
      * @param callable $callback
      * @param int      $priority
      */
-    public function on($event, $routes, $callback, $priority = 0) {
+    public function on($event, $context, $callback, $priority = 0) {
         if (!isset($this->events[$event])) $this->events[$event] = [];
-        $this->events[$event][] = ['routes' => $routes, 'fn' => $callback, 'prio' => $priority];
+        $this->events[$event][] = ['contexts' => $context, 'fn' => $callback, 'prio' => $priority];
     }
 
     /**
@@ -37,8 +37,9 @@ class Event {
     /**
      * @param string $event
      * @param array  $params
+     * @param string $context
      */
-    public function trigger($event, $params = []) {
+    public function trigger($event, $params = [], $context = '') {
         if (empty($this->events[$event])) {
             return;
         }
@@ -51,19 +52,19 @@ class Event {
         $queue->top();
         while ($queue->valid()) {
             $index = $queue->current();
-            if (isset($this->route)) {
-                $routes = explode(',', $this->events[$event][$index]['routes']);
-                $current_route = false;
-                foreach ($routes as $route) {
-                    if (fnmatch(trim($route), $this->route)) {
-                        $current_route = true;
+            if (!empty($context)) {
+                $contexts = explode(',', $this->events[$event][$index]['contexts']);
+                $current_context = false;
+                foreach ($contexts as $route) {
+                    if (fnmatch(trim($route), $context)) {
+                        $current_context = true;
                         break;
                     }
                 }
             } else {
-                $current_route = true;
+                $current_context = true;
             }
-            if ($current_route && is_callable($this->events[$event][$index]['fn'])) {
+            if ($current_context && is_callable($this->events[$event][$index]['fn'])) {
                 if (call_user_func_array($this->events[$event][$index]['fn'], $params) === false) {
                     break;
                 }

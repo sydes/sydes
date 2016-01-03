@@ -36,8 +36,11 @@ $app['preferredLanguage'] = $app['request']->getPreferredLanguage($app['translat
 $app['event'] = function () {
     return new App\Event;
 };
-
-
-
+$plugins = glob(DIR_PLUGIN . '/*/index.php');
+$plugins[] = DIR_SYSTEM . '/plugins.php';
+foreach ($plugins as $plugin){
+    include $plugin;
+}
+$app['event']->trigger('after.bootstrap');
 
 return $app;
