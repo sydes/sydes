@@ -16,8 +16,6 @@ class Document {
     public $title;
     public $base;
     public $meta = [];
-    public $notify;
-    public $alerts = [];
     public $links = [];
     public $scripts = [];
     public $internal_scripts = [];
@@ -29,40 +27,7 @@ class Document {
     public $csrf_token;
 
     public function __construct() {
-        if (isset($_SESSION['alerts'])) {
-            $this->alerts = $_SESSION['alerts'];
-            unset($_SESSION['alerts']);
-        }
-    }
 
-    /**
-     * Sets a notify message.
-     *
-     * @param string $message
-     * @param string $status Any of bootstrap alert statuses
-     * @return $this
-     */
-    public function notify($message, $status = 'success') {
-        $this->notify = [
-            'message' => $message,
-            'status' => $status
-        ];
-        return $this;
-    }
-
-    /**
-     * Adds a alert message.
-     *
-     * @param string $message
-     * @param string $status Any of bootstrap alert statuses
-     * @return $this
-     */
-    public function alert($message, $status = 'success') {
-        $this->alerts[] = [
-            'message' => $message,
-            'status' => $status
-        ];
-        return $this;
     }
 
     /**
@@ -128,9 +93,9 @@ class Document {
      * @param array  $attrs ['rel' => '...', 'href' => '...', 'type' => '...']
      * @return $this|null
      */
-    public function addLink($key, $attrs) {
+    public function addLink($key, array $attrs) {
         if (!isset($attrs['href'])){
-            return;
+            throw new \InvalidArgumentException(t('error_document_addlink_href'));
         }
         $this->links[$key] = $attrs;
         return $this;

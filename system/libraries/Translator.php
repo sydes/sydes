@@ -14,7 +14,7 @@ class Translator {
 
     public $installedPackages;
     private $container;
-    private $locale;
+    private $locale = 'en_US';
 
     public function __construct() {
         $langs = glob(DIR_LANGUAGE.'/*');
@@ -24,9 +24,14 @@ class Translator {
         $this->installedPackages = $langs;
     }
 
-    public function loadPackage() {
-        $this->container[$this->locale] = include DIR_LANGUAGE.'/'.$this->locale.'/translation.php';
+    public function loadPackage($locale = null) {
+        $locale = $locale ?: $this->locale;
+        if (isset($this->container[$locale])) {
+            return $this;
+        }
+        $this->container[$locale] = include DIR_LANGUAGE.'/'.$locale.'/translation.php';
     }
+
     public function setLocale($locale) {
         $this->locale = $locale;
     }

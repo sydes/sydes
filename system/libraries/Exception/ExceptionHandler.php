@@ -13,7 +13,7 @@ namespace App\Exception;
 class ExceptionHandler {
 
     public function report(\Exception $e) {
-        // TODO fire event
+        app('event')->trigger('exception', [$e], str_replace('App\Exception\\', '', get_class($e)));
         return $this;
     }
 
@@ -24,9 +24,8 @@ class ExceptionHandler {
     private function renderError(\Exception $e) {
         $response = response();
         if (app('config')['app']['debug']) {
-            $response->withContent(document()->alert('Err... this is error: '.
-                $e->getMessage().'<br>'.pre($e->getTraceAsString(), true), 'danger'
-            ));
+            alert('Err... this is error: '.$e->getMessage().'<br>'.pre($e->getTraceAsString(), true), 'danger');
+            $response->withContent(document());
         } else {
             $response->withContent(render(DIR_SYSTEM.'/templates/error_500.php', [$e]));
             $response->withStatus(500);
@@ -36,11 +35,16 @@ class ExceptionHandler {
     }
 
     private function renderException(\Exception $e) {
-        $response = response(document()->alert($e->getMessage(), 'danger'));
-        if ($e instanceof NotFoundHttpException) {
-            $response->withStatus(404);
-        } elseif ($e instanceof ForbiddenHttpException) {
+        if ($e instanceof RedirectException) {
+            return response()->withRedirect($e->url, $e->statusCode);
+        }
+
+        alert($e->getMessage(), 'danger');
+        $response = response(document());
+        if ($e instanceof ForbiddenHttpException) {
             $response->withStatus(403);
+        } elseif ($e instanceof NotFoundHttpException) {
+            $response->withStatus(404);
         }
         return $response;
     }

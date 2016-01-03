@@ -67,10 +67,22 @@ class Response {
      */
     public function withContent($content) {
         if (is_array($content)) {
+            if (isset($content['notify'])) unset($_SERVER['notify']);
+            if (isset($content['alerts'])) unset($_SERVER['alerts']);
             $content = json_encode($content);
             $this->mime = 'json';
         } elseif ($content instanceof \App\Document) {
+            if (isset($_SERVER['notify'])) {
+                $content->data['notify'] = $_SERVER['notify'];
+                unset($_SERVER['notify']);
+            }
+            if (isset($_SERVER['alerts'])) {
+                $content->data['alerts'] = $_SERVER['alerts'];
+                unset($_SERVER['alerts']);
+            }
+            app('event')->trigger('before.render', $content, app('request')->url);
             $content = app('renderer')->render($content);
+            app('event')->trigger('after.render', $content);
         }
         $this->content = (string) $content;
         return $this;

@@ -31,31 +31,31 @@ class App extends \Pimple\Container {
      *
      */
     public function init() {
-        $this['preferredLanguage'] = $this['request']->getPreferredLanguage($this['translator']->installedPackages);
-        // TODO выяснить языки админки и фронта
-        // установить основкую локаль
-        // загрузить языковые пакеты
+        $this['event']->trigger('before.system.init');
+
+        $this['config'] = include DIR_APP.'/config.php';
+
+        $this['adminLang'] = $this['config']['app']['language'];
+        $this['translator']->loadPackage($this['adminLang']);
+
+        $domains = $this->findDomains();
+        $site = $this['site'] = $domains[$this['request']->domain];
+        $siteConf = include DIR_SITE.'/'.$site.'/config.php';
+        $this['config'] = array_merge($this['config'], ['site' => $siteConf]);
+        $this['base'] = $siteConf['domains'][0];
+        $this['db'] = function () use ($site) {
+            return new Database($site);
+        };
 
         $this['section'] = (strpos($this['request']->url, ADMIN.'/') === 1) ? 'admin' : 'front';
-
+        $this['contentLang'] = $this->findContentLocale();
         $this['renderer'] = function ($c) {
             return $c['section'] == 'admin' ? new Renderer\Admin() : new Renderer\Front();
         };
 
-        // load main languages
-
-        // find site by domain
-        // load site config
-        
-        $this['config'] = include DIR_APP.'/config.php';
-
         date_default_timezone_set($this['config']['app']['time_zone']);
 
-        $site = 's1';
-
-        $this['db'] = function () use ($site) {
-            return new Database($site);
-        };
+        $this['event']->trigger('after.system.init');
     }
 
     public function run() {
@@ -95,27 +95,28 @@ class App extends \Pimple\Container {
             $r->addRoute('GET', '/html', 'test/html');
             $r->addRoute('GET', '/nool', 'test/nool');
             $r->addRoute('GET', '/moved', 'test/moved');
-            $r->addRoute('GET', '/update', 'test/update');
-            $r->addRoute('GET', '/store', 'test/store');
-            $r->addRoute('GET', '/ajaxupdate', 'test/ajaxupdate');
-            $r->addRoute('GET', '/ajaxstore', 'test/ajaxstore');
+            $r->addRoute('GET', '/update', 'test/notifyAfterRedirect');
+            $r->addRoute('GET', '/store', 'test/alertAfterRedirect');
+            $r->addRoute('GET', '/ajaxupdate', 'test/ajaxNotify');
+            $r->addRoute('GET', '/ajaxstore', 'test/ajaxAlert');
+            $r->addRoute('GET', '/refresh', 'test/ajaxRefresh');
+            $r->addRoute('GET', '/refresh2', 'test/refreshAndNotify');
+            $r->addRoute('GET', '/random', 'test/random');
             $r->addRoute('GET', '/', 'test/index');
         }, ['cacheFile' => DIR_CACHE.'/route.cache']);
 
         $routeInfo = $dispatcher->dispatch($request->method, $request->url);
 
-        switch ($routeInfo[0]) {
-            case \FastRoute\Dispatcher::FOUND:
-                $parts = explode('/', $routeInfo[1]);
-                $vars = $routeInfo[2];
-                break;
-            default:
-                //TODO try to find predefined urls in database
-                if (1){
-                    throw new NotFoundHttpException;
-                }
-                $parts = explode('/', 'test/page/42');
-                $vars = array_slice($parts, 2);
+        if ($routeInfo[0] == \FastRoute\Dispatcher::FOUND) {
+            $parts = explode('/', $routeInfo[1]);
+            $vars = $routeInfo[2];
+        } else {
+            //TODO try to find predefined urls in database
+            if (1) {
+                throw new NotFoundHttpException;
+            }
+            $parts = explode('/', 'test/page/42');
+            $vars = array_slice($parts, 2);
         }
 
         $name = $parts[0];
@@ -128,6 +129,48 @@ class App extends \Pimple\Container {
         include $path.'/index.php';
         $instance = new $class;
         return call_user_func_array([$instance, $method], $vars);
+    }
+
+    private function findDomains() {
+        $domains = $this['cache']->remember('domains', function () {
+            $domains = [];
+            foreach (glob(DIR_SITE.'/s*', GLOB_ONLYDIR) as $sitePath) {
+                $config = include $sitePath.'/config.php';
+                $site = str_replace(DIR_SITE.'/', '', $sitePath);
+                foreach ($config['domains'] as $domain) {
+                    $domains[$domain] = $site;
+                }
+            }
+            return $domains;
+        }, 31536000);
+
+        if (!isset($domains[$this['request']->domain])) {
+            $this->abort(404, t('error_domain_not_associated'));
+        }
+
+        return $domains;
+    }
+
+    private function findContentLocale() {
+        $locales = $this['config']['site']['locales'];
+        $locale = $locales[0];
+
+        if (count($locales) > 1) {
+            if ($this['section'] == 'admin') {
+                if (isset($this['request']->cookies['content_locale']) &&
+                    in_array($this['request']->cookies['content_locale'], $locales)) {
+                    $locale = $this['request']->cookies['content_locale'];
+                }
+            } else {
+                $url = explode('/', $this['request']->url, 3);
+                if (in_array($url[1], $locales)) {
+                    $locale = $url[1];
+                    $this['request']->url = isset($url[2]) ? substr($this['request']->url, 3) : '/';
+                }
+            }
+        }
+
+        return $locale;
     }
 
 }

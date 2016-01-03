@@ -11,7 +11,7 @@
 use App\Http\Response;
 
 /**
- * Print formatted array
+ * Print formatted array.
  *
  * @param array $array
  * @param bool $return
@@ -25,7 +25,7 @@ function pre($array, $return = false) {
 }
 
 /**
- * Find path to extension in default or custom folders
+ * Find path to extension in default or custom folders.
  *
  * @param $type
  * @param $name
@@ -48,7 +48,7 @@ function findExt($type, $name) {
 }
 
 /**
- * Load and execute file with given data
+ * Load and execute file with given data.
  *
  * @param string $file
  * @param array  $result
@@ -61,7 +61,7 @@ function render($file, $result = []) {
 }
 
 /**
- * Generate random string
+ * Generate random string.
  *
  * @param int $length
  * @return null|string
@@ -81,7 +81,7 @@ function token($length) {
 }
 
 /**
- * Translate string
+ * Translate string.
  *
  * @param string $text
  * @return mixed
@@ -91,7 +91,7 @@ function t($text) {
 }
 
 /**
- * Make a slug from the string
+ * Make a slug from the string.
  *
  * @param string $str
  * @param bool   $strict
@@ -234,7 +234,7 @@ function toSlug($str, $strict = true) {
 }
 
 /**
- * Check server for system requirements
+ * Check server for system requirements.
  *
  * @return array
  */
@@ -273,7 +273,7 @@ function checkServer() {
 }
 
 /**
- * Print array to file for include
+ * Print array to file for include.
  *
  * @param array  $array
  * @param string $filename
@@ -328,7 +328,7 @@ function app($key = null) {
 }
 
 /**
- * Get the document instance
+ * Get the document instance.
  *
  * @param bool $empty
  * @return App\Document
@@ -345,7 +345,6 @@ function document($empty = false) {
     return $d;
 }
 
-
 /**
  * Throw an HttpException with the given data.
  *
@@ -358,7 +357,7 @@ function abort($code, $message = '') {
 }
 
 /**
- * Get the response instance
+ * Get the response instance.
  *
  * @param string $content
  * @param int $statusCode
@@ -369,11 +368,62 @@ function response($content = '', $statusCode = 200, $headers = []) {
     return new Response($content, $statusCode, $headers);
 }
 
+/**
+ * Create a new redirect response to the given url.
+ *
+ * @param string $to
+ * @param int    $status
+ * @return Response|array
+ */
 function redirect($to, $status = 301) {
-    return (new Response('', $status))->withRedirect($to, $status);
+    return app('request')->is_ajax ? ['redirect' => $to] : (new Response)->withRedirect($to, $status);
 }
 
+/**
+ * Create a new redirect response to the previous location.
+ *
+ * @return Response
+ */
 function back() {
     $to = app('request')->headers['REFERER'] ?: '/';
     return (new Response)->withRedirect($to);
+}
+
+/**
+ * Refresh page after ajax request.
+ *
+ * @return array|null
+ */
+function refresh() {
+    return app('request')->is_ajax ? ['refresh' => 1] : null;
+}
+
+/**
+ * Sets a notify message.
+ *
+ * @param string $message
+ * @param string $status Any of bootstrap alert statuses
+ * @return array
+ */
+function notify($message, $status = 'success') {
+    $_SESSION['notify'] = [
+        'message' => $message,
+        'status' => $status
+    ];
+    return ['notify' => $_SESSION['notify']];
+}
+
+/**
+ * Adds a alert message.
+ *
+ * @param string $message
+ * @param string $status Any of bootstrap alert statuses
+ * @return array
+ */
+function alert($message, $status = 'success') {
+    $_SESSION['alerts'][] = [
+        'message' => $message,
+        'status' => $status
+    ];
+    return ['alerts' => $_SESSION['alerts']];
 }

@@ -18,13 +18,9 @@ class Front {
      */
     public function render(\App\Document $document) {
         //TODO render doc or ajax response
-        if (!empty($document->data)){
-            $result = json_encode($document);
-        } elseif (!empty($document->notify)) {
-            $result = json_encode($document->notify);
-        } else {
-            $result = json_encode($document->alerts);
-        }
+
+        $result = pre($document, true);
+
         return $result;
     }
 
