@@ -29,6 +29,9 @@ $app['load'] = function () {
 $app['translator'] = function () {
     return new App\Translator();
 };
+$app['event'] = function () {
+    return new App\Event();
+};
 
 
 
