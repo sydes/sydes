@@ -7,7 +7,12 @@
 .block-edit:before{content:"\270f";}
 .block-template:before{content:"\e060";}
 
+.with-toolbar{padding-top:33px;}
 #toolbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
 background:#2c313a !important;
 box-shadow:0 1px 2px #000 !important;
 }
