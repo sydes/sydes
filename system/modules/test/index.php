@@ -14,7 +14,9 @@ class TestController
 
     public function index()
     {
-        return '<a href="page/123">page</a><br>
+        $d = document();
+        $d->data = [
+            'content' => '<a href="page/123">page</a><br>
 <a href="notfound">notfound</a><br>
 <a href="forbidden">forbidden</a><br>
 <a href="ajax">ajax</a><br>
@@ -30,7 +32,9 @@ class TestController
 <a href="refresh">refresh</a><br>
 <a href="refresh2">refresh and notify</a><br>
 <a href="random">random</a><br>
-<a href="nope">nope</a><br>'.app('contentLang').' '.app('request')->url;
+<a href="nope">nope</a><br>'.app('contentLang').' '.app('request')->url
+        ];
+        return $d;
     }
 
     public function page($id)
