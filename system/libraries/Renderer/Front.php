@@ -87,8 +87,8 @@ class Front
             'locale' => app('contentLang'),
         ]);
         $doc->addScript('extend', '$.extend(syd, '.json_encode($doc->js).');');
-        $footer[] = '<script>'."\n".implode("\n\n", $doc->internal_scripts)."\n".'</script>';
         $footer[] = '<ul id="notify"></ul>';
+        $footer[] = '<script>'."\n".implode("\n\n", $doc->internal_scripts)."\n".'</script>';
 
         if (Auth::admin()) {
             $footer[] = $this->getToolbar();
