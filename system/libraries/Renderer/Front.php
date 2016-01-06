@@ -27,6 +27,7 @@ class Front
      */
     private $document;
 
+    private $theme;
     /**
      * @param Document $doc
      * @return string
@@ -35,6 +36,8 @@ class Front
     {
         //$this->config = config('front');
         $this->document = $doc;
+        $this->addAlerts();
+        $this->addNotify();
         $this->theme = $theme = app('config')['site']['theme'];
         $layout = ifsetor($doc->data['layout'], 'page');
         app('translator')->setLocale(app('contentLang'))->loadFrom('theme', $theme);
@@ -85,6 +88,7 @@ class Front
         ]);
         $doc->addScript('extend', '$.extend(syd, '.json_encode($doc->js).');');
         $footer[] = '<script>'."\n".implode("\n\n", $doc->internal_scripts)."\n".'</script>';
+        $footer[] = '<ul id="notify"></ul>';
 
         if (Auth::admin()) {
             $footer[] = $this->getToolbar();
@@ -200,6 +204,25 @@ class Front
         }
 
         return $html;
+    }
+
+    protected function addAlerts()
+    {
+        if (!empty($_SESSION['alerts'])) {
+            foreach ($_SESSION['alerts'] as $a) {
+                $this->document->addScript('alerts', "syd.alert('{$a['message']}', '{$a['status']}');");
+            }
+            $_SESSION['alerts'] = [];
+        }
+        $this->document->data['alerts'] = '<div id="alerts"></div>';
+    }
+
+    protected function addNotify()
+    {
+        if (isset($_SESSION['notify'])) {
+            $this->document->addScript('notify', "syd.notify('{$_SESSION['notify']['message']}', '{$_SESSION['notify']['status']}');");
+            unset($_SESSION['notify']);
+        }
     }
 
     private function iblock($name, $params = false)
