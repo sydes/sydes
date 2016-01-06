@@ -457,3 +457,8 @@ if (!function_exists('ifsetor')) {
         return isset($value) ? $value : $default;
     }
 }
+
+function e($str)
+{
+    return htmlspecialchars($str);
+}
