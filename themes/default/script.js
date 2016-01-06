@@ -2,7 +2,7 @@ $(document).ready(function(){
 	// fancybox initialization
 	if (typeof jQuery.fn.fancybox !== "undefined"){
 		$('.fancybox, [rel^="lightbox"]').fancybox()
-	};
+	}
 
 	// back to top
 	$(window).scroll(function(){
@@ -27,4 +27,4 @@ $(document).ready(function(){
 
 	// your scripts here
 	
-})
+});
