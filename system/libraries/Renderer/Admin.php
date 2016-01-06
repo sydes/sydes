@@ -10,13 +10,15 @@
 
 namespace App\Renderer;
 
-class Admin {
+class Admin
+{
 
     /**
      * @param \App\Document $document
      * @return string
      */
-    public function render(\App\Document $document) {
+    public function render(\App\Document $document)
+    {
         //TODO render doc or ajax response
         return json_encode($document);
     }

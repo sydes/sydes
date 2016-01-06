@@ -9,17 +9,19 @@
  */
 namespace App;
 
-use App\Exception\NotFoundHttpException;
 use App\Exception\ForbiddenHttpException;
 use App\Exception\HttpException;
+use App\Exception\NotFoundHttpException;
 
-class App extends \Pimple\Container {
+class App extends \Pimple\Container
+{
 
     private static $instance;
 
     private function __clone() {}
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (empty(self::$instance)) {
             self::$instance = new self();
         }
@@ -30,7 +32,8 @@ class App extends \Pimple\Container {
      * Initialization of application
      *
      */
-    public function init() {
+    public function init()
+    {
         $this['event']->trigger('before.system.init');
 
         $this['config'] = include DIR_APP.'/config.php';
@@ -58,7 +61,8 @@ class App extends \Pimple\Container {
         $this['event']->trigger('after.system.init');
     }
 
-    public function run() {
+    public function run()
+    {
         $result = $this->sendRequestThroughRouter($this['request']);
 
         if ($result instanceof Http\Response) {
@@ -71,11 +75,12 @@ class App extends \Pimple\Container {
     /**
      * Throw an HttpException with the given data.
      *
-     * @param int $code
+     * @param int    $code
      * @param string $message
      * @throws Exception\HttpException
      */
-    public function abort($code, $message = null) {
+    public function abort($code, $message = null)
+    {
         if ($code == 404) {
             throw new NotFoundHttpException($message);
         } elseif ($code == 403) {
@@ -84,8 +89,9 @@ class App extends \Pimple\Container {
         throw new HttpException($code, $message);
     }
 
-    private function sendRequestThroughRouter($request) {
-        $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $r) {
+    private function sendRequestThroughRouter($request)
+    {
+        $dispatcher = \FastRoute\cachedDispatcher(function (\FastRoute\RouteCollector $r) {
             $r->addRoute('GET', '/page/{id:[0-9]+}', 'test/page');
             $r->addRoute('GET', '/notfound', 'test/notfound');
             $r->addRoute('GET', '/forbidden', 'test/forbidden');
@@ -131,7 +137,8 @@ class App extends \Pimple\Container {
         return call_user_func_array([$instance, $method], $vars);
     }
 
-    private function findDomains() {
+    private function findDomains()
+    {
         $domains = $this['cache']->remember('domains', function () {
             $domains = [];
             foreach (glob(DIR_SITE.'/s*', GLOB_ONLYDIR) as $sitePath) {
@@ -151,14 +158,16 @@ class App extends \Pimple\Container {
         return $domains;
     }
 
-    private function findContentLocale() {
+    private function findContentLocale()
+    {
         $locales = $this['config']['site']['locales'];
         $locale = $locales[0];
 
         if (count($locales) > 1) {
             if ($this['section'] == 'admin') {
                 if (isset($this['request']->cookies['content_locale']) &&
-                    in_array($this['request']->cookies['content_locale'], $locales)) {
+                    in_array($this['request']->cookies['content_locale'], $locales)
+                ) {
                     $locale = $this['request']->cookies['content_locale'];
                 }
             } else {

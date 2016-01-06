@@ -10,7 +10,8 @@
 
 namespace App;
 
-class Config {
+class Config
+{
 
     /**
      * @var array
@@ -23,7 +24,7 @@ class Config {
     private $module;
 
     /**
-     * @var PDO object
+     * @var \PDO object
      */
     private $db;
 
@@ -32,7 +33,8 @@ class Config {
      */
     private $changed = false;
 
-    public function __construct($module, Database $db) {
+    public function __construct($module, Database $db)
+    {
         $this->module = $module;
         $this->db = $db;
 
@@ -54,10 +56,27 @@ class Config {
         }
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         if ($this->changed) {
             $this->commit();
         }
+    }
+
+    /**
+     * Sends data to database.
+     *
+     * @return self
+     */
+    public function commit()
+    {
+        $this->db->exec("DELETE FROM config WHERE module = '{$this->module}'");
+        $stmt = $this->db->prepare("INSERT INTO config (module, key, value) VALUES ('{$this->module}', :key, :value)");
+        foreach ($this->data as $key => $value) {
+            $stmt->execute(['key' => $key, 'value' => json_encode($value)]);
+        }
+        $this->changed = false;
+        return $this;
     }
 
     /**
@@ -67,7 +86,8 @@ class Config {
      * @param mixed  $default
      * @return mixed
      */
-    public function get($key = null, $default = null) {
+    public function get($key = null, $default = null)
+    {
         if (is_null($key)) {
             return $this->data;
         } else {
@@ -82,7 +102,8 @@ class Config {
      * @param mixed        $value
      * @return self
      */
-    public function set($key, $value = null) {
+    public function set($key, $value = null)
+    {
         if (is_null($value)) {
             $this->data = $key;
         } else {
@@ -98,28 +119,14 @@ class Config {
      * @param string $key
      * @return self
      */
-    public function delete($key = null) {
+    public function delete($key = null)
+    {
         if (is_null($key)) {
             $this->data = [];
         } else {
             unset($this->data[$key]);
         }
         $this->changed = true;
-        return $this;
-    }
-
-    /**
-     * Sends data to database.
-     *
-     * @return self
-     */
-    public function commit() {
-        $this->db->exec("DELETE FROM config WHERE module = '{$this->module}'");
-        $stmt = $this->db->prepare("INSERT INTO config (module, key, value) VALUES ('{$this->module}', :key, :value)");
-        foreach ($this->data as $key => $value) {
-            $stmt->execute(['key' => $key, 'value' => json_encode($value)]);
-        }
-        $this->changed = false;
         return $this;
     }
 

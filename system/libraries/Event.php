@@ -10,7 +10,8 @@
 
 namespace App;
 
-class Event {
+class Event
+{
 
     protected $events = [];
 
@@ -20,15 +21,19 @@ class Event {
      * @param callable $callback
      * @param int      $priority
      */
-    public function on($event, $context, $callback, $priority = 0) {
-        if (!isset($this->events[$event])) $this->events[$event] = [];
+    public function on($event, $context, $callback, $priority = 0)
+    {
+        if (!isset($this->events[$event])) {
+            $this->events[$event] = [];
+        }
         $this->events[$event][] = ['contexts' => $context, 'fn' => $callback, 'prio' => $priority];
     }
 
     /**
      * @param string $event
      */
-    public function off($event) {
+    public function off($event)
+    {
         if (!isset($this->events[$event])) {
             $this->events[$event] = [];
         }
@@ -39,7 +44,8 @@ class Event {
      * @param array  $params
      * @param string $context
      */
-    public function trigger($event, $params = [], $context = '') {
+    public function trigger($event, $params = [], $context = '')
+    {
         if (empty($this->events[$event])) {
             return;
         }

@@ -10,18 +10,22 @@
 
 namespace App;
 
-class Auth {
+class Auth
+{
 
-    public static function login() {
-        
+    public static function login()
+    {
+
     }
 
-    public static function logout() {
-        
+    public static function logout()
+    {
+
     }
 
-    public static function admin() {
-        
+    public static function admin()
+    {
+
         return true;
     }
 

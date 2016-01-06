@@ -10,7 +10,8 @@
 
 namespace App\Http;
 
-class Response {
+class Response
+{
 
     /**
      * Mime types translation table.
@@ -19,25 +20,25 @@ class Response {
      */
     public static $mimeTypes = [
         'binary' => 'application/octet-stream',
-        'css' => 'text/css',
-        'csv' => 'application/vnd.ms-excel',
-        'doc' => 'application/msword',
-        'html' => 'text/html',
-        'json' => 'application/json',
-        'js' => 'application/x-javascript',
-        'txt' => 'text/plain',
-        'rss' => 'application/rss+xml',
-        'atom' => 'application/atom+xml',
-        'zip' => 'application/zip',
-        'pdf' => 'application/pdf',
-        'xls' => 'application/vnd.ms-excel',
-        'gtar' => 'application/x-gtar',
-        'gzip' => 'application/x-gzip',
-        'tar' => 'application/x-tar',
-        'xhtml' => 'application/xhtml+xml',
-        'rtf' => 'text/rtf',
-        'xsl' => 'text/xml',
-        'xml' => 'text/xml',
+        'css'    => 'text/css',
+        'csv'    => 'application/vnd.ms-excel',
+        'doc'    => 'application/msword',
+        'html'   => 'text/html',
+        'json'   => 'application/json',
+        'js'     => 'application/x-javascript',
+        'txt'    => 'text/plain',
+        'rss'    => 'application/rss+xml',
+        'atom'   => 'application/atom+xml',
+        'zip'    => 'application/zip',
+        'pdf'    => 'application/pdf',
+        'xls'    => 'application/vnd.ms-excel',
+        'gtar'   => 'application/x-gtar',
+        'gzip'   => 'application/x-gzip',
+        'tar'    => 'application/x-tar',
+        'xhtml'  => 'application/xhtml+xml',
+        'rtf'    => 'text/rtf',
+        'xsl'    => 'text/xml',
+        'xml'    => 'text/xml',
     ];
 
     protected $content;
@@ -50,10 +51,11 @@ class Response {
      * HttpResponse constructor.
      *
      * @param string $content
-     * @param int $statusCode
-     * @param array $headers
+     * @param int    $statusCode
+     * @param array  $headers
      */
-    public function __construct($content = '', $statusCode = 200, $headers = []) {
+    public function __construct($content = '', $statusCode = 200, $headers = [])
+    {
         $this->withContent($content);
         $this->statusCode = $statusCode;
         $this->headers = $headers;
@@ -65,26 +67,17 @@ class Response {
      * @param  mixed $content
      * @return self
      */
-    public function withContent($content) {
+    public function withContent($content)
+    {
         if (is_array($content)) {
-            if (isset($content['notify'])) unset($_SERVER['notify']);
-            if (isset($content['alerts'])) unset($_SERVER['alerts']);
             $content = json_encode($content);
             $this->mime = 'json';
         } elseif ($content instanceof \App\Document) {
-            if (isset($_SERVER['notify'])) {
-                $content->data['notify'] = $_SERVER['notify'];
-                unset($_SERVER['notify']);
-            }
-            if (isset($_SERVER['alerts'])) {
-                $content->data['alerts'] = $_SERVER['alerts'];
-                unset($_SERVER['alerts']);
-            }
             app('event')->trigger('before.render', $content, app('request')->url);
             $content = app('renderer')->render($content);
             app('event')->trigger('after.render', $content);
         }
-        $this->content = (string) $content;
+        $this->content = (string)$content;
         return $this;
     }
 
@@ -93,15 +86,17 @@ class Response {
      *
      * @param $code
      */
-    public function withStatus($code) {
+    public function withStatus($code)
+    {
         $this->statusCode = $code;
     }
 
     /**
      * Sends HTTP headers and content.
      */
-    public function send() {
-        if (is_null($this->mime)){
+    public function send()
+    {
+        if (is_null($this->mime)) {
             $this->mime = 'html';
         }
         $this->addHeader('Content-type', self::$mimeTypes[$this->mime]);
@@ -111,9 +106,28 @@ class Response {
     }
 
     /**
+     * Sets a header by name.
+     *
+     * @param string       $key    The key
+     * @param string|array $values The value or an array of values
+     * @return self
+     */
+    public function addHeader($key, $values)
+    {
+        $values = array_values((array)$values);
+        if (!isset($this->headers[$key])) {
+            $this->headers[$key] = $values;
+        } else {
+            $this->headers[$key] = array_merge($this->headers[$key], $values);
+        }
+        return $this;
+    }
+
+    /**
      * Sends HTTP headers.
      */
-    public function sendHeaders() {
+    public function sendHeaders()
+    {
         if (headers_sent()) {
             return;
         }
@@ -134,29 +148,13 @@ class Response {
     }
 
     /**
-     * Sets a header by name.
-     *
-     * @param string       $key    The key
-     * @param string|array $values The value or an array of values
-     * @return self
-     */
-    public function addHeader($key, $values) {
-        $values = array_values((array) $values);
-        if (!isset($this->headers[$key])) {
-            $this->headers[$key] = $values;
-        } else {
-            $this->headers[$key] = array_merge($this->headers[$key], $values);
-        }
-        return $this;
-    }
-
-    /**
      * Removes a header.
      *
      * @param string $key The HTTP header name
      * @return self
      */
-    public function removeHeader($key) {
+    public function removeHeader($key)
+    {
         unset($this->headers[$key]);
         return $this;
     }
@@ -169,11 +167,12 @@ class Response {
      * @param int    $expire Ttl in seconds
      * @return self
      */
-    public function addCookie($name, $value, $expire) {
+    public function addCookie($name, $value, $expire)
+    {
         $this->cookies[] = [
-            'name' => $name,
-            'value' => $value,
-            'expire' => $expire
+            'name'   => $name,
+            'value'  => $value,
+            'expire' => $expire,
         ];
         return $this;
     }
@@ -184,10 +183,11 @@ class Response {
      * @param string $name The cookie name
      * @return self
      */
-    public function removeCookie($name) {
+    public function removeCookie($name)
+    {
         $this->cookies[] = [
-            'name' => $name,
-            'expire' => -2
+            'name'   => $name,
+            'expire' => -2,
         ];
         return $this;
     }
@@ -198,7 +198,8 @@ class Response {
      * @param string $type
      * @return self
      */
-    public function withMime($type) {
+    public function withMime($type)
+    {
         $this->mime = in_array($type, self::$mimeTypes) ? $type : 'txt';
         return $this;
     }
@@ -209,8 +210,9 @@ class Response {
      * @param string $filename
      * @return self
      */
-    public function download($filename) {
-        if (is_null($this->mime)){
+    public function download($filename)
+    {
+        if (is_null($this->mime)) {
             $this->mime = 'binary';
         }
         $this->addHeader('Content-Disposition', 'attachment; filename="'.toSlug($filename, false).'"');
@@ -224,7 +226,8 @@ class Response {
      * @param int    $status
      * @return self
      */
-    public function withRedirect($url, $status = 301) {
+    public function withRedirect($url, $status = 301)
+    {
         $this->statusCode = $status;
         $this->addHeader('Location', $url);
         return $this;

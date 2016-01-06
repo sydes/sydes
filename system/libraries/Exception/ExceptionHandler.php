@@ -10,31 +10,36 @@
 
 namespace App\Exception;
 
-class ExceptionHandler {
+class ExceptionHandler
+{
 
-    public function report(\Exception $e) {
+    public function report(\Exception $e)
+    {
         app('event')->trigger('exception', [$e], str_replace('App\Exception\\', '', get_class($e)));
         return $this;
     }
 
-    public function render(\Exception $e) {
+    public function render(\Exception $e)
+    {
         return $e instanceof \ErrorException ? $this->renderError($e) : $this->renderException($e);
     }
 
-    private function renderError(\Exception $e) {
+    private function renderError(\Exception $e)
+    {
         $response = response();
         if (app('config')['app']['debug']) {
             alert('Err... this is error: '.$e->getMessage().'<br>'.pre($e->getTraceAsString(), true), 'danger');
             $response->withContent(document());
         } else {
-            $response->withContent(render(DIR_SYSTEM.'/templates/error_500.php', [$e]));
+            $response->withContent(render(DIR_SYSTEM.'/views/error_500.php', [$e]));
             $response->withStatus(500);
         }
 
         return $response;
     }
 
-    private function renderException(\Exception $e) {
+    private function renderException(\Exception $e)
+    {
         if ($e instanceof RedirectException) {
             return response()->withRedirect($e->url, $e->statusCode);
         }

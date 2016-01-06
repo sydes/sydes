@@ -14,9 +14,10 @@ use App\Http\Response;
  * Print formatted array.
  *
  * @param array $array
- * @param bool $return
+ * @param bool  $return
  */
-function pre($array, $return = false) {
+function pre($array, $return = false)
+{
     $pre = '<pre>'.print_r($array, true).'</pre>';
     if ($return) {
         return $pre;
@@ -31,11 +32,12 @@ function pre($array, $return = false) {
  * @param $name
  * @return null|string
  */
-function findExt($type, $name) {
+function findExt($type, $name)
+{
     $paths = [
         'module' => '/modules/'.$name,
         'iblock' => '/iblocks/'.$name,
-        'plugin' => '/plugins/'.$name
+        'plugin' => '/plugins/'.$name,
     ];
 
     foreach ([DIR_APP, DIR_SYSTEM] as $place) {
@@ -54,7 +56,9 @@ function findExt($type, $name) {
  * @param array  $result
  * @return string
  */
-function render($file, $result = []) {
+function render($file, $data = [])
+{
+    extract($data, EXTR_SKIP);
     ob_start();
     include $file;
     return ob_get_clean();
@@ -66,7 +70,8 @@ function render($file, $result = []) {
  * @param int $length
  * @return null|string
  */
-function token($length) {
+function token($length)
+{
     $chars = [
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
         'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -86,7 +91,8 @@ function token($length) {
  * @param string $text
  * @return mixed
  */
-function t($text) {
+function t($text)
+{
     return app('translator')->translate($text);
 }
 
@@ -97,7 +103,8 @@ function t($text) {
  * @param bool   $strict
  * @return string
  */
-function toSlug($str, $strict = true) {
+function toSlug($str, $strict = true)
+{
     $charsArray = [
         'a' => [
             'à', 'á', 'ả', 'ã', 'ạ', 'ă', 'ắ', 'ằ', 'ẳ', 'ẵ',
@@ -220,7 +227,7 @@ function toSlug($str, $strict = true) {
             "\xE2\x80\xAF", "\xE2\x81\x9F", "\xE3\x80\x80"],
         '-' => ['*', '+'],
     ];
-    
+
     foreach ($charsArray as $key => $value) {
         $str = str_replace($value, $key, $str);
     }
@@ -238,7 +245,8 @@ function toSlug($str, $strict = true) {
  *
  * @return array
  */
-function checkServer() {
+function checkServer()
+{
     $wr = '';
     foreach (['app', 'themes/default', 'upload/images', 'upload/files', 'upload/_thumbs/Images', 'upload/_thumbs/Files'] as $path) {
         if (!is_writable(DIR_ROOT.'/'.$path)) {
@@ -249,21 +257,22 @@ function checkServer() {
         $wr = 'These folder is not writable: <ul>'.$wr.'</ul>';
     }
 
-    $req_pdo = class_exists('PDO', false);
-    $pdo_drv = $req_pdo ? PDO::getAvailableDrivers() : [];
-    $req_sqlite = in_array('sqlite', $pdo_drv);
-    $req_json = function_exists('json_encode');
-    $req_rewrite = function_exists('apache_get_modules') ? in_array('mod_rewrite', apache_get_modules()) : true;
-    $req_outer_content = ((function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen')) || function_exists('curl_init')) ? true : false;
-    $req_zip = class_exists('ZipArchive', false);
+    $reqPdo = class_exists('PDO', false);
+    $pdoDrv = $reqPdo ? PDO::getAvailableDrivers() : [];
+    $reqSqlite = in_array('sqlite', $pdoDrv);
+    $reqJson = function_exists('json_encode');
+    $reqRewrite = function_exists('apache_get_modules') ? in_array('mod_rewrite', apache_get_modules()) : true;
+    $reqOuterContent = ((function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen'))
+        || function_exists('curl_init')) ? true : false;
+    $reqZip = class_exists('ZipArchive', false);
 
     $errors = version_compare(PHP_VERSION, '5.4.0') < 0 ? '<li>php older than 5.4</li>' : '';
-    $errors .=!$req_pdo ? '<li>PDO not supported</li>' : '';
-    $errors .=!$req_sqlite ? '<li>SQLite driver for PDO not found</li>' : '';
-    $errors .=!$req_json ? '<li>Json not supported</li>' : '';
-    $errors .=!$req_rewrite ? '<li>mod_rewrite not supported</li>' : '';
-    $errors .=!$req_outer_content ? '<li>Neither url_fopen nor cURL is available</li>' : '';
-    $errors .=!$req_zip ? '<li>ZipArchive not found</li>' : '';
+    $errors .= !$reqPdo ? '<li>PDO not supported</li>' : '';
+    $errors .= !$reqSqlite ? '<li>SQLite driver for PDO not found</li>' : '';
+    $errors .= !$reqJson ? '<li>Json not supported</li>' : '';
+    $errors .= !$reqRewrite ? '<li>mod_rewrite not supported</li>' : '';
+    $errors .= !$reqOuterContent ? '<li>Neither url_fopen nor cURL is available</li>' : '';
+    $errors .= !$reqZip ? '<li>ZipArchive not found</li>' : '';
 
     if (!empty($errors)) {
         $errors = 'Server is not supported: <ul>'.$errors.'</ul>';
@@ -278,13 +287,15 @@ function checkServer() {
  * @param array  $array
  * @param string $filename
  */
-function arr2file($array, $filename) {
+function arr2file($array, $filename)
+{
     $string = '<?php return '.var_export($array, true).';';
     file_put_contents($filename, $string, LOCK_EX);
     chmod($filename, 0777);
 }
 
-function getContentByUrl($url) {
+function getContentByUrl($url)
+{
     $data = null;
     if (ini_get('allow_url_fopen')) {
         $data = file_get_contents($url);
@@ -302,7 +313,8 @@ function getContentByUrl($url) {
     return $data;
 }
 
-function extractOuterZip($destination, $archive) {
+function extractOuterZip($destination, $archive)
+{
     $temp = DIR_TEMP.'/'.token(6);
     file_put_contents($temp, getContentByUrl($archive));
 
@@ -320,7 +332,8 @@ function extractOuterZip($destination, $archive) {
  * @param  string $key
  * @return mixed|App\App
  */
-function app($key = null) {
+function app($key = null)
+{
     if (is_null($key)) {
         return App\App::getInstance();
     }
@@ -348,11 +361,12 @@ function document($empty = false) {
 /**
  * Throw an HttpException with the given data.
  *
- * @param int $code
+ * @param int    $code
  * @param string $message
  * @throws App\Exception\HttpException
  */
-function abort($code, $message = '') {
+function abort($code, $message = '')
+{
     App\App::getInstance()->abort($code, $message);
 }
 
@@ -360,11 +374,12 @@ function abort($code, $message = '') {
  * Get the response instance.
  *
  * @param string $content
- * @param int $statusCode
- * @param array $headers
+ * @param int    $statusCode
+ * @param array  $headers
  * @return Response
  */
-function response($content = '', $statusCode = 200, $headers = []) {
+function response($content = '', $statusCode = 200, $headers = [])
+{
     return new Response($content, $statusCode, $headers);
 }
 
@@ -375,7 +390,8 @@ function response($content = '', $statusCode = 200, $headers = []) {
  * @param int    $status
  * @return Response|array
  */
-function redirect($to, $status = 301) {
+function redirect($to, $status = 301)
+{
     return app('request')->is_ajax ? ['redirect' => $to] : (new Response)->withRedirect($to, $status);
 }
 
@@ -384,7 +400,8 @@ function redirect($to, $status = 301) {
  *
  * @return Response
  */
-function back() {
+function back()
+{
     $to = app('request')->headers['REFERER'] ?: '/';
     return (new Response)->withRedirect($to);
 }
@@ -394,7 +411,8 @@ function back() {
  *
  * @return array|null
  */
-function refresh() {
+function refresh()
+{
     return app('request')->is_ajax ? ['refresh' => 1] : null;
 }
 
@@ -405,10 +423,11 @@ function refresh() {
  * @param string $status Any of bootstrap alert statuses
  * @return array
  */
-function notify($message, $status = 'success') {
+function notify($message, $status = 'success')
+{
     $_SESSION['notify'] = [
         'message' => $message,
-        'status' => $status
+        'status'  => $status,
     ];
     return ['notify' => $_SESSION['notify']];
 }
@@ -420,10 +439,11 @@ function notify($message, $status = 'success') {
  * @param string $status Any of bootstrap alert statuses
  * @return array
  */
-function alert($message, $status = 'success') {
+function alert($message, $status = 'success')
+{
     $_SESSION['alerts'][] = [
         'message' => $message,
-        'status' => $status
+        'status'  => $status,
     ];
     return ['alerts' => $_SESSION['alerts']];
 }

@@ -10,7 +10,8 @@
 
 namespace App;
 
-class Database {
+class Database
+{
 
     /**
      * @var \PDO
@@ -22,15 +23,16 @@ class Database {
      *
      * @param string $site site id
      */
-    public function __construct($site) {
-        if (empty($site)){
+    public function __construct($site)
+    {
+        if (empty($site)) {
             return;
         }
 
         $this->db = new \PDO(
             'sqlite:'.DIR_SITE.'/'.$site.'/database.db', null, null, [
-                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
             ]
         );
 
@@ -44,14 +46,16 @@ class Database {
      * @param string $table  table name
      * @param string $scheme scheme of table
      */
-    public function issetTable($table, $scheme) {
+    public function issetTable($table, $scheme)
+    {
         /* TODO в вечный кеш инфу о созданных таблицах кидать */
-        if (!(bool) $this->query("SELECT 1 FROM {$table} WHERE 1")) {
+        if (!(bool)$this->query("SELECT 1 FROM {$table} WHERE 1")) {
             $this->exec($scheme);
         }
     }
 
-    public function __call($name, array $args) {
+    public function __call($name, array $args)
+    {
         return $this->db->$name($args);
     }
 

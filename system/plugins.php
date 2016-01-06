@@ -1,7 +1,7 @@
 <?php
 $app = app();
-$app['event']->on('after.system.init', '*', function() use ($app){
-    if ($app['section'] == 'admin'){
+$app['event']->on('after.system.init', '*', function () use ($app) {
+    if ($app['section'] == 'admin') {
         if (!App\Auth::admin()) {
             throw new App\Exception\RedirectException('/admin/login');
         }
@@ -15,13 +15,13 @@ $app['event']->on('before.render', 'admin/*', function (App\Document &$doc) use 
 
     $app['cache']->remember('update_checked', function () use ($app) {
         $need = file_get_contents('http://sydes.ru/update/?version='.VERSION.'&site='.md5($_SERVER['HTTP_HOST']));
-        $update_text = 0;
+        $updateText = 0;
         if ($need == 1) {
-            $update_text = t('common_update_cms');
+            $updateText = t('common_update_cms');
         } elseif ($need == 2) {
-            $update_text = t('security_update_cms');
+            $updateText = t('security_update_cms');
         }
-        $app['cache']->put('update_text', $update_text, 600);
+        $app['cache']->put('update_text', $updateText, 600);
         return 1;
     }, 86400);
 

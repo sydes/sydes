@@ -10,9 +10,11 @@
 
 namespace App;
 
-class Loader {
+class Loader
+{
 
-    public function model($module) {
+    public function model($module)
+    {
         $part = strpos($module, '/') !== false ? explode('/', $module) : [$module, $module];
         $file = findExt('module', $part[0]).'/model/'.$part[1].'.php';
 
@@ -26,7 +28,8 @@ class Loader {
         return new $class();
     }
 
-    public function view($template, $data = []) {
+    public function view($template, $data = [])
+    {
         $part = explode('/', $template);
         if (count($part) != 2) {
             throw new \RuntimeException(t('error_loadview_argument'));
