@@ -14,39 +14,26 @@ use App\Auth;
 use App\Document;
 use App\HTML;
 
-class Front
+class Front extends Renderer
 {
 
     /**
      * @var \App\Config
      */
     private $config;
-
-    /**
-     * @var Document
-     */
-    private $document;
-
     private $theme;
-    /**
-     * @param Document $doc
-     * @return string
-     */
+
     public function render(Document $doc)
     {
-        //$this->config = config('front');
-        $this->document = $doc;
-        $this->addAlerts();
-        $this->addNotify();
+        //$this->config = config('front'); TODO uncomment
+        $this->prepare($doc);
+
         $this->theme = $theme = app('config')['site']['theme'];
         $layout = ifsetor($doc->data['layout'], 'page');
         app('translator')->setLocale(app('contentLang'))->loadFrom('theme', $theme);
 
-        $doc->addScript('jquery-1.11', '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
-        $doc->addScript('bootstrap-3.3', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js');
-        $doc->addScript('sydes-core', ['/system/assets/js/sydes.js', '/system/assets/js/front.js']);
-        $doc->addStyle('bootstrap-3.3', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css');
-        $doc->addStyle('sydes-core', '/system/assets/css/front.css');
+        $doc->addScript('sydes-front', '/system/assets/js/front.js');
+        $doc->addStyle('sydes-front', '/system/assets/css/front.css');
 
         $template = $this->getTemplate($theme, $layout);
         $template = str_replace('{content}', ifsetor($doc->data['content']), $template);
@@ -54,55 +41,34 @@ class Front
         unset($doc->data['content']);
 
         $doc->findMetaTags();
-        $head = [
-            '<title>'.$doc->title.'</title>',
-            '<base href="http://'.app('base').'/">',
-        ];
-
         $doc->meta['generator'] = 'SyDES';
         foreach ($doc->meta as $name => $content) {
             $whatName = in_array(substr($name, 0, 3), ['og:', 'fb:', 'al:']) ? 'property' : 'name';
-            $head[] = '<meta '.$whatName.'="'.$name.'" content="'.$content.'">';
+            $this->head[] = '<meta '.$whatName.'="'.$name.'" content="'.$content.'">';
         }
 
-        foreach ($doc->styles as $pack) {
-            foreach ($pack as $file) {
-                $head[] = '<link rel="stylesheet" href="'.$file.'" media="screen">';
-            }
-        }
-        $head[] = empty($doc->internal_styles) ? '' : '<style>'."\n".implode("\n\n", $doc->internal_styles)."\n".'</style>';
+        $this->fillHead();
 
         foreach ($doc->links as $link) {
-            $head[] = '<link'.HTML::attr($link).'>';
+            $this->head[] = '<link'.HTML::attr($link).'>';
         }
 
-        $footer = $find = $replace = [];
-        foreach ($doc->scripts as $pack) {
-            foreach ($pack as $file) {
-                $footer[] = '<script src="'.$file.'"></script>';
-            }
-        }
-
-        $doc->addJsSettings([
-            'locale' => app('contentLang'),
-        ]);
-        $doc->addScript('extend', '$.extend(syd, '.json_encode($doc->js).');');
-        $footer[] = '<ul id="notify"></ul>';
-        $footer[] = '<script>'."\n".implode("\n\n", $doc->internal_scripts)."\n".'</script>';
+        $this->fillFooter();
 
         if (Auth::admin()) {
-            $footer[] = $this->getToolbar();
+            $this->footer[] = $this->getToolbar();
         }
 
         $toReplace = array_merge($doc->data, [
             'language' => app('contentLang'),
-            'head'     => implode("\n    ", $head),
-            'footer'   => implode("\n    ", $footer),
+            'head'     => implode("\n    ", $this->head),
+            'footer'   => implode("\n    ", $this->footer),
             'year'     => date('Y'),
             'theme'    => 'themes/'.$theme,
             'csrf_token' => token(32),
         ]);
 
+        $find = $replace = [];
         foreach ($toReplace as $key => $val) {
             $find[] = '{'.$key.'}';
             $replace[] = $val;
@@ -204,26 +170,6 @@ class Front
         }
 
         return $html;
-    }
-
-    protected function addAlerts()
-    {
-        if (!empty($_SESSION['alerts'])) {
-            foreach ($_SESSION['alerts'] as $a) {
-                $this->document->addScript('alerts', 'syd.alert('.json_encode($a['message']).', '.json_encode($a['status']).');');
-            }
-            $_SESSION['alerts'] = [];
-        }
-        $this->document->data['alerts'] = '<div id="alerts"></div>';
-    }
-
-    protected function addNotify()
-    {
-        if (isset($_SESSION['notify'])) {
-            $this->document->addScript('notify', 'syd.notify('.json_encode($_SESSION['notify']['message'])
-                .', '.json_encode($_SESSION['notify']['status']).');');
-            unset($_SESSION['notify']);
-        }
     }
 
     private function iblock($name, $params = false)
