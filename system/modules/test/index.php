@@ -44,7 +44,7 @@ class TestController
             'meta_title' => 'Overridden title',
         ];
         $d->addScript('my', '$(document).ready(function(){console.log(\'worked!\')})');
-        alert('You\'ve got a message', 'info');
+        alert('You\'ve got a "message"', 'info');
         return $d;
     }
 
@@ -86,7 +86,7 @@ class TestController
     {
         // do something
         // if some condition
-        return;
+        retur;
         // else do more things
     }
 
