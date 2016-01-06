@@ -31,7 +31,7 @@ class ExceptionHandler
             alert('Err... this is error: '.$e->getMessage().'<br>'.pre($e->getTraceAsString(), true), 'danger');
             $response->withContent(document());
         } else {
-            $response->withContent(render(DIR_SYSTEM.'/views/error_500.php', [$e]));
+            $response->withContent(render(DIR_SYSTEM.'/views/error_500.php'));
             $response->withStatus(500);
         }
 
