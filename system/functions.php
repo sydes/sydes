@@ -384,7 +384,7 @@ function response($content = '', $statusCode = 200, $headers = [])
  */
 function redirect($to, $status = 301)
 {
-    return app('request')->is_ajax ? ['redirect' => $to] : (new Response)->withRedirect($to, $status);
+    return app('request')->isAjax ? ['redirect' => $to] : (new Response)->withRedirect($to, $status);
 }
 
 /**

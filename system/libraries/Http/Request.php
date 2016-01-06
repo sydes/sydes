@@ -109,21 +109,21 @@ class Request
      *
      * @var bool
      */
-    public $is_post = false;
+    public $isPost = false;
 
     /**
      * Returns true if the request is a XMLHttpRequest.
      *
      * @var bool
      */
-    public $is_ajax = false;
+    public $isAjax = false;
 
     /**
      * Checks whether the request is secure or not.
      *
      * @var bool
      */
-    public $is_secure = false;
+    public $isSecure = false;
 
     public function __construct(
         array $query = [],
@@ -156,13 +156,13 @@ class Request
         }
 
         if ($this->method == 'POST') {
-            $this->is_post = true;
+            $this->isPost = true;
         }
 
         if (isset($this->headers['X_REQUESTED_WITH']) &&
             strtolower($this->headers['X_REQUESTED_WITH']) == 'xmlhttprequest'
         ) {
-            $this->is_ajax = true;
+            $this->isAjax = true;
         }
 
         if ((!empty($server['HTTPS']) && $server['HTTPS'] !== 'off') ||
@@ -170,7 +170,7 @@ class Request
             (!empty($server['HTTP_X_FORWARDED_PROTO']) && $server['HTTP_X_FORWARDED_PROTO'] == 'https')
         ) {
             $this->scheme = 'https';
-            $this->is_secure = true;
+            $this->isSecure = true;
         }
     }
 

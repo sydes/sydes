@@ -15,7 +15,7 @@ if (file_exists(DIR_APP.'/config.php')) {
     die('Delete this folder, pls');
 }
 
-if ($app['request']->is_post && $app['request']->has('username')) {
+if ($app['request']->isPost && $app['request']->has('username')) {
     $folders = ['cache', 'iblocks', 'languages', 'logs', 'modules', 'plugins', 'sites', 'temp', 'thumbs'];
     foreach ($folders as $folder) {
         if (!file_exists(DIR_APP.'/'.$folder)) {
