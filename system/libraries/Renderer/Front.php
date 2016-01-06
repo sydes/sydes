@@ -159,7 +159,7 @@ class Front
         $layoutContent = file_get_contents($file);
 
         $firstLine = strtok($layoutContent, "\n");
-        if (!preg_match('/extends\(([\w-]+)\)/', $firstLine, $matches)) {
+        if (!preg_match('/@extends\(([\w-]+)\)/', $firstLine, $matches)) {
             return $layoutContent;
         }
 
