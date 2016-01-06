@@ -14,8 +14,7 @@ class Document
 {
 
     public $data = [];
-    public $title;
-    public $base;
+    public $title = 'SyDES';
     public $meta = [];
     public $links = [];
     public $scripts = [];
@@ -24,12 +23,6 @@ class Document
     public $internal_styles = [];
     public $context_menu = [];
     public $js = ['l10n' => [], 'settings' => []];
-    public $language = 'en';
-    public $csrf_token;
-
-    public function __construct() {
-
-    }
 
     /**
      * Adds a script by url or raw string
@@ -153,7 +146,7 @@ class Document
         if (isset($this->data['meta_title'])) {
             $this->title = $this->data['meta_title'];
             unset($this->data['meta_title']);
-        } else {
+        } elseif (isset($this->data['title'])) {
             $this->title = $this->data['title'];
         }
 

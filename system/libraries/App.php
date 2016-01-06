@@ -67,9 +67,27 @@ class App extends \Pimple\Container
 
         if ($result instanceof Http\Response) {
             return $result;
-        } else {
-            return response($result);
         }
+
+        if (is_array($result)) {
+            if (isset($result['notify'])) {
+                unset($_SESSION['notify']);
+            }
+            if (isset($result['alerts'])) {
+                unset($_SESSION['alerts']);
+            }
+        } elseif ($result instanceof Document) {
+            if (isset($_SESSION['notify'])) {
+                $result->notify = $_SESSION['notify'];
+                unset($_SESSION['notify']);
+            }
+            if (isset($_SESSION['alerts'])) {
+                $result->alerts = $_SESSION['alerts'];
+                unset($_SESSION['alerts']);
+            }
+        }
+
+        return response($result);
     }
 
     /**

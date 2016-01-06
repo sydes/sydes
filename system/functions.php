@@ -343,19 +343,11 @@ function app($key = null)
 /**
  * Get the document instance.
  *
- * @param bool $empty
  * @return App\Document
  */
-function document($empty = false) {
-    $d = new App\Document;
-    if ($empty){
-        return $d;
-    }
-
-    $d->addStyle('core', '/system/assets/css/core.css');
-    //TODO add other data
-
-    return $d;
+function document()
+{
+    return new App\Document;
 }
 
 /**
@@ -446,4 +438,22 @@ function alert($message, $status = 'success')
         'status'  => $status,
     ];
     return ['alerts' => $_SESSION['alerts']];
+}
+
+/**
+ * Creates or loads config for extension
+ *
+ * @param string $module
+ * @return App\Config
+ */
+function config($module)
+{
+    return new App\Config($module, app('db'));
+}
+
+if (!function_exists('ifsetor')) {
+    function ifsetor(&$value, $default = null)
+    {
+        return isset($value) ? $value : $default;
+    }
 }

@@ -52,8 +52,4 @@ class Loader
         return $html;
     }
 
-    public function config($model) {
-        return new Config($model, app('db'));
-    }
-
 }
