@@ -405,7 +405,7 @@ function back()
  */
 function refresh()
 {
-    return app('request')->is_ajax ? ['refresh' => 1] : null;
+    return ['refresh' => 1];
 }
 
 /**
