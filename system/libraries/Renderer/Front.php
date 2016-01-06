@@ -210,7 +210,7 @@ class Front
     {
         if (!empty($_SESSION['alerts'])) {
             foreach ($_SESSION['alerts'] as $a) {
-                $this->document->addScript('alerts', "syd.alert('{$a['message']}', '{$a['status']}');");
+                $this->document->addScript('alerts', 'syd.alert('.json_encode($a['message']).', '.json_encode($a['status']).');');
             }
             $_SESSION['alerts'] = [];
         }
@@ -220,7 +220,8 @@ class Front
     protected function addNotify()
     {
         if (isset($_SESSION['notify'])) {
-            $this->document->addScript('notify', "syd.notify('{$_SESSION['notify']['message']}', '{$_SESSION['notify']['status']}');");
+            $this->document->addScript('notify', 'syd.notify('.json_encode($_SESSION['notify']['message'])
+                .', '.json_encode($_SESSION['notify']['status']).');');
             unset($_SESSION['notify']);
         }
     }
