@@ -241,6 +241,13 @@ class HTML
         return '<div class="form-group">'.$btn.'</div>';
     }
 
+    public static function mastercodeInput()
+    {
+        return isset($_SESSION['admin']) ? '' : '<div class="form-group">
+    <input type="text" name="mastercode" class="form-control" placeholder="'.t('mastercode').'" required>
+</div>';
+    }
+
     /**
      * @param array $crumbs 'title' => ''[, 'url' => '']
      * @return string
