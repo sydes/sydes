@@ -108,7 +108,7 @@ class TestController
     public function alertAfterRedirect()
     {
         alert('This is not stored', 'danger');
-        return redirect('/');
+        return redirect();
     }
 
     public function ajaxNotify()
@@ -146,7 +146,7 @@ class TestController
                 return refresh();
                 break;
             case 3:
-                return redirect('/');
+                return redirect();
                 break;
             default:
                 return null;

@@ -2,8 +2,8 @@
 $app = app();
 $app['event']->on('after.system.init', '*', function () use ($app) {
     if ($app['section'] == 'admin') {
-        if (!App\Auth::admin()) {
-            throw new App\Exception\RedirectException('/admin/login');
+        if (!app('user')->isEditor()) {
+            throw new App\Exception\RedirectException('admin/login');
         }
     }
 });

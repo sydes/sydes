@@ -382,7 +382,7 @@ function response($content = '', $statusCode = 200, $headers = [])
  * @param int    $status
  * @return Response|array
  */
-function redirect($to, $status = 301)
+function redirect($to = '', $status = 301)
 {
     return app('request')->isAjax ? ['redirect' => $to] : (new Response)->withRedirect($to, $status);
 }
