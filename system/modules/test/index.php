@@ -153,4 +153,24 @@ class TestController
         }
     }
 
+    public function adminMain()
+    {
+        $d = document();
+        $d->data = [
+            'content' => '<p>Dashboard</p>
+<p><a href="admin/pages">Pages</a></p>',
+        ];
+        return $d;
+    }
+
+    public function adminPages()
+    {
+        $d = document();
+        $d->data = [
+            'content' => '<p>Pages list</p>
+<p><a href="admin">Dashboard</a></p>',
+        ];
+        return $d;
+    }
+
 }
