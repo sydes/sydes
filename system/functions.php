@@ -458,7 +458,35 @@ if (!function_exists('ifsetor')) {
     }
 }
 
+/**
+ * Escape HTML entities in a string.
+ *
+ * @param string $value
+ * @return string
+ */
 function e($str)
 {
-    return htmlspecialchars($str);
+    return htmlentities($str, ENT_QUOTES, 'UTF-8', false);
+}
+
+/**
+ * Write to log
+ *
+ * @param $string
+ */
+function elog($string)
+{
+    $string = htmlentities($string);
+    $date = date('r');
+    $ip = app('request')->ip;
+    file_put_contents(DIR_LOG.'/'.date('Ym').'.log', "$date | $ip | $string\n", FILE_APPEND | LOCK_EX);
+}
+
+function onlyAdmin()
+{
+    if (!app('user')->isAdmin()) {
+        alert(t('error_mastercode_needed'), 'warning');
+        $to = ifsetor(app('request')->headers['REFERER'], 'admin');
+        throw new \App\Exception\RedirectException($to);
+    }
 }

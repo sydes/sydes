@@ -77,6 +77,7 @@ class Renderer
         $this->document->addJsSettings([
             'locale' => app('contentLang'),
         ]);
+        $this->document->addScript('token', "var token = '{$_SESSION['csrf_token']}';");
         $this->document->addScript('extend', '$.extend(syd, '.json_encode($this->document->js).');');
         $this->footer[] = '<ul id="notify"></ul>';
         $this->footer[] = '<script>'."\n".implode("\n\n", $this->document->internal_scripts)."\n".'</script>';

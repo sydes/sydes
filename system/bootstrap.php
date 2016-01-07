@@ -11,6 +11,10 @@
 session_start();
 mb_internal_encoding('UTF-8');
 
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = token(16);
+}
+
 $app = App\App::getInstance();
 $handler = new App\Exception\Handler;
 
@@ -26,16 +30,20 @@ $app['cache'] = function () {
 $app['load'] = function () {
     return new App\Loader;
 };
-
 $app['translator'] = function () {
     return new App\Translator;
 };
-$app['translator']->loadPackage();
-$app['preferredLanguage'] = $app['request']->getPreferredLanguage($app['translator']->installedPackages);
-
 $app['event'] = function () {
     return new App\Event;
 };
+
+$app['translator']->loadPackage();
+$app['preferredLanguage'] = $app['request']->getPreferredLanguage($app['translator']->installedPackages);
+
+if ($app['request']->isPost && $_SESSION['csrf_token'] != $app['request']->get('token')) {
+    abort(403, t('invalid_csrf_token'));
+}
+
 $plugins = glob(DIR_PLUGIN.'/*/index.php');
 $plugins[] = DIR_SYSTEM.'/plugins.php';
 foreach ($plugins as $plugin) {

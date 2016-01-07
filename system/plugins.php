@@ -1,20 +1,18 @@
 <?php
-$app = app();
+$app = app(); // TODO or not needed?
 $app['event']->on('after.system.init', '*', function () use ($app) {
-    if ($app['section'] == 'admin') {
-        if (!app('user')->isEditor()) {
-            throw new App\Exception\RedirectException('admin/login');
-        }
+    if ($app['section'] == 'admin' && !$app['user']->isEditor() && $app['request']->url != '/admin/login') {
+        throw new App\Exception\RedirectException('admin/login');
     }
 });
 
-$app['event']->on('before.render', 'admin/*', function (App\Document &$doc) use ($app) {
+$app['event']->on('before.render', 'admin/*', function () use ($app) {
     if (!$app['config']['app']['check_updates']) {
         return;
     }
 
     $app['cache']->remember('update_checked', function () use ($app) {
-        $need = file_get_contents('http://sydes.ru/update/?version='.VERSION.'&site='.md5($_SERVER['HTTP_HOST']));
+        $need = getContentByUrl('http://sydes.ru/update/?version='.VERSION.'&site='.md5($_SERVER['HTTP_HOST']));
         $updateText = 0;
         if ($need == 1) {
             $updateText = t('common_update_cms');
@@ -27,6 +25,6 @@ $app['event']->on('before.render', 'admin/*', function (App\Document &$doc) use 
 
     $update_text = $app['cache']->get('update_text');
     if ($update_text) {
-        $doc->alert($update_text);
+        alert($update_text);
     }
 });

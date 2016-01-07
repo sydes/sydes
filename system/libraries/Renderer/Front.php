@@ -10,7 +10,6 @@
 
 namespace App\Renderer;
 
-use App\Auth;
 use App\Document;
 use App\HTML;
 
@@ -55,7 +54,7 @@ class Front extends Renderer
 
         $this->fillFooter();
 
-        if (Auth::admin()) {
+        if (app('user')->isEditor()) {
             $this->footer[] = $this->getToolbar();
         }
 

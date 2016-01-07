@@ -173,4 +173,22 @@ class TestController
         return $d;
     }
 
+    public function login()
+    {
+        $d = document();
+        $d->data = [
+            'content' => 'login form',
+        ];
+        return $d;
+    }
+
+    public function doLogin()
+    {
+        $r = app('request');
+        if (app('user')->login($r->get('login'), $r->get('password'), $r->has('remember'))) {
+            return redirect('admin'); // TODO first link
+        }
+        return back();
+    }
+
 }

@@ -37,6 +37,9 @@ class App extends \Pimple\Container
         $this['event']->trigger('before.system.init');
 
         $this['config'] = include DIR_APP.'/config.php';
+        $this['user'] = function () {
+            return new User($this['config']['user']);
+        };
 
         $this['adminLang'] = $this['config']['app']['language'];
         $this['translator']->loadPackage($this['adminLang']);
@@ -50,7 +53,7 @@ class App extends \Pimple\Container
             return new Database($site);
         };
 
-        $this['section'] = (strpos($this['request']->url, ADMIN.'/') === 1) ? 'admin' : 'front';
+        $this['section'] = (strpos($this['request']->url, ADMIN) === 1) ? 'admin' : 'front';
         $this['contentLang'] = $this->findContentLocale();
         $this['renderer'] = function ($c) {
             return $c['section'] == 'admin' ? new Renderer\Admin() : new Renderer\Front();
@@ -118,7 +121,11 @@ class App extends \Pimple\Container
             $r->addRoute('GET', '/refresh2', 'test/refreshAndNotify');
             $r->addRoute('GET', '/random', 'test/random');
             $r->addRoute('GET', '/', 'test/index');
-        }, ['cacheFile' => DIR_CACHE.'/route.cache']);
+            $r->addRoute('GET', '/admin', 'test/adminMain');
+            $r->addRoute('GET', '/admin/pages', 'test/adminPages');
+            $r->addRoute('GET', '/admin/login', 'test/login');
+            $r->addRoute('POST', '/admin/login', 'test/doLogin');
+        }, ['cacheFile' => DIR_CACHE.'/routes.cache']);
 
         $routeInfo = $dispatcher->dispatch($request->method, $request->url);
 

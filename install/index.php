@@ -57,11 +57,9 @@ if ($app['request']->isPost && $app['request']->has('username')) {
         }
     }
 
-    echo 'installed';
-
-    // залогиниться и ввести мастеркод
-    // $app['response']->alert('Delete install folder!');
-    // $app['response']->redirect('admin')->send();
+    (new App\User($config['user']))->login($post['username'], $post['password']);
+    alert('Delete install folder!');
+    redirect('admin')->send();
 } else {
     $packages = glob(DIR_LANGUAGE.'/*');
     $langs = [];
