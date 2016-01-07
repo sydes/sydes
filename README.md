@@ -2,6 +2,9 @@
 
 # WIP
 
+    This is early-dev version of 3.x branch
+    If you wanna production version, please check main repo https://github.com/artygrand/SyDES
+
 ## Overview
 
 SyDES is a free open source content management framework for various small or medium  personal sites. With iblocks you can put any dynamic or static content to any page that allows you to create any entity, such as a blog, catalog or even gallery. Multi-Site will allow to create network of satellites with any domain or language.
