@@ -229,7 +229,8 @@ class Response
     public function withRedirect($url, $status = 301)
     {
         $this->statusCode = $status;
-        $this->addHeader('Location', '/'.ltrim($url, '/'));
+        $url = strpos($url, 'http') === 0 ? $url : '/'.ltrim($url, '/');
+        $this->addHeader('Location', $url);
         return $this;
     }
 
