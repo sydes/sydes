@@ -27,9 +27,6 @@ $app['request'] = function () {
 $app['cache'] = function () {
     return new App\Cache(DIR_CACHE);
 };
-$app['load'] = function () {
-    return new App\Loader;
-};
 $app['translator'] = function () {
     return new App\Translator;
 };
@@ -39,10 +36,6 @@ $app['event'] = function () {
 
 $app['translator']->loadPackage();
 $app['preferredLanguage'] = $app['request']->getPreferredLanguage($app['translator']->installedPackages);
-
-if ($app['request']->isPost && $_SESSION['csrf_token'] != $app['request']->get('token')) {
-    abort(403, t('invalid_csrf_token'));
-}
 
 $plugins = glob(DIR_PLUGIN.'/*/index.php');
 $plugins[] = DIR_SYSTEM.'/plugins.php';
