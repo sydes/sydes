@@ -123,8 +123,8 @@ class App extends \Pimple\Container
             $r->addRoute('GET', '/', 'test/index');
             $r->addRoute('GET', '/admin', 'test/adminMain');
             $r->addRoute('GET', '/admin/pages', 'test/adminPages');
-            $r->addRoute('GET', '/admin/login', 'test/login');
-            $r->addRoute('POST', '/admin/login', 'test/doLogin');
+            $r->addRoute('GET', '/login', 'test/login');
+            $r->addRoute('POST', '/login', 'test/doLogin');
         }, ['cacheFile' => DIR_CACHE.'/routes.cache']);
 
         $routeInfo = $dispatcher->dispatch($request->method, $request->url);

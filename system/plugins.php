@@ -1,8 +1,8 @@
 <?php
-$app = app(); // TODO or not needed?
 $app['event']->on('after.system.init', '*', function () use ($app) {
-    if ($app['section'] == 'admin' && !$app['user']->isEditor() && $app['request']->url != '/admin/login') {
-        throw new App\Exception\RedirectException('admin/login');
+    if ($app['section'] == 'admin' && !$app['user']->isEditor()) {
+        $_SESSION['entry'] = $app['request']->url;
+        throw new App\Exception\RedirectException('login');
     }
 });
 
