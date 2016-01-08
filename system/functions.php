@@ -461,7 +461,7 @@ if (!function_exists('ifsetor')) {
 /**
  * Escape HTML entities in a string.
  *
- * @param string $value
+ * @param string $str
  * @return string
  */
 function e($str)
@@ -489,4 +489,56 @@ function onlyAdmin()
         $to = ifsetor(app('request')->headers['REFERER'], 'admin');
         throw new \App\Exception\RedirectException($to);
     }
+}
+
+/**
+ * Loads model of some module
+ *
+ * @param string $module String like module_name or module_name/model_name
+ * @return mixed
+ */
+function model($module)
+{
+    $part = strpos($module, '/') !== false ? explode('/', $module) : [$module, $module];
+    $file = findExt('module', $part[0]).'/models/'.$part[1].'.php';
+
+    if (!file_exists($file)) {
+        throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
+    }
+
+    include_once $file;
+    $class = ucfirst($part[1]).'Model';
+
+    return new $class();
+}
+
+/**
+ * Loads view of some module
+ *
+ * @param string $template String like module_name/view_name
+ * @param array  $data
+ * @return string
+ */
+function view($template, $data = [])
+{
+    $part = explode('/', $template);
+    if (count($part) != 2) {
+        throw new \RuntimeException(t('error_view_argument'));
+    }
+
+    app('event')->trigger('before.render.partial', [$template, $data], $template);
+
+    $file_override = DIR_THEME.'/'.app('config')['site']['theme'].'/module/'.$template.'.php';
+    $file = findExt('module', $part[0]).'/views/'.$part[1].'.php';
+    if (file_exists($file_override)) {
+        $html = render($file_override, $data);
+    } elseif (file_exists($file)) {
+        $html = render($file, $data);
+    } else {
+        throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
+    }
+
+    app('event')->trigger('after.render.partial', [$html], $template);
+
+    return $html;
 }
