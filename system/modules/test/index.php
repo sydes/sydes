@@ -39,14 +39,13 @@ class TestController
 
     public function page($id)
     {
-        $d = document();
-        $d->data = [
+        $d = document([
             'content' => '<p>some content</p>',
             'page_id' => $id,
             'meta_keywords' => 'key, another key',
             'title' => 'Page title',
             'meta_title' => 'Overridden title',
-        ];
+        ]);
         $d->addScript('my', '$(document).ready(function(){console.log(\'worked!\')})');
         alert('You\'ve got a "message"', 'info');
         return $d;
@@ -155,38 +154,34 @@ class TestController
 
     public function adminMain()
     {
-        $d = document();
-        $d->data = [
+        $d = document([
             'content' => '<p>Dashboard</p>
 <p><a href="admin/pages">Pages</a></p>',
-        ];
+        ]);
         return $d;
     }
 
     public function adminPages()
     {
-        $d = document();
-        $d->data = [
+        $d = document([
             'content' => '<p>Pages list</p>
 <p><a href="admin">Dashboard</a></p>',
-        ];
+        ]);
         return $d;
     }
 
     public function login()
     {
-        $d = document();
-        $d->data = [
-            'content' => 'login form',
-        ];
-        return $d;
+        return view('test/login-form', ['signUp' => 0, 'autoLogin' => 1, 'button' => 'go']);
     }
 
     public function doLogin()
     {
         $r = app('request');
-        if (app('user')->login($r->get('login'), $r->get('password'), $r->has('remember'))) {
-            return redirect('admin'); // TODO first link
+        if (app('user')->login($r->get('username'), $r->get('password'), $r->has('remember'))) {
+            $entry = $_SESSION['entry'];
+            unset($_SESSION['entry']);
+            return redirect($entry);
         }
         return back();
     }
