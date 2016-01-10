@@ -1,0 +1,22 @@
+{
+  "name": "sydes/default-theme",
+  "description": "Default theme with two layouts for pages and news",
+  "version": 1.4,
+  "type": "sydes-theme",
+  "keywords": ["sydes", "theme"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ArtyGrand",
+      "email": "artygrand@gmail.com",
+      "homepage": "http://artygrand.ru"
+    }
+  ],
+  "require": {
+    "composer/installers": "~1.0"
+  },
+  "extra": {
+    "name": "Default",
+    "tags": ["any columns", "gray"]
+  }
+}
