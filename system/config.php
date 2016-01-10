@@ -23,5 +23,6 @@ define('DIR_SITE',     DIR_APP.'/sites');
 define('DIR_TEMP',     DIR_APP.'/temp');
 define('DIR_THUMB',    DIR_APP.'/thumbs');
 
+define('API_HOST', 'http://api.sydes.ru/');
 define('ADMIN', 'admin'); //wanna rename folder?
 define('DEFAULT_ADMIN_ROUTE', 'pages');

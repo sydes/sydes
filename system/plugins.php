@@ -12,7 +12,7 @@ $app['event']->on('before.render', 'admin/*', function () use ($app) {
     }
 
     $app['cache']->remember('update_checked', function () use ($app) {
-        $need = getContentByUrl('http://sydes.ru/update/?version='.VERSION.'&site='.md5($_SERVER['HTTP_HOST']));
+        $need = getContentByUrl(API_HOST.'update?version='.VERSION.'&site='.md5($_SERVER['HTTP_HOST']));
         $updateText = 0;
         if ($need == 1) {
             $updateText = t('common_update_cms');
