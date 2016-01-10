@@ -123,12 +123,6 @@ $(document).ajaxSend(function (e, xhr, settings) {
     $('html').css('cursor', 'auto')
 });
 
-$(document).on('submit', 'form', function () {
-    if (!$(this).find('input[name="token"]').length) {
-        $(this).append('<input type="hidden" name="token" value="' + token + '">');
-    }
-});
-
 var ua = navigator.userAgent.toLowerCase(),
     isIE = (ua.indexOf("msie") != -1 && ua.indexOf("opera") == -1),
     isSafari = ua.indexOf("safari") != -1,

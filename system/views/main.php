@@ -116,7 +116,6 @@
     <div id="menuclick"></div>
 
     <?=$footer;?>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="/vendor/ckfinder/ckfinder.js"></script>
     <script src="/system/assets/js/utils.min.js"></script>
     <script src="/system/assets/js/main.js"></script>

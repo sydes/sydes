@@ -8,20 +8,18 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace App;
-
 class HTML
 {
 
     private static $extenders = [];
 
     /**
-     * Adds closure to methods
+     * Adds callable to methods
      *
      * @param string  $name
-     * @param Closure $closure
+     * @param callable $closure
      */
-    public static function extend($name, Closure $closure)
+    public static function extend($name, callable $closure)
     {
         self::$extenders[$name] = $closure;
     }
@@ -32,12 +30,12 @@ class HTML
      * @param string $name
      * @param array  $arguments
      * @return mixed
-     * @throws BaseException
+     * @throws \RuntimeException
      */
     static public function __callStatic($name, array $arguments)
     {
-        if (!array_key_exists($name, self::$instance->registry)) {
-            throw new BaseException(sprintf(t('error_undefined_extender'), $name));
+        if (!array_key_exists($name, self::$extenders)) {
+            throw new \InvalidArgumentException(sprintf(t('error_undefined_extender'), $name));
         }
         return call_user_func_array(self::$extenders[$name], $arguments);
     }
@@ -498,6 +496,11 @@ class HTML
             }
         }
         return $attr;
+    }
+
+    public static function csrf_token()
+    {
+        return '<input type="hidden" name="token" value="'.$_SESSION['csrf_token'].'">';
     }
 
 }

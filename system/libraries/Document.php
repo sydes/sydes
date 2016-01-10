@@ -13,7 +13,7 @@ namespace App;
 class Document
 {
 
-    public $data = [];
+    public $data;
     public $title = 'SyDES';
     public $meta = [];
     public $links = [];
@@ -23,6 +23,11 @@ class Document
     public $internal_styles = [];
     public $context_menu = [];
     public $js = ['l10n' => [], 'settings' => []];
+
+    public function __construct($data = [])
+    {
+        $this->data = $data;
+    }
 
     /**
      * Adds a script by url or raw string

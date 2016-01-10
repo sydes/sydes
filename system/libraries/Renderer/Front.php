@@ -11,7 +11,6 @@
 namespace App\Renderer;
 
 use App\Document;
-use App\HTML;
 
 class Front extends Renderer
 {
@@ -150,7 +149,7 @@ class Front extends Renderer
             $params = [];
             if ($matches[3][$i]) {
                 $matches[3][$i] = str_replace(['&amp;', '&quot;'], ['&', '"'], $matches[3][$i]);
-                $params = HTML::parseAttr($matches[3][$i]);
+                $params = \HTML::parseAttr($matches[3][$i]);
             }
             $content = $this->$method($matches[2][$i], $params);
 

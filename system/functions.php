@@ -345,9 +345,9 @@ function app($key = null)
  *
  * @return App\Document
  */
-function document()
+function document($data = [])
 {
-    return new App\Document;
+    return new App\Document($data);
 }
 
 /**
@@ -394,7 +394,7 @@ function redirect($to = '', $status = 301)
  */
 function back()
 {
-    $to = app('request')->headers['REFERER'] ?: '/';
+    $to = ifsetor(app('request')->headers['REFERER'], '');
     return (new Response)->withRedirect($to);
 }
 
@@ -482,7 +482,7 @@ function elog($string)
     file_put_contents(DIR_LOG.'/'.date('Ym').'.log', "$date | $ip | $string\n", FILE_APPEND | LOCK_EX);
 }
 
-function onlyAdmin()
+function restricted()
 {
     if (!app('user')->isAdmin()) {
         alert(t('error_mastercode_needed'), 'warning');

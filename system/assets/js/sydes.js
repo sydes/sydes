@@ -92,4 +92,11 @@ syd.token = function (length) {
     return string;
 };
 
+// Automatic adds token field to all form
+$(document).on('submit', 'form', function () {
+    if (!$(this).find('input[name="token"]').length) {
+        $(this).append('<input type="hidden" name="token" value="' + token + '">');
+    }
+});
+
 })(jQuery);

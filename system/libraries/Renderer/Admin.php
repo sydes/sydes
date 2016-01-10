@@ -27,6 +27,7 @@ class Admin extends Renderer
 
         $this->fillHead();
 
+        $doc->scripts['jquery-1.11'][] = '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js';
         $this->fillFooter();
 
         $dummy = [
@@ -61,6 +62,7 @@ class Admin extends Renderer
             $dummy['col_sm'] = $dummy['col_sm']-3;
             $dummy['col_lg'] = $dummy['col_lg']-2;
         }
+        $doc->data['breadcrumbs'] = \HTML::breadcrumb($doc->data['breadcrumbs']);
 
         return render(DIR_SYSTEM.'/views/main.php', array_merge($dummy, $doc->data));
     }

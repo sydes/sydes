@@ -34,8 +34,12 @@ $app['event'] = function () {
     return new App\Event;
 };
 
-$app['translator']->loadPackage();
-$app['preferredLanguage'] = $app['request']->getPreferredLanguage($app['translator']->installedPackages);
+$app['section'] = strpos($app['request']->url, ADMIN) == 1 ? 'admin' : 'front';
+$app['renderer'] = function ($c) {
+    return $c['section'] == 'admin' ? new App\Renderer\Admin : new App\Renderer\Front;
+};
+
+include DIR_SYSTEM.'/libraries/HTML.php';
 
 $plugins = glob(DIR_PLUGIN.'/*/index.php');
 $plugins[] = DIR_SYSTEM.'/plugins.php';

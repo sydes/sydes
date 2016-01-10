@@ -28,13 +28,22 @@ class App extends \Pimple\Container
         return self::$instance;
     }
 
-    /**
-     * Initialization of application
-     *
-     */
     public function init()
     {
-        $this['event']->trigger('before.system.init');
+        $this['event']->trigger('before.system.init', [$this]);
+
+        if (!file_exists(DIR_APP.'/config.php')) { // not yet installed
+            $folders = ['cache', 'iblocks', 'languages', 'logs', 'modules', 'plugins', 'sites', 'temp', 'thumbs'];
+            foreach ($folders as $folder) {
+                if (!file_exists(DIR_APP.'/'.$folder)) {
+                    mkdir(DIR_APP.'/'.$folder, 0777, true);
+                }
+            }
+            $this['request']->url = '/install';
+            return;
+        }
+
+        $this['translator']->loadPackage();
 
         $this['config'] = include DIR_APP.'/config.php';
         $this['user'] = function () {
@@ -44,8 +53,10 @@ class App extends \Pimple\Container
         $this['adminLang'] = $this['config']['app']['language'];
         $this['translator']->loadPackage($this['adminLang']);
 
-        $domains = $this->findDomains();
+        $sites = glob(DIR_SITE.'/s*', GLOB_ONLYDIR);
+        $domains = $this->findDomains($sites);
         $site = $this['site'] = $domains[$this['request']->domain];
+
         $siteConf = include DIR_SITE.'/'.$site.'/config.php';
         $this['config'] = array_merge($this['config'], ['site' => $siteConf]);
         $this['base'] = $siteConf['domains'][0];
@@ -53,15 +64,15 @@ class App extends \Pimple\Container
             return new Database($site);
         };
 
-        $this['section'] = (strpos($this['request']->url, ADMIN) === 1) ? 'admin' : 'front';
         $this['contentLang'] = $this->findContentLocale();
-        $this['renderer'] = function ($c) {
-            return $c['section'] == 'admin' ? new Renderer\Admin() : new Renderer\Front();
-        };
 
         date_default_timezone_set($this['config']['app']['time_zone']);
 
-        $this['event']->trigger('after.system.init');
+        if ($this['request']->isPost && $_SESSION['csrf_token'] != $this['request']->get('token')) {
+            abort(403, t('invalid_csrf_token'));
+        }
+
+        $this['event']->trigger('after.system.init', [$this]);
     }
 
     public function run()
@@ -84,13 +95,6 @@ class App extends \Pimple\Container
         return response($result);
     }
 
-    /**
-     * Throw an HttpException with the given data.
-     *
-     * @param int    $code
-     * @param string $message
-     * @throws Exception\HttpException
-     */
     public function abort($code, $message = null)
     {
         if ($code == 404) {
@@ -123,8 +127,13 @@ class App extends \Pimple\Container
             $r->addRoute('GET', '/', 'test/index');
             $r->addRoute('GET', '/admin', 'test/adminMain');
             $r->addRoute('GET', '/admin/pages', 'test/adminPages');
-            $r->addRoute('GET', '/login', 'test/login');
-            $r->addRoute('POST', '/login', 'test/doLogin');
+
+            $r->addRoute('GET', '/login', 'user/loginForm');
+            $r->addRoute('POST', '/login', 'user/login');
+            $r->addRoute('GET', '/install', 'utils/signUpForm');
+            $r->addRoute('POST', '/install', 'utils/signUp');
+            $r->addRoute('GET', '/admin/sites/add', 'sites/addForm');
+            $r->addRoute('POST', '/admin/sites/add', 'sites/add');
         }, ['cacheFile' => DIR_CACHE.'/routes.cache']);
 
         $routeInfo = $dispatcher->dispatch($request->method, $request->url);
@@ -153,11 +162,11 @@ class App extends \Pimple\Container
         return call_user_func_array([$instance, $method], $vars);
     }
 
-    private function findDomains()
+    private function findDomains($sites)
     {
-        $domains = $this['cache']->remember('domains', function () {
+        $domains = $this['cache']->remember('domains', function () use ($sites) {
             $domains = [];
-            foreach (glob(DIR_SITE.'/s*', GLOB_ONLYDIR) as $sitePath) {
+            foreach ($sites as $sitePath) {
                 $config = include $sitePath.'/config.php';
                 $site = str_replace(DIR_SITE.'/', '', $sitePath);
                 foreach ($config['domains'] as $domain) {
