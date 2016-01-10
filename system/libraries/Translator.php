@@ -15,7 +15,7 @@ class Translator
 
     public $installedPackages;
     private $container;
-    private $locale = 'en_US';
+    private $locale = 'en';
 
     public function __construct()
     {
@@ -29,10 +29,10 @@ class Translator
     public function loadPackage($locale = null)
     {
         $locale = $locale ?: $this->locale;
-        if (isset($this->container[$locale])) {
-            return $this;
+        if (!isset($this->container[$locale])) {
+            $this->container[$locale] = include DIR_LANGUAGE.'/'.$locale.'/translation.php';
         }
-        $this->container[$locale] = include DIR_LANGUAGE.'/'.$locale.'/translation.php';
+        return $this;
     }
 
     /**
@@ -49,8 +49,8 @@ class Translator
     {
         return isset($this->container[$this->locale][$text]) ?
             $this->container[$this->locale][$text] :
-            (isset($this->container['en_US'][$text]) ?
-                $this->container['en_US'][$text] :
+            (isset($this->container['en'][$text]) ?
+                $this->container['en'][$text] :
                 $text);
     }
 
@@ -59,7 +59,7 @@ class Translator
         $base = $type == 'theme' ? DIR_THEME.'/'.$name : findExt($type, $name);
         $path = $base.'/languages/'.$this->locale.'.php';
         if (!file_exists($path)) {
-            $path = $base.'/languages/en_US.php';
+            $path = $base.'/languages/en.php';
             if (!file_exists($path)) {
                 return;
             }
