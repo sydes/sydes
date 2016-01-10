@@ -553,3 +553,12 @@ function parseLayoutData($str)
     }
     return $data;
 }
+
+/**
+ * @param string $file
+ * @return mixed
+ */
+function parse_json_file($file)
+{
+    return json_decode(file_get_contents($file), true);
+}
