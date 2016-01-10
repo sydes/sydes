@@ -14,11 +14,6 @@ define('SYDES_START', microtime(true));
 require __DIR__.'/vendor/autoload.php';
 $app = require DIR_SYSTEM.'/bootstrap.php';
 
-if (!file_exists(DIR_APP.'/config.php')) {
-    header('Location: install/');
-    die;
-}
-
 $app->init();
 
 $response = $app->run();
