@@ -124,13 +124,13 @@ class Front extends Renderer
         $layoutContent = file_get_contents($file);
 
         $firstLine = strtok($layoutContent, "\n");
-        if (!preg_match('/@extends\(([\w-]+)\)/', $firstLine, $matches)) {
+        if (!$data = parseLayoutData($firstLine)) {
             return $layoutContent;
         }
 
         $layoutContent = str_replace($firstLine, '', $layoutContent);
 
-        $file = DIR_THEME.'/'.$theme.'/'.$matches[1].'.html';
+        $file = DIR_THEME.'/'.$theme.'/'.$data['extends'].'.html';
         if (!file_exists($file)) {
             trigger_error(sprintf(t('error_file_not_found'), $file));
         }

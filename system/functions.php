@@ -542,3 +542,14 @@ function view($template, $data = [])
 
     return $html;
 }
+
+function parseLayoutData($str)
+{
+    $data = [];
+    if (preg_match_all('/@([a-z]+)\(([\w -]+)\)/', $str, $matches)) {
+        foreach ($matches[1] as $i => $key) {
+            $data[$key] = $matches[2][$i];
+        }
+    }
+    return $data;
+}
