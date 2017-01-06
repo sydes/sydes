@@ -1,10 +1,9 @@
 <?php
-
 /**
  * SyDES - Lightweight CMF for a simple sites with SQLite database
  *
  * @package   SyDES
- * @copyright 2011-2016, ArtyGrand <artygrand.ru>
+ * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
@@ -24,5 +23,6 @@ define('DIR_TEMP',     DIR_APP.'/temp');
 define('DIR_THUMB',    DIR_APP.'/thumbs');
 
 define('API_HOST', 'http://api.sydes.ru/');
-define('ADMIN', 'admin'); //wanna rename folder?
-define('DEFAULT_ADMIN_ROUTE', 'pages');
+
+define('VERSION', '3.0.0-a');
+define('APP_START', microtime(true));

@@ -1,0 +1,222 @@
+#!/usr/bin/php
+<?php
+use App\Cmf;
+use App\Container;
+
+if (PHP_SAPI != 'cli') {
+    exit;
+}
+
+require __DIR__.'/vendor/autoload.php';
+
+process(is_array($argv) ? $argv : array(), $argc);
+
+function process($argv, $argc)
+{
+    if ($argc == 1) {
+        cli_help();
+        exit(0);
+    }
+
+    $func = 'cli_'.str_replace(':', '_', $argv[1]);
+    $options = options($argv);
+
+    if (!function_exists($func)) {
+        say('This command is not defined');
+        exit(1);
+    }
+
+    $refFunc = new ReflectionFunction($func);
+    $requiredParams = $refFunc->getNumberOfParameters();
+
+    if ($requiredParams == 2 && (!isset($argv[2]) || strpos($argv[2], '-') === 0)) {
+        say('This command requires name');
+        exit(1);
+    }
+
+    if ($requiredParams == 2) {
+        $func($argv[2], $options);
+    } else {
+        $func($options);
+    }
+}
+
+function say($words)
+{
+    echo <<<EOF
+$words
+
+EOF;
+}
+
+function ask($question)
+{
+    echo $question.': ';
+    return trim(fgets(STDIN));
+}
+
+function clear()
+{
+    echo "\e[1A\e[K";
+}
+
+function options($argv)
+{
+    $args = [];
+    foreach ($argv as $arg) {
+        if (preg_match('/--([^=]+)=(.*)/', $arg, $reg)) {
+            $args[$reg[1]] = $reg[2];
+        } elseif (preg_match('/--?([\w]+)/', $arg, $reg)) {
+            $args[$reg[1]] = true;
+        }
+    }
+    return $args;
+}
+
+function status($done, $total, $size = 30)
+{
+    static $start_time;
+
+    // if we go over our bound, just ignore it
+    if ($done > $total) {
+        return;
+    }
+
+    if (empty($start_time)) {
+        $start_time = time();
+    }
+    $now = time();
+
+    $perc = (double)($done / $total);
+
+    $bar = floor($perc * $size);
+
+    $status_bar = "\r[";
+    $status_bar .= str_repeat("=", $bar);
+    if ($bar < $size) {
+        $status_bar .= ">";
+        $status_bar .= str_repeat(" ", $size - $bar);
+    } else {
+        $status_bar .= "=";
+    }
+
+    $disp = number_format($perc * 100, 0);
+
+    $status_bar .= "] $disp%  $done/$total";
+
+    $rate = ($now - $start_time) / $done;
+    $left = $total - $done;
+    $eta = round($rate * $left, 2);
+
+    $elapsed = $now - $start_time;
+
+    $status_bar .= " remaining: ".number_format($eta)." sec.  elapsed: ".number_format($elapsed)." sec.";
+
+    echo "$status_bar  ";
+
+    flush();
+
+    // when done, send a newline
+    if ($done == $total) {
+        echo "\n";
+    }
+}
+
+function cli_help()
+{
+    say('Welcome to SyDES CLI
+Usage: php sydes command [name] [options]
+------------------
+Available commands:
+  install             CMF installer
+  install:ext name    Install some module, plugin, iblock or theme
+  update              Update CMF
+  update:ext name     Update some extension
+  uninstall           Delete all user data
+  uninstall:ext name  Delete some extension
+  make:module name    Create basic files for module
+  make:plugin name    Create basic files for plugin
+  make:iblock name    Create basic files for iblock
+  make:theme name     Create basic files for theme');
+}
+
+function cli_install($opts)
+{
+    $params = [
+        'email' => 'admin@domain.tld',
+        'username' => 'demo',
+        'password' => 'demo',
+        'mastercode' => 'demo',
+        'siteName' => 'Demo site',
+        'locale' => 'en',
+        'domain' => '',
+        'timeZone' => 0,
+    ];
+
+    if (isset($opts['demo'])) {
+
+        say('You can enter with these credentials:
+Username: demo
+Password: demo
+Mastercode: demo
+But we need some info...
+');
+
+    } else {
+
+        say('Ok! Just answer the following questions');
+        say('First, create your account');
+        $params['email'] = ask('Email');
+        clear();
+        $params['username'] = ask('Username');
+        clear();
+        $params['password'] = ask('Password');
+        clear();
+        $params['mastercode'] = ask('Mastercode');
+        clear();
+        say('Good!');
+        say('Now we\'ll create your site');
+        $params['siteName'] = mb_convert_encoding(ask('Site name'), 'UTF-8', 'cp866');
+        clear();
+        $params['locale'] = ask('Locale (en)');
+        clear();
+
+    }
+
+    $params['domain'] = ask('Domain (test.com)');
+    clear();
+
+	Container::setContainer(new Container);
+    Cmf::install($params);
+    echo "Successful installed\n";
+    echo "Have a nice day!\n";
+}
+
+function cli_update()
+{
+    $error = Cmf::update();
+    if ($error == false) {
+        say('SyDES updated');
+    } else {
+        say('Not updated. There is error: '.$error);
+    }
+}
+
+function cli_uninstall()
+{
+    Cmf::uninstall();
+    say('SyDES uninstalled');
+}
+
+function cli_install_ext($name, $opts = array())
+{
+    // download
+    say('Downloading...');
+    sleep(1);
+    if ($opts['e'] || $opts['enable']) {
+        // install
+        say('Installation...');
+        sleep(1);
+    }
+    say('Extension '.$name.' installed');
+}

@@ -1,20 +1,5 @@
 $(document).ready(function () {
-    if ($('.menu-top').length) {
-        var menu = $('#menu');
-        header_height = menu.height();
-        menu.css('height', '50px');
-        if (syd.cookie('menu') != 'click') {
-            $('#menu').hoverIntent(makeTall, makeShort)
-        }
-        menu.click(function () {
-            makeTall();
-            $('#menuclick').show()
-        });
-        $('#menuclick').click(function () {
-            makeShort();
-            $('#menuclick').hide()
-        })
-    }
+    stickMenu($('#menu'));
 
     if ($('.tab-container .col-xs-2').width() < 183) {
         $('.tab-container .col-xs-2').toggleClass('col-xs-2 col-xs-3');
@@ -47,7 +32,7 @@ $(document).ready(function () {
         modalPosition()
     }).on('hidden.bs.modal', function () {
         $(this).removeData('bs.modal')
-    })
+    });
 });
 
 var editorBuffer = '';
@@ -95,7 +80,11 @@ $(document).on('click', '.skin-selector a', function () {
 });
 $.ajaxSetup({
     type: 'POST',
-    data: {ajax: 1}
+    data: {ajax: 1},
+   /* headers: {
+        'X-Csrf-Token':token
+        TODO реализовать? или я не вижу, чтобы с пост добавлялись переменные с токеном?
+    }*/
 });
 $(document).ajaxSend(function (e, xhr, settings) {
     $('html').css('cursor', 'wait');

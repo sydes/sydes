@@ -6,15 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {head}
 
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css">
-    <link rel="stylesheet" href="{theme}/style.css" media="screen">
+    <link rel="stylesheet" href="/{theme_path}/style.css" media="screen">
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" href="/favicon.png">
 </head>
 <body>
     <div id="section-top">
@@ -33,10 +32,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3">
-                    <a href="" class="logo"><img src="{theme}/img/logo.png"></a>
+                    <a href="" class="logo"><img src="{config:logo}"></a>
                 </div>
                 <nav class="col-sm-9">
-                    {iblock:menu show="main" class="main-menu"}
+                    {iblock:menu show="main" class="main-menu to-mobile"}
                 </nav>
             </div>
         </div>
@@ -55,7 +54,7 @@
             <div class="row">
                 <div class="col-sm-3">
                     <h3>Integer placerat</h3>
-                    <ul>
+                    <ul class="to-mobile">
                         <li><a href="#">placerat sollicitudin</a></li>
                         <li><a href="#">dolor sit amet</a></li>
                         <li><a href="#">fringilla id quis</a></li>
@@ -85,7 +84,7 @@
                 </div>
                 <div class="col-sm-3">
                     <h3>{t:last_news}</h3>
-                    {iblock:pages show="2" template="mini"}
+                    {iblock:pages show="news" only="elements" template="mini"}
                 </div>
             </div>
         </div>
@@ -101,12 +100,9 @@
         </div>
     </footer>
 
-    <a href="#" class="scrollup">Scroll</a>
-
     {footer}
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
-    <script src="{theme}/script.js"></script>
+    <script src="/{theme_path}/script.js"></script>
 
     {iblock:counters}
 </body>

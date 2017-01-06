@@ -1,0 +1,13 @@
+@extends(page) @as(Contacts)
+
+<div class="row">
+    <div class="col-sm-6">
+        <h1>{title}</h1>
+        {content}
+    </div>
+    <div class="col-sm-6">
+        {iblock:form show="1"}
+    </div>
+</div>
+
+{iblock:ymap lat="48.85831474" lon="2.29453735" zoom="16" point-lat="48.85831474" point-lon="2.29453735" point-text="We here!" height="400"}

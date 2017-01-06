@@ -1,0 +1,30 @@
+{
+  "info": {
+    "name": "Sample theme",
+    "description": "Demonstration of theme with all features",
+    "version": "1.0",
+    "tags": ["any columns", "gray"],
+    "authors": [
+      {
+        "name": "ArtyGrand",
+        "email": "artygrand@gmail.com",
+        "homepage": "http://artygrand.ru"
+      }
+    ]
+  },
+  "settings": {
+    "image_styles": {
+	  "medium": {
+	    "width": 250,
+	    "height": 200,
+	    "type": "crop_center"
+	  }
+	}
+  },
+  "data": {
+    "phone": "+7(123)45-67-890",
+    "address": "Most Famous st.",
+    "show_map": true,
+    "logo": "/themes/default/img/logo.png"
+  }
+}

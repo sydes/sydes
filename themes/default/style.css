@@ -1,3 +1,5 @@
+/* TODO не забудь задизайнить!!! */
+
 .dmenu ul{display:none;}
 .dmenu .opened>ul, .dmenu .active>ul{display:block;}
 .dmenu .active>a{font-weight:bold;}

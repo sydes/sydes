@@ -1,12 +1,4 @@
 $(document).ready(function () {
-    // fix redirect to home when # clicked
-    var pathname = window.location.href.split('#')[0];
-    $('a[href^="#"]').each(function () {
-        var $this = $(this),
-            link = $this.attr('href');
-        $this.attr('href', pathname + link);
-    });
-
     $('.modal').on('show.bs.modal', function (e) {
         var size = $(e.relatedTarget).data('size'), dialog = $(this).find('.modal-dialog');
         dialog.removeClass('modal-sm modal-lg');
@@ -43,6 +35,7 @@ function modalPosition() {
             }
         });
 
+        // TODO высоту настроить по псевдоэлементу
         $(this).find('.modal-dialog').addClass('modal-dialog-center').css({
             'margin-top': function () {
                 return -($(this).outerHeight() / 2);

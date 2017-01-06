@@ -1,11 +1,10 @@
 AddDefaultCharset utf-8
-ErrorDocument 403 /?route=common/error/e403
 
 # Prevent Directoy listing 
 Options -Indexes
 
 # Prevent Direct Access to files
-<FilesMatch "\.(db|log|sql|ini|cache)">
+<FilesMatch "\.(db|log|sql|ini|cache)$">
 	Order allow,deny
 	Deny from all
 	Satisfy all
@@ -16,27 +15,27 @@ Options -Indexes
 	RewriteEngine On
 
 	# Force www:
-	#RewriteCond %{HTTPS} !=on
+	#RewriteCond %{HTTPS} off
 	#RewriteCond %{HTTP_HOST} !^www\..+$ [NC]
 	#RewriteRule ^ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 	# Force non-www:
-	RewriteCond %{HTTPS} !=on
+	RewriteCond %{HTTPS} off
 	RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
 	RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
 
-	RewriteBase /
-	RewriteRule ^index\.php$ - [L]
+	# Force https:
+	#RewriteCond %{HTTPS} off
+	#RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-	#hepler redirecting
-	RewriteRule ^rss/(.+)$ /index.php?route=common/rss/view/$1 [L]
-	
-	RewriteCond %{REQUEST_URI} ^(/cache/img/)
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule ^cache/img/(\d+)_(\d+)_(\w)/(.+)$ index.php?route=common/thumb&width=$1&height=$2&act=$3&src=$4 [L]
+	RewriteBase /
+
+	# Remove index from url
+	RewriteCond %{THE_REQUEST} /index\.php
+	RewriteRule . / [R=301,L]
 
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule (.*)/$ $1 [NC,R=301,L]
+	RewriteRule (.*)/$ $1 [R=301,L]
 
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_FILENAME} !-f
@@ -66,7 +65,7 @@ Options -Indexes
 	Header unset ETag
 	FileETag None
 </filesMatch>
-</ifModule>
+</IfModule>
 
 <IfModule mod_gzip.c>
 	mod_gzip_on Yes

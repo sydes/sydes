@@ -1,0 +1,12 @@
+@extends(page) @as(News Item)
+
+<div class="row">
+    <div class="col-sm-8">
+        <h1>{title}</h1>
+        {content}
+    </div>
+    <div class="col-sm-4">
+        <div class="h3">{t:last_news}</div>
+        {iblock:pages show="siblings" template="mini"}
+    </div>
+</div>

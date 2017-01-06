@@ -1,0 +1,21 @@
+{
+  "name": "sydes/sample-module",
+  "description": "Demonstration of module with all features",
+  "version": "1.0",
+  "type": "sydes-module",
+  "keywords": ["sydes", "module"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ArtyGrand",
+      "email": "artygrand@gmail.com",
+      "homepage": "http://artygrand.ru"
+    }
+  ],
+  "require": {
+    "composer/installers": "~1.0"
+  },
+  "extra": {
+    "installer-name": "Sample"
+  }
+}

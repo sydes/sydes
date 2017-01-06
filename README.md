@@ -21,15 +21,23 @@ SyDES is a free open source content management framework for various small or me
 
 ## Install
 
+### Old-style
+
 1. Download and unzip archive in site root folder
-2. Open this folder in browser
+2. Open this site in browser
 3. Edit chmod, if needed
 4. Enter login, password, master code and e-mail
 5. Create new site
 
+### From console
+
+1. `composer create-project sydes/sydes`
+2. `...` (install sydes-cli?)
+3. `php sydes install`
+
 ## System requirements
 
-Apache, PHP 5.4, PDO with sqlite driver, mod_rewrite, JSON, url_fopen or cURL, ZipArchive.
+Apache 2.2, PHP 5.4, PDO with sqlite driver, mod_rewrite, JSON, url_fopen or cURL, ZipArchive.
 
 Upload [check.php](check.php) to the server to check the requirements
 
@@ -39,7 +47,6 @@ Upload [check.php](check.php) to the server to check the requirements
 + CKFinder (DEMO)
 + jQuery
 + jQuery UI
-+ jQuery hoverIntent
 + jquery nestedSortable
 + Bootstrap
 + Bootstrap datePicker

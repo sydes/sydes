@@ -27,24 +27,24 @@
         <?=$errors[1];?>
         <div><a href=".">Refresh page</a></div>
     <?php } else { ?>
-        <div><input class="input" type="text" name="username" placeholder="<?=t('username');?>" required></div>
-        <div><input class="input" type="password" name="password" placeholder="<?=t('password');?>" required></div>
+        <div><input class="input" type="text" name="username" placeholder="Username" required></div>
+        <div><input class="input" type="password" name="password" placeholder="Password" required></div>
         <?php if ($signUp) { ?>
-        <div><input class="input" type="text" name="mastercode" placeholder="Master code" required></div>
-        <div><input class="input" type="email" name="email" placeholder="Email" required></div>
-        <div><?=App\HTML::select('language', $lang, $langs, ['class' => ['input']]);?></div>
-        <div class="two">&nbsp;</div><div class="two last"><button type="submit">Create account</button></div>
-        <input type="hidden" id="time_zone" name="time_zone">
-        <script>document.getElementById('time_zone').value = (new Date()).getTimezoneOffset() / 60;</script>
+            <div><input class="input" type="text" name="mastercode" placeholder="Master code" required></div>
+            <div><input class="input" type="email" name="email" placeholder="Email" required></div>
+            <div><?=H::select('locale', '', $locales, ['class' => ['input']]);?></div>
+            <div class="two">&nbsp;</div><div class="two last"><button type="submit">Create account</button></div>
+            <input type="hidden" id="time_zone" name="time_zone">
+            <script>document.getElementById('time_zone').value = (new Date()).getTimezoneOffset() / 60;</script>
         <?php } else { ?>
-        <div class="two">
-            <?php if ($autoLogin){?>
-                <label><input type="checkbox" name="remember"> <?=t('remember_me')?></label>
-            <?php } ?>
-        </div><div class="two last"><button type="submit"><?=t('login');?></button></div>
+            <div class="two">
+                <?php if ($autoLogin){?>
+                    <label><input type="checkbox" name="remember"> <?=t('remember_me')?></label>
+                <?php } ?>
+            </div><div class="two last"><button type="submit"><?=t('login');?></button></div>
         <?php } ?>
     <?php } ?>
-    <?=App\HTML::csrf_token();?>
+    <?=csrf_field();?>
 </form>
 
 </body>
