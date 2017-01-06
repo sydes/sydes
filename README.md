@@ -21,7 +21,7 @@ SyDES is a free open source content management framework for various small or me
 
 ## Install
 
-### Old-style
+### Old-style (not work since no release with compiled vendor folder)
 
 1. Download and unzip archive in site root folder
 2. Open this site in browser
@@ -31,9 +31,8 @@ SyDES is a free open source content management framework for various small or me
 
 ### From console
 
-1. `composer create-project sydes/sydes`
-2. `...` (install sydes-cli?)
-3. `php sydes install`
+1. `composer create-project --stability=dev sydes/sydes .`
+2. `php sydes install`
 
 ## System requirements
 
