@@ -1,6 +1,6 @@
 /.idea
-/app
-/vendor
+app/
+vendor/
 
 /upload/_thumbs/Images/*
 /upload/images/*
