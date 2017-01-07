@@ -19,12 +19,25 @@
 	    "height": 200,
 	    "type": "crop_center"
 	  }
-	}
+	},
+    "data_fields": {
+      "map_show": {
+        "type": "yesNo"
+      },
+      "map_type": {
+        "type": "select",
+        "options": ["default", "gmap"]
+      },
+      "logo": {
+        "type": "image"
+      }
+    }
   },
   "data": {
     "phone": "+7(123)45-67-890",
     "address": "Most Famous st.",
-    "show_map": true,
+    "map_show": 1,
+    "map_type": "gmap",
     "logo": "/themes/default/img/logo.png"
   }
 }

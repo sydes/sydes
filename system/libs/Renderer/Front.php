@@ -193,7 +193,7 @@ class Front extends Renderer
         ob_start();
         $out = include $iblockDir.'/iblock.php';
         if (!is_null($out)) {
-            $tplOverride = DIR_THEME.'/'.$this->theme.'/iblock/'.$name.'/'.$args['template'].'.php';
+            $tplOverride = DIR_THEME.'/'.$this->theme.'/iblock/'.$name.'/views/'.$args['template'].'.php';
             $tplOriginal = $iblockDir.'/views/'.$args['template'].'.php';
 
             if (is_file($tplOverride)) {

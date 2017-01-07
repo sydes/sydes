@@ -53,14 +53,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3">
-                    <h3>Integer placerat</h3>
-                    <ul class="to-mobile">
-                        <li><a href="#">placerat sollicitudin</a></li>
-                        <li><a href="#">dolor sit amet</a></li>
-                        <li><a href="#">fringilla id quis</a></li>
-                        <li><a href="#">quam eros</a></li>
-                        <li><a href="#">elementum sed</a></li>
-                    </ul>
+                    <h3>{t:our_services}</h3>
+                    {iblock:menu show="1" class="to-mobile"}
                 </div>
                 <div class="col-sm-3">
                     <h3>Fusce sit amet</h3>
@@ -73,18 +67,12 @@
                     </ul>
                 </div>
                 <div class="col-sm-3">
-                    <h3>Sed lobortis auctor</h3>
-                    <ul>
-                        <li><a href="#">Pellentesque</a></li>
-                        <li><a href="#">posuere turpis</a></li>
-                        <li><a href="#">adipiscing elit</a></li>
-                        <li><a href="#">Sed feugiat</a></li>
-                        <li><a href="#">porta hendrerit</a></li>
-                    </ul>
+                    <h3>{t:our_map}</h3>
+                    {iblock:map}
                 </div>
                 <div class="col-sm-3">
                     <h3>{t:last_news}</h3>
-                    {iblock:pages show="news" only="elements" template="mini"}
+                    {iblock:pages show="news" only="list" template="mini"}
                 </div>
             </div>
         </div>
