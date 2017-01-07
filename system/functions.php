@@ -728,3 +728,8 @@ function sortByWeight($a, $b)
 {
     return $a['weight'] - $b['weight'];
 }
+
+function thumbnail($url, $width, $height, array $params = ['resize'])
+{
+    return $url;
+}
