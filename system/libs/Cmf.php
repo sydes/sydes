@@ -79,7 +79,6 @@ class Cmf
                 ]],
                 'system' => ['weight' => 400, 'title' => 'menu_system',  'icon' => 'cog', 'items' => [
                     ['weight' => 100, 'title' => 'module_settings', 'url' => '/admin/settings'],
-                    ['weight' => 300, 'title' => 'module_iblocks', 'url' => '/admin/iblocks'],
                     ['weight' => 400, 'title' => 'module_logs', 'url' => '/admin/logs'],
                 ]],
             ],
@@ -96,6 +95,7 @@ class Cmf
             'Page',
             'Route',
             'Theme',
+            'Iblock',
         ];
 
         foreach ($modules as $module) {
