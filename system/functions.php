@@ -535,7 +535,7 @@ function alert($message, $status = 'success')
 /**
  * Creates or loads config for extension
  *
- * @param string $module
+ * @param string $extension
  * @return App\Config
  */
 function config($extension)

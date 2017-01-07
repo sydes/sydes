@@ -132,9 +132,10 @@ class App
 
     private function findSite($host)
     {
-        $sites = glob(DIR_SITE.'/s*', GLOB_ONLYDIR);
 
-        $domains = $this->container['cache']->remember('domains', function () use ($sites) {
+
+        $domains = $this->container['cache']->remember('domains', function () {
+            $sites = glob(DIR_SITE.'/s*', GLOB_ONLYDIR);
             $domains = [];
             foreach ($sites as $sitePath) {
                 $config = include $sitePath.'/config.php';
