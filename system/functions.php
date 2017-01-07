@@ -31,23 +31,42 @@ function pre($array, $return = false)
 }
 
 /**
- * Find path to extension in default or user folders.
+ * Find path to infoBlock in theme or app.
  *
- * @param $type
- * @param $name
+ * @param string $name
  * @return null|string
  */
-function findExt($type, $name)
+function findIblockDir($name)
 {
-    $paths = [
-        'module' => '/modules/'.ucfirst($name),
-        'iblock' => '/iblocks/'.$name,
-    ];
-    $file = ($type == 'iblock') ? 'index' : 'Controller';
+    $places = [DIR_THEME.'/'.app('site')['theme'], DIR_APP];
 
+    foreach ($places as $place) {
+        $path = $place.'/iblocks/'.$name;
+        if (file_exists($path.'/iblock.php')) {
+            return $path;
+        }
+    }
+
+    foreach (app('site')['modules'] as $modName => $module) {
+        if (isset($module['iblocks']) && in_array($name, $module['iblocks'])) {
+            return findModuleDir($modName).'/iblocks/'.$name;
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Find path to module in core or user folders.
+ *
+ * @param string $name
+ * @return null|string
+ */
+function findModuleDir($name)
+{
     foreach ([DIR_APP, DIR_SYSTEM] as $place) {
-        $path = $place.$paths[$type];
-        if (file_exists($path.'/'.$file.'.php')) {
+        $path = $place.'/modules/'.ucfirst($name);
+        if (file_exists($path.'/Controller.php')) {
             return $path;
         }
     }
@@ -573,7 +592,7 @@ function restricted()
 function model($module)
 {
     $part = strpos($module, '/') !== false ? explode('/', $module) : [$module, $module];
-    $file = findExt('module', $part[0]).'/models/'.$part[1].'.php';
+    $file = findModuleDir($part[0]).'/models/'.$part[1].'.php';
 
     if (!file_exists($file)) {
         throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
@@ -602,7 +621,7 @@ function view($template, $data = [])
     app('event')->trigger('before.render.partial', [$template, $data], $template);
 
     $file_override = DIR_THEME.'/'.app('site')['theme'].'/module/'.$template.'.php';
-    $file = findExt('module', $part[0]).'/views/'.$part[1].'.php';
+    $file = findModuleDir($part[0]).'/views/'.$part[1].'.php';
     if (file_exists($file_override)) {
         $html = render($file_override, $data);
     } elseif (file_exists($file)) {

@@ -175,7 +175,7 @@ class Front extends Renderer
 
     public function iblock($name, $params = false)
     {
-        $iblockDir = findExt('iblock', $name);
+        $iblockDir = findIblockDir($name);
         if (!$iblockDir) {
             return sprintf(t('error_iblock_not_found'), $name);
         }
