@@ -14,7 +14,7 @@ class Renderer
 {
     /** @var Document */
     protected $document;
-    protected $head;
+    protected $head = [];
     protected $footer = [];
 
     public function render(Document $doc) {
@@ -65,10 +65,7 @@ class Renderer
     }
 
     protected function fillHead() {
-        $this->head = [
-            '<title>'.$this->document->title.'</title>',
-            //'<base href="'.$this->document->base.'/">',
-        ];
+        $this->head[] = '<title>'.$this->document->title.'</title>';
 
         foreach ($this->document->styles as $pack) {
             foreach ($pack as $file) {
@@ -88,7 +85,8 @@ class Renderer
         $this->document->addJsSettings([
             'locale' => app('locale'),
         ]);
-        //$this->document->addJs('token', "var token = '{$_SESSION['csrf_token']}';"); TODO вставить токен
+        $this->document->addJs('token', "var csrf_name = '".app('csrf')->getTokenName()
+            ."', csrf_value = '".app('csrf')->getTokenValue()."';");
         $this->document->addJs('extend', '$.extend(syd, '.json_encode($this->document->sydes['js'], JSON_UNESCAPED_UNICODE).');');
         $this->footer[] = '<ul id="notify"></ul>';
         $this->footer[] = '<script>'."\n".implode("\n\n", $this->document->internal_scripts)."\n".'</script>';

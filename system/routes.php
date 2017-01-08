@@ -24,7 +24,7 @@
 
     ['GET', '/login', 'User@loginForm'],
     ['POST', '/login', 'User@login'],
-    ['GET', '/logout', 'User@logout'], // TODO вернуть на пост, создать форму, как в ларавельке
+    ['POST', '/logout', 'User@logout'], // TODO вернуть на пост, создать форму, как в ларавельке
     ['GET', '/install', 'Util@signUpForm'],
     ['POST', '/install', 'Util@signUp'],
     ['GET', '/admin/sites/add', 'Site@addForm'],

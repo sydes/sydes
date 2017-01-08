@@ -2,15 +2,6 @@
 
     <a href="/admin"><?=t('admin');?></a>
 
-    <div class="btn-group">
-        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown"><?=t('add');?> <span class="caret"></span></button>
-        <ul class="dropdown-menu dropdown-menu">
-            <?php foreach ($types as $type => $name) { ?>
-                <li><a href="/admin/pages/edit&type=<?=$type;?>"><?=$name;?></a></li>
-            <?php } ?>
-        </ul>
-    </div>
-
     <a href="/admin/cache/clear-all&return=<?=$request_uri;?>"><?=t('clear_cache');?></a>
 
     <span class="divider"></span>

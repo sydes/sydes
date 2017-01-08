@@ -35,8 +35,8 @@ class Front extends Renderer
         $template = $this->compile($template);
         unset($doc->data['content']);
 
-        // TODO проверить, куда делить метатеги из test/page($id)
         $doc->findMetaTags();
+
         $doc->meta['generator'] = 'SyDES';
         foreach ($doc->meta as $name => $content) {
             $whatName = in_array(substr($name, 0, 3), ['og:', 'fb:', 'al:']) ? 'property' : 'name';
@@ -56,12 +56,11 @@ class Front extends Renderer
         }
 
         $toReplace = array_merge($doc->data, [
-            'language' => 'en', // TODO выколюпать локать из ссылки
+            'language' => app('locale'),
             'head'     => implode("\n    ", $this->head),
             'footer'   => implode("\n    ", $this->footer),
             'year'     => date('Y'),
-            'theme_path'    => 'themes/'.$theme,
-            'csrf_token' => token(32),
+            'theme_path' => '/themes/'.$theme,
         ]);
 
         $find = $replace = [];
@@ -73,19 +72,10 @@ class Front extends Renderer
         $template = str_replace($find, $replace, $template);
 
         return preg_replace('!{\w+}!', '', $template);
-
-
     }
 
     private function getToolbar()
     {
-        $types = [];
-        // TODO новое место найти для типов страниц
-        /*foreach (app('site')['page_types'] as $type => $data) {
-            if (!isset($data['hidden'])) {
-                $types[$type] = $data['title'];
-            }
-        }*/
 
         $menu = [];
         foreach ($this->document->sydes['context_menu'] as $key => $data) {
@@ -108,7 +98,6 @@ class Front extends Renderer
 
         return render(DIR_SYSTEM.'/views/toolbar.php', [
             'page'        => $this->document->data,
-            'types'       => $types,
             'theme'       => $this->theme,
             'menu'        => $menu,
             'request_uri' => app('request')->getUri()->getPath(),
