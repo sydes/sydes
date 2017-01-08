@@ -30,7 +30,7 @@ class Front extends Renderer
         $doc->addPackage('sydes-front', '/system/assets/js/front.js', '/system/assets/css/front.css');
 
 
-        $template = $this->getTemplate($theme, $layout);
+        $template = $this->getTemplate($layout);
         $template = str_replace('{content}', ifsetor($doc->data['content']), $template);
         $template = $this->compile($template);
         unset($doc->data['content']);
@@ -115,29 +115,16 @@ class Front extends Renderer
         ]);
     }
 
-    private function getTemplate($theme, $layout)
+    private function getTemplate($layout)
     {
-        $file = DIR_THEME.'/'.$theme.'/layouts/'.$layout.'.html';
-        if (!file_exists($file)) {
-            throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
-        }
-        $layoutContent = file_get_contents($file);
+        $theme = app('theme');
+        $data = $theme->getLayout($layout);
 
-        // TODO перенести часть обязанностей в Theme
-        $firstLine = strtok($layoutContent, "\n");
-        if (!$data = parseLayoutData($firstLine)) {
-            return $layoutContent;
+        while (isset($data['extends'])) {
+            $data = $theme->extendLayout($data);
         }
 
-        $layoutContent = str_replace($firstLine, '', $layoutContent);
-
-        $file = DIR_THEME.'/'.$theme.'/'.$data['extends'].'.html';
-        if (!file_exists($file)) {
-            throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
-        }
-        $template = file_get_contents($file);
-
-        return str_replace('{layout}', $layoutContent, $template);
+        return $data['content'];
     }
 
     private function compile($html)
