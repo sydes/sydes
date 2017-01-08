@@ -50,7 +50,7 @@ class Controller
             }
         }
 
-        return html(render(DIR_SYSTEM.'/modules/user/views/login-signup.php', [
+        return html(render(DIR_SYSTEM.'/modules/User/views/login-signup.php', [
             'locales' => $langs,
             'errors' => checkServer(),
             'title' => 'Sign up for',

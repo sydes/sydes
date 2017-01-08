@@ -21,10 +21,8 @@
 <!-- you shall not pass -->
 <form action="" method="post">
     <div class="text">S<span class="red">y</span>DES</div>
-    <?php if (!empty($errors[0])) { ?>
-        <?=$errors[0];?>
-    <?php } elseif (!empty($errors[1])) { ?>
-        <?=$errors[1];?>
+    <?php if (!empty($errors)) { ?>
+        <?=$errors;?>
         <div><a href=".">Refresh page</a></div>
     <?php } else { ?>
         <div><input class="input" type="text" name="username" placeholder="Username" required></div>
