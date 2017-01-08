@@ -44,13 +44,13 @@ class App
 
         $context = $this->getEventContext($route[0]);
         $events = $this->container['event'];
-        $events->trigger('route.found', [$route], $context);
+        $events->trigger('route.found', [&$route], $context);
 
         $result = self::execute($route);
-        $events->trigger('module.executed', [$result], $context);
+        $events->trigger('module.executed', [&$result], $context);
 
         $response = $this->prepare($result);
-        $events->trigger('response.prepared', [$response], $context);
+        $events->trigger('response.prepared', [&$response], $context);
 
         if (!$silent) {
             $this->container['emitter']->emit($response);
@@ -132,8 +132,6 @@ class App
 
     private function findSite($host)
     {
-
-
         $domains = $this->container['cache']->remember('domains', function () {
             $sites = glob(DIR_SITE.'/s*', GLOB_ONLYDIR);
             $domains = [];
@@ -157,7 +155,15 @@ class App
         $this->container['rawSiteConfig'] = $siteConf;
         $this->container['site'] = ['id' => $site] + $siteConf;
 
-        // TODO загрузить установленные плагины
+        $events = $this->container['event'];
+        foreach ($siteConf['modules'] as $module) {
+            if (!isset($module['handlers'])) {
+                continue;
+            }
+            foreach ($module['handlers'] as $handler) {
+                new $handler($events);
+            }
+        }
 
         return $site;
     }
