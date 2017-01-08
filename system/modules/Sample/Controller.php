@@ -21,7 +21,6 @@ class Controller
 
          Cmf::installModule('sample', [
             'handlers' => ['Module\\Sample\\Handlers'],
-            'iblocks' => ['sample', 'other'],
          ]);
 
         Cmf::addRoutes('sample', [
