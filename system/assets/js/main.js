@@ -78,39 +78,6 @@ $(document).on('click', '.skin-selector a', function () {
     syd.cookie('skin', skin, 7);
     return false
 });
-$.ajaxSetup({
-    type: 'POST',
-    data: {ajax: 1},
-   /* headers: {
-        'X-Csrf-Token':token
-        TODO реализовать? или я не вижу, чтобы с пост добавлялись переменные с токеном?
-    }*/
-});
-$(document).ajaxSend(function (e, xhr, settings) {
-    $('html').css('cursor', 'wait');
-    settings.data += '&token=' + token
-}).ajaxSuccess(function (e, xhr, settings) {
-    if (syd.cookie('debug') == '1') {
-        console.log(xhr.responseText)
-    }
-    if (xhr.getResponseHeader('Content-Type') == 'application/json') {
-        window.respond = $.parseJSON(xhr.responseText);
-        if ('notify' in window.respond) {
-            syd.notify(window.respond.notify.message, window.respond.notify.status)
-        }
-        if ('reload' in window.respond) {
-            window.location.reload()
-        }
-        if ('redirect' in window.respond) {
-            location.href = window.respond.redirect
-        }
-    }
-}).ajaxError(function () {
-    $('html').css('cursor', 'auto');
-    syd.notify('AJAX 404 (Not Found)', 'danger')
-}).ajaxComplete(function () {
-    $('html').css('cursor', 'auto')
-});
 
 var ua = navigator.userAgent.toLowerCase(),
     isIE = (ua.indexOf("msie") != -1 && ua.indexOf("opera") == -1),
@@ -120,13 +87,6 @@ if (isIE || isSafari) {
     addHandler(document, "keydown", hotSave)
 } else {
     addHandler(document, "keypress", hotSave)
-}
-
-function makeTall() {
-    $('#menu').animate({"height": header_height}, 150)
-}
-function makeShort() {
-    $('#menu').animate({"height": 50}, 150)
 }
 
 function ajaxFormApply() {
@@ -218,56 +178,3 @@ $(document).on('mousedown', '.field-date', function () {
         })
     }
 });
-
-$(document).on('click', '.field-image', function () {
-    BrowseServer('Images:/', $(this))
-});
-$(document).on('click', '.field-file', function () {
-    BrowseServer('Files:/', $(this))
-});
-$(document).on('click', '.field-pdf', function () {
-    BrowseServer('Files:/pdf/', $(this))
-});
-$(document).on('click', '.field-flash', function () {
-    BrowseServer('Flash:/', $(this))
-});
-$(document).on('click', '.field-folder', function () {
-    var e = $(this), folder = e.val().replace('/upload/images/', '');
-    BrowseServer('Images:/' + folder + '/', e, 'crop')
-});
-
-function BrowseServer(path, e, w) {
-    var finder = new CKFinder();
-    finder.basePath = '../vendor/ckfinder/';
-    finder.startupPath = path;
-    if (w == 'crop') {
-        finder.selectActionFunction = SetInputCropped
-    } else {
-        finder.selectActionFunction = SetInput
-    }
-    finder.selectActionData = e;
-    finder.popup();
-}
-
-function SetInput(fileUrl, data, allFiles) {
-    var files = [];
-    for (var file in allFiles) {
-        files.push(allFiles[file]['url'])
-    }
-    files = array_unique(files);
-    data['selectActionData'].val(files.join()).change();
-}
-
-function SetInputCropped(fileUrl, data) {
-    data['selectActionData'].val(fileUrl.split('/').splice(3, fileUrl.split('/').length - 4).join('/')).change()
-}
-
-function array_unique(arr) {
-    var tmp_arr = [];
-    for (var i = 0; i < arr.length; i++) {
-        if (tmp_arr.indexOf(arr[i]) == "-1") {
-            tmp_arr.push(arr[i]);
-        }
-    }
-    return tmp_arr;
-}
