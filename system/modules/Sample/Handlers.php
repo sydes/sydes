@@ -4,11 +4,12 @@
  */
 namespace Module\Sample;
 
+use App\Event;
+
 class Handlers
 {
-    public function __construct($events)
+    public function __construct(Event $events)
     {
-        /** @var $events \App\Event */
         $events->on('module.executed', '*', [$this, 'handleEvent1']);
 
         $events->on(

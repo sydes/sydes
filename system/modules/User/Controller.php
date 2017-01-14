@@ -34,7 +34,7 @@ class Controller
         $d = document([
             'content'       => view('user/form', ['autologin' => app('user')->autologin]),
             'sidebar_left'  => '',
-            'sidebar_right' => H::saveButton(DIR_APP.'/config.php').H::mastercodeInput(),
+            'sidebar_right' => \H::saveButton(DIR_APP.'/config.php').\H::mastercodeInput(),
             'form_url'      => 'admin/user/update',
             'meta_title'    => t('module_profile'),
             'breadcrumbs'   => [

@@ -139,7 +139,7 @@ class H
      */
     public static function text($name, $value, array $attr = [])
     {
-        if (isset($attr['rows']) and $attr['rows'] > 1) {
+        if (isset($attr['rows']) && $attr['rows'] > 1) {
             return '<textarea name="'.$name.'"'.self::attr($attr).'>'.$value.'</textarea>';
         } else {
             return '<input type="text" value="'.$value.'" name="'.$name.'"'.self::attr($attr).'>';
