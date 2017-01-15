@@ -41,9 +41,7 @@
     "logo": "/themes/default/img/logo.png"
   },
   "js": {
-    "bootstrap": [
-      "//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-    ],
+    "bootstrap": "//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js",
     "lightbox": [
       "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"
     ],
@@ -62,10 +60,9 @@
       "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css"
     ],
     "theme": [
-      "css/main.css"
+      "css/main.css",
+      "css/color1.css"
     ],
-    "custom": [
-      "custom.css"
-    ]
+    "custom": "custom.css"
   }
 }
