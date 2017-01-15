@@ -23,15 +23,6 @@ class Renderer
 
     public function prepare(Document $doc)
     {
-        $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js');
-        $doc->addPackage('bootstrap',
-            '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
-            '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
-        $doc->addJs('sydes-core', '/system/assets/js/sydes.js');
-        $doc->addPackage('fancybox',
-            '//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js',
-            '//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css');
-
         $this->document = $doc;
         $this->addAlerts();
         $this->addNotify();

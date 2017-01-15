@@ -13,23 +13,37 @@ use H;
 
 class Front extends Renderer
 {
-    private $themeConfig;
+    private $config;
     private $theme;
 
     public function render(Document $doc)
     {
         $this->prepare($doc);
 
-        $this->theme = $theme = app('site')['theme'];
-        $layout = ifsetor($doc->data['layout'], 'page');
+        $this->theme = app('site')['theme'];
+        $this->config = app('theme')->getConfig();
+        $themePath = '/themes/'.$this->theme;
 
-        $this->themeConfig = app('theme')->getConfig();
+        if (isset($this->config['js'])) {
+            foreach ($this->config['js'] as $key => $source) {
+                $source = $this->addThemePath($source, $themePath);
+                $this->document->addJs($key, $source);
+            }
+        }
+        if (isset($this->config['css'])) {
+            foreach ($this->config['css'] as $key => $source) {
+                $source = $this->addThemePath($source, $themePath);
+                $this->document->addCss($key, $source);
+            }
+        }
 
-        app('translator')->setLocale(app('locale'))->loadFrom('theme', $theme);
+        app('translator')->setLocale(app('locale'))->loadFrom('theme', $this->theme);
 
         $doc->addPackage('sydes-front', '/system/assets/js/front.js', '/system/assets/css/front.css');
+        // TODO разделить на администраторские и обычные стили и скрипты
 
 
+        $layout = ifsetor($doc->data['layout'], 'page');
         $template = $this->getTemplate($layout);
         $template = str_replace('{content}', ifsetor($doc->data['content']), $template);
         $template = $this->compile($template);
@@ -60,7 +74,7 @@ class Front extends Renderer
             'head'     => implode("\n    ", $this->head),
             'footer'   => implode("\n    ", $this->footer),
             'year'     => date('Y'),
-            'theme_path' => '/themes/'.$theme,
+            'theme_path' => $themePath,
         ]);
 
         $find = $replace = [];
@@ -192,7 +206,16 @@ class Front extends Renderer
 
     public function config($key)
     {
-        return ifsetor($this->themeConfig['data'][$key], false);
+        return ifsetor($this->config['data'][$key], false);
     }
 
+    private function addThemePath($source, $themePath)
+    {
+        foreach ((array)$source as $i => $path) {
+            if ($path[0] != '/' && substr($path, 0, 4) != 'http') {
+                $source[$i] = $themePath.'/'.$path;
+            }
+        }
+        return $source;
+    }
 }

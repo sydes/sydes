@@ -39,5 +39,33 @@
     "map_show": 1,
     "map_type": "gmap",
     "logo": "/themes/default/img/logo.png"
+  },
+  "js": {
+    "bootstrap": [
+      "//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    ],
+    "lightbox": [
+      "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"
+    ],
+    "theme": [
+      "js/main.js"
+    ],
+    "custom": [
+      "custom.js"
+    ]
+  },
+  "css": {
+    "bootstrap": [
+      "//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    ],
+    "lightbox": [
+      "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css"
+    ],
+    "theme": [
+      "css/main.css"
+    ],
+    "custom": [
+      "custom.css"
+    ]
   }
 }

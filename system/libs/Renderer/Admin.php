@@ -18,6 +18,13 @@ class Admin extends Renderer
         $doc->title .= ' - '.$siteName.' @ SyDES';
         $this->prepare($doc);
 
+        $this->document->addPackage('bootstrap',
+            '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+            '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+        $this->document->addPackage('fancybox',
+            '//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js',
+            '//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css');
+
         $this->fillHead();
         $this->fillFooter();
 

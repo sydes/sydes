@@ -381,7 +381,10 @@ function abort($code, $message = '')
  */
 function document($data = [])
 {
-    return new App\Document($data);
+    $doc = new App\Document($data);
+    $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js');
+    $doc->addJs('sydes', '/system/assets/js/sydes.js');
+    return $doc;
 }
 
 /**

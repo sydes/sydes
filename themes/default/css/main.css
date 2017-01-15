@@ -6,7 +6,7 @@
 #section-top{background:#666;color:#fff;}
 #section-top a{color:#000;}
 header{background:#ccc;color:#333;}
-header  .row{padding-top:20px;padding-bottom:20px;}
+header .row{padding-top:20px;padding-bottom:20px;}
 
 .mobile-menu{padding:10px 15px;overflow:hidden;display:block;background:#333;color:#fff;}
 .mobile-menu:hover{color:#fff;text-decoration:none;}
@@ -34,7 +34,7 @@ footer ul{padding-left:20px;}
 footer a{color:#eee;}
 footer a:hover{color:#999;text-decoration:none;}
 
-.scrollup {width:40px;height:40px;opacity:.9;position:fixed;bottom:30px;right:10px;display:none;text-indent:-9999px;background:url('img/icon-top.png') no-repeat center center #999;z-index:999999;}
+.scrollup {width:40px;height:40px;opacity:.9;position:fixed;bottom:30px;right:10px;display:none;text-indent:-9999px;background:url('../img/icon-top.png') no-repeat center center #999;z-index:999999;}
 
 
 /* only mobile styles */
