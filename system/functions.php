@@ -73,6 +73,11 @@ function findModuleDir($name)
     return null;
 }
 
+function assetsDir($module)
+{
+    return str_replace(DIR_ROOT, '', findModuleDir($module)).'/assets';
+}
+
 /**
  * Load and execute file with given data.
  *
