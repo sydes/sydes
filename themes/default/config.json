@@ -42,27 +42,19 @@
   },
   "js": {
     "bootstrap": "//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js",
-    "lightbox": [
-      "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"
-    ],
+    "lightbox": "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js",
     "theme": [
-      "js/main.js"
-    ],
-    "custom": [
+      "js/main.js",
       "custom.js"
     ]
   },
   "css": {
-    "bootstrap": [
-      "//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    ],
-    "lightbox": [
-      "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css"
-    ],
+    "bootstrap": "//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
+    "lightbox": "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css",
     "theme": [
       "css/main.css",
-      "css/color1.css"
-    ],
-    "custom": "custom.css"
+      "css/color1.css",
+      "custom.css"
+    ]
   }
 }

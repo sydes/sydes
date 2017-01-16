@@ -211,11 +211,10 @@ class Front extends Renderer
 
     private function addThemePath($source, $themePath)
     {
-        foreach ((array)$source as $i => $path) {
-            if ($path[0] != '/' && substr($path, 0, 4) != 'http') {
-                $source[$i] = $themePath.'/'.$path;
-            }
+        $arr = [];
+        foreach ((array)$source as $path) {
+            $arr[] = ($path[0] != '/' && substr($path, 0, 4) != 'http') ? $themePath.'/'.$path : $path;
         }
-        return $source;
+        return $arr;
     }
 }
