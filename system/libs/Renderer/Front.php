@@ -18,6 +18,8 @@ class Front extends Renderer
 
     public function render(Document $doc)
     {
+        app('event')->trigger('render.before', [&$doc]);
+
         $this->prepare($doc);
 
         $this->theme = app('site')['theme'];

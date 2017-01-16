@@ -11,6 +11,7 @@ namespace App;
 class Event
 {
     protected $events = [];
+    protected $context = '';
 
     /**
      * @param string   $event
@@ -47,6 +48,8 @@ class Event
             return;
         }
 
+        $context = $context ?: $this->context;
+
         $queue = new \SplPriorityQueue();
         foreach ($this->events[$event] as $index => $action) {
             $queue->insert($index, $action['prio']);
@@ -74,5 +77,15 @@ class Event
             }
             $queue->next();
         }
+    }
+
+    public function setContext($context)
+    {
+        $this->context = $context;
+    }
+
+    public function getContext()
+    {
+        return $this->context;
     }
 }

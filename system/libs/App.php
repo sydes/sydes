@@ -42,15 +42,15 @@ class App
             $this->container['locale'];
         $this->container['translator']->setLocale($locale)->loadPackage();
 
-        $context = $this->getEventContext($route[0]);
         $events = $this->container['event'];
-        $events->trigger('route.found', [&$route], $context);
+        $events->setContext($this->getEventContext($route[0]));
+        $events->trigger('route.found', [&$route]);
 
         $result = self::execute($route);
-        $events->trigger('module.executed', [&$result], $context);
+        $events->trigger('module.executed', [&$result]);
 
         $response = $this->prepare($result);
-        $events->trigger('response.prepared', [&$response], $context);
+        $events->trigger('response.prepared', [&$response]);
 
         if (!$silent) {
             $this->container['emitter']->emit($response);
