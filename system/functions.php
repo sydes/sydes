@@ -64,8 +64,14 @@ function iblockDir($name)
  */
 function moduleDir($name)
 {
+    $parts = explode('-', $name);
+    foreach ($parts as $i => $part) {
+        $parts[$i] = ucfirst($part);
+    }
+    $name = implode('', $parts);
+
     foreach ([DIR_APP, DIR_SYSTEM] as $place) {
-        $path = $place.'/modules/'.ucfirst($name);
+        $path = $place.'/modules/'.$name;
         if (file_exists($path.'/Controller.php')) {
             return $path;
         }
