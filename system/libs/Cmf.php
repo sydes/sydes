@@ -145,15 +145,16 @@ class Cmf
     public static function installModule($name, array $data = [])
     {
         $config = app('rawSiteConfig');
-        if (!isset($config['modules'][$name])) {
-            $dir = moduleDir($name).'/iblocks/';
-            $iblocks = str_replace($dir, '', glob($dir.'*'));
-            $data['iblocks'] = $iblocks;
-
-            $config['modules'][$name] = $data;
-
-            self::saveSiteConfig($config);
+        if (isset($config['modules'][$name])) {
+            return;
         }
+        $dir = moduleDir($name).'/iblocks/';
+        $iblocks = str_replace($dir, '', glob($dir.'*'));
+        $data['iblocks'] = $iblocks;
+
+        $config['modules'][$name] = $data;
+
+        self::saveSiteConfig($config);
     }
 
     /**
@@ -178,16 +179,17 @@ class Cmf
     public static function addMenuGroup($name, $title, $icon = 'asterisk', $weight = 150)
     {
         $config = app('rawSiteConfig');
-        if (!isset($config['menu'][$name])) {
-            $config['menu'][$name] = [
-                'weight' => $weight,
-                'title' => $title,
-                'icon' => $icon,
-                'items' => []
-            ];
-
-            self::saveSiteConfig($config);
+        if (isset($config['menu'][$name])) {
+            return;
         }
+        $config['menu'][$name] = [
+            'weight' => $weight,
+            'title' => $title,
+            'icon' => $icon,
+            'items' => []
+        ];
+
+        self::saveSiteConfig($config);
     }
 
     /**
@@ -225,15 +227,16 @@ class Cmf
     public static function removeMenuItem($group, $url)
     {
         $config = app('rawSiteConfig');
-        if (isset($config['menu'][$group])) {
-            foreach ($config['menu'][$group]['items'] as $i => $item) {
-                if ($item['url'] == $url) {
-                    unset($config['menu'][$group]['items'][$i]);
+        if (!isset($config['menu'][$group])) {
+            return;
+        }
+        foreach ($config['menu'][$group]['items'] as $i => $item) {
+            if ($item['url'] == $url) {
+                unset($config['menu'][$group]['items'][$i]);
 
-                    self::saveSiteConfig($config);
+                self::saveSiteConfig($config);
 
-                    break;
-                }
+                break;
             }
         }
     }
