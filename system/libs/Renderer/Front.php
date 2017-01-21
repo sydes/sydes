@@ -11,7 +11,7 @@ namespace App\Renderer;
 use App\Document;
 use H;
 
-class Front extends Renderer
+class Front extends Base
 {
     private $config;
     private $theme;

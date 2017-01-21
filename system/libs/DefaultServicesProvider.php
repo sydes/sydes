@@ -29,7 +29,8 @@ class DefaultServicesProvider
          * @return Exception\BaseHandler|Exception\SiteHandler
          */
         $c['exceptionHandler'] = function ($c) {
-            return isset($c['site']) ? new Exception\SiteHandler : new Exception\BaseHandler;
+            $class = 'App\Exception\\'.$c['exceptionPlace'].'Handler';
+            return new $class;
         };
 
         if (!isset($c['emitter'])) {

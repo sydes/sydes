@@ -104,6 +104,8 @@ class App
             }
         }
 
+        $this->container['exceptionPlace'] = 'Site';
+
         $router = $this->container['router'];
         $router->forSite($site);
         $router->cache($this->container['settings']['cacheRouter']);

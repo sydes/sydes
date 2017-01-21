@@ -10,7 +10,7 @@ namespace App\Renderer;
 
 use App\Document;
 
-class Admin extends Renderer
+class Admin extends Base
 {
     public function render(Document $doc)
     {

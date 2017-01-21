@@ -10,7 +10,7 @@ namespace App\Renderer;
 
 use App\Document;
 
-class Renderer
+class Base
 {
     /** @var Document */
     protected $document;
@@ -19,6 +19,8 @@ class Renderer
 
     public function render(Document $doc) {
         $this->prepare($doc);
+        debug_print_backtrace();
+        return 'wut';
     }
 
     public function prepare(Document $doc)
@@ -81,6 +83,66 @@ class Renderer
         $this->document->addJs('extend', '$.extend(syd, '.json_encode($this->document->sydes['js'], JSON_UNESCAPED_UNICODE).');');
         $this->footer[] = '<ul id="notify"></ul>';
         $this->footer[] = '<script>'."\n".implode("\n\n", $this->document->internal_scripts)."\n".'</script>';
+
+        if (app('user')->isEditor()) {
+            $this->footer[] = $this->getToolbar();
+        }
+    }
+
+    protected function getToolbar()
+    {
+        /*$menu = [];
+        foreach ($this->document->sydes['context_menu'] as $key => $data) {
+            $menu[$key]['title'] = $data['title'];
+            $menu[$key]['link'] = $data['link'];
+            foreach ($data['children'] as $child) {
+                $modal = '';
+                if ($child['modal']) {
+                    $size = '';
+                    if ($child['modal'] === 'small') {
+                        $size = 'data-size="sm"';
+                    } elseif ($child['modal'] === 'large') {
+                        $size = 'data-size="lg"';
+                    }
+                    $modal = 'data-toggle="modal" data-target="#modal" '.$size.' ';
+                }
+                $menu[$key]['children'][] = '<a '.$modal.'href="'.$child['link'].'">'.$child['title'].'</a>';
+            }
+        }
+
+        return render(DIR_SYSTEM.'/views/toolbar.php', [
+            'menu'        => $menu,
+            'request_uri' => app('request')->getUri()->getPath(),
+        ]);*/
+
+        $this->document->addContextMenu('left', 'brand_link', [
+            'weight' => 0,
+            'title' => 'Administration',
+            'link' => '/admin'
+        ]);
+
+        $this->document->addContextMenu('right', 'profile', [
+            'weight' => 0,
+            'title' => 'ArtyGrand',
+            'children' => [
+                'profile' => [
+                    'title' => 'Profile',
+                    'link' => '/admin/profile',
+                ],
+                'logout' => [
+                    'html' => '<strong>Logout form<strong>',
+                ]
+            ]
+        ]);
+
+        $this->document->addContextMenu('right', 'support', [
+            'weight' => 10,
+            'title' => 'Support',
+            'link' => '//sydes.ru/ru/docs/v2/iblocks',
+            'modal' => 'lg'
+        ]);
+
+        return pre($this->document->sydes['context_menu'], true);
     }
 
 }

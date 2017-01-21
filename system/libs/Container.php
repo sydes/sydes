@@ -64,6 +64,7 @@ class Container extends PimpleContainer
     {
         $this['settings'] = array_merge($this->defaultSettings, $settings);
         $this['section'] = 'base';
+        $this['exceptionPlace'] = 'Base';
 
         $defaultProvider = new DefaultServicesProvider;
         $defaultProvider->register($this);
