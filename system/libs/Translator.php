@@ -50,8 +50,14 @@ class Translator
 
     public function loadFrom($type, $name)
     {
-        $func = 'find'.ucfirst($type).'Dir';
-        $base = $type == 'theme' ? DIR_THEME.'/'.$name : $func($name);
+        if ($type == 'theme') {
+            $base = DIR_THEME.'/'.$name;
+        } elseif ($type == 'module') {
+            $base = moduleDir($name);
+        } else {
+            $base = iblockDir($name);
+        }
+
         $path = $base.'/languages/'.$this->locale.'.php';
         if (!file_exists($path)) {
             $path = $base.'/languages/en.php';

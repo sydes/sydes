@@ -146,7 +146,7 @@ class Cmf
     {
         $config = app('rawSiteConfig');
         if (!isset($config['modules'][$name])) {
-            $dir = findModuleDir($name).'/iblocks/';
+            $dir = moduleDir($name).'/iblocks/';
             $iblocks = str_replace($dir, '', glob($dir.'*'));
             $data['iblocks'] = $iblocks;
 

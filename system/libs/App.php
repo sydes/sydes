@@ -214,7 +214,7 @@ class App
     {
         $route = self::parseRoute($params[0]);
 
-        $path = findModuleDir($route['path'][0]);
+        $path = moduleDir($route['path'][0]);
         if (is_null($path)) {
             throw new \Exception(sprintf(t('error_module_folder_not_found'), $route['path'][0]));
         }

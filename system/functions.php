@@ -36,7 +36,7 @@ function pre($array, $return = false)
  * @param string $name
  * @return null|string
  */
-function findIblockDir($name)
+function iblockDir($name)
 {
     $places = [DIR_THEME.'/'.app('site')['theme'], DIR_APP];
 
@@ -49,7 +49,7 @@ function findIblockDir($name)
 
     foreach (app('site')['modules'] as $modName => $module) {
         if (isset($module['iblocks']) && in_array($name, $module['iblocks'])) {
-            return findModuleDir($modName).'/iblocks/'.$name;
+            return moduleDir($modName).'/iblocks/'.$name;
         }
     }
 
@@ -62,7 +62,7 @@ function findIblockDir($name)
  * @param string $name
  * @return null|string
  */
-function findModuleDir($name)
+function moduleDir($name)
 {
     foreach ([DIR_APP, DIR_SYSTEM] as $place) {
         $path = $place.'/modules/'.ucfirst($name);
@@ -75,7 +75,7 @@ function findModuleDir($name)
 
 function assetsDir($module)
 {
-    return str_replace(DIR_ROOT, '', findModuleDir($module)).'/assets';
+    return str_replace(DIR_ROOT, '', moduleDir($module)).'/assets';
 }
 
 /**
@@ -579,7 +579,7 @@ function restricted()
 function model($module)
 {
     $part = strpos($module, '/') !== false ? explode('/', $module) : [$module, $module];
-    $file = findModuleDir($part[0]).'/models/'.$part[1].'.php';
+    $file = moduleDir($part[0]).'/models/'.$part[1].'.php';
 
     if (!file_exists($file)) {
         throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
@@ -608,7 +608,7 @@ function view($template, $data = [])
     app('event')->trigger('before.render.partial', [$template, $data], $template);
 
     $file_override = DIR_THEME.'/'.app('site')['theme'].'/module/'.$template.'.php';
-    $file = findModuleDir($part[0]).'/views/'.$part[1].'.php';
+    $file = moduleDir($part[0]).'/views/'.$part[1].'.php';
     if (file_exists($file_override)) {
         $html = render($file_override, $data);
     } elseif (file_exists($file)) {
