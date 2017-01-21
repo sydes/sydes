@@ -494,6 +494,41 @@ function back()
 }
 
 /**
+ * Create a new response with downloadable file
+ *
+ * @param       $file
+ * @param int   $status
+ * @param array $headers
+ * @return \App\Http\AttachmentResponse
+ */
+function download($file, $name = null, $status = 200, $headers = [])
+{
+    return new App\Http\AttachmentResponse($file, $name, $status, $headers);
+}
+
+/**
+ * Create a new response with downloadable content
+ *
+ * @param       $content
+ * @param int   $status
+ * @param array $headers
+ * @return Response
+ */
+function downloadContent($content, $name, $status = 200, $headers = [])
+{
+    $headers = array_replace($headers, [
+        'content-length'      => strlen($content),
+        'content-disposition' => sprintf('attachment; filename=%s', $name),
+    ]);
+    $response = new Response('php://temp', $status, $headers);
+    $response->getBody()->write($content);
+    if (!$response->hasHeader('Content-Type')) {
+        $response = $response->withHeader('Content-Type', 'application/octet-stream');
+    }
+    return $response;
+}
+
+/**
  * Sets a notify message.
  *
  * @param string $message

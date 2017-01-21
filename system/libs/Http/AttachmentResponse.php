@@ -26,13 +26,13 @@ class AttachmentResponse extends Response
      * @param int    $status  Integer status code for the response; 200 by default.
      * @param array  $headers Array of headers to use at initialization.
      */
-    public function __construct($file, $status = 200, array $headers = [])
+    public function __construct($file, $name = null, $status = 200, array $headers = [])
     {
         $fileInfo = new \SplFileInfo($file);
 
         $headers = array_replace($headers, [
             'content-length'      => $fileInfo->getSize(),
-            'content-disposition' => sprintf('attachment; filename=%s', $fileInfo->getFilename()),
+            'content-disposition' => sprintf('attachment; filename=%s', $name ?: $fileInfo->getFilename()),
         ]);
 
         parent::__construct(
