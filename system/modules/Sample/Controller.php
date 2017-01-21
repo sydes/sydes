@@ -21,6 +21,7 @@ class Controller
 
          Cmf::installModule('sample', [
             'handlers' => ['Module\\Sample\\Handlers'],
+            'files' => ['functions.php'],
          ]);
 
         Cmf::addRoutes('sample', [

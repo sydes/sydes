@@ -158,12 +158,17 @@ class App
         $this->container['site'] = ['id' => $site] + $siteConf;
 
         $events = $this->container['event'];
-        foreach ($siteConf['modules'] as $module) {
-            if (!isset($module['handlers'])) {
-                continue;
+        foreach ($siteConf['modules'] as $name => $module) {
+            if (isset($module['handlers'])) {
+                foreach ($module['handlers'] as $handler) {
+                    call_user_func_array($handler, [$events]);
+                }
             }
-            foreach ($module['handlers'] as $handler) {
-                new $handler($events);
+
+            if (isset($module['files'])) {
+                foreach ($module['files'] as $file) {
+                    include moduleDir($name).'/'.$file;
+                }
             }
         }
 
