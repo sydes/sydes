@@ -18,7 +18,7 @@
     ['GET', '/', 'Test@index'],
     ['GET', '/admin', 'Test@adminMain'],
     ['GET', '/admin/pages', 'Test@adminPages'],
-    ['GET', '/case', 'TestCase@index'],
+    ['GET', '/case', 'Test/Case@index'],
 
     ['GET', '/sample', 'Sample@index'],
 

@@ -182,31 +182,18 @@ class App
     }
 
     /**
-     * Splits ModuleSubmodule[at]method to array for autoLoader
+     * Splits ModuleName/Submodule[at]method to array for autoLoader
      *
-     * @param $route
+     * @param string $route
      * @return array
-     * @throws \Exception
      */
-    private static function parseRoute($route)
+    public static function parseRoute($route)
     {
         $parts = explode('@', $route);
-        $files = preg_split('/(?=[A-Z])/', $parts[0]);
-
         $array = [
-            'method' => $parts[1]
+            'path' => explode('/', $parts[0]),
+            'method' => $parts[1],
         ];
-
-        if (isset($files[1])) {
-            $array['path'][0] = $files[1];
-        } else {
-            throw new \Exception(sprintf(t('error_wrong_handler_notation'), $route));
-        }
-
-        if (isset($files[2])) {
-            $array['path'][1] = $files[2];
-        }
-
         return $array;
     }
 
