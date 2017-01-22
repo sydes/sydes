@@ -1,6 +1,7 @@
 {
   "name": "sydes/sydes",
   "description": "SyDES - Lightweight CMF for a simple sites with SQLite database",
+  "version": "3.0.0-a",
   "keywords": ["cms", "cmf", "sydes", "sqlite"],
   "homepage": "http://sydes.ru",
   "license": "GPL-3.0+",
