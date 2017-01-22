@@ -31,7 +31,7 @@ SyDES is a free open source content management framework for various small or me
 
 ### From console
 
-1. `composer create-project --stability=dev sydes/sydes .`
+1. `composer create-project --prefer-dist --sdev sydes/sydes .`
 2. `php sydes install`
 
 ## System requirements
