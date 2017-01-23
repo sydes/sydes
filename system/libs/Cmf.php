@@ -96,6 +96,7 @@ class Cmf
             'Route',
             'Theme',
             'Iblock',
+            'SampleName',
         ];
 
         foreach ($modules as $module) {
@@ -148,9 +149,12 @@ class Cmf
         if (isset($config['modules'][$name])) {
             return;
         }
+
         $dir = moduleDir($name).'/iblocks/';
         $iblocks = str_replace($dir, '', glob($dir.'*'));
-        $data['iblocks'] = $iblocks;
+        if (!empty($iblocks)){
+            $data['iblocks'] = $iblocks;
+        }
 
         $config['modules'][$name] = $data;
 
