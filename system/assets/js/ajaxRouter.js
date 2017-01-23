@@ -1,8 +1,8 @@
 $.ajaxSetup({
     type: 'POST',
     data: {
-        csrf_name: csrf_name,
-        csrf_value: csrf_value
+        /*csrf_name: csrf_name,
+        csrf_value: csrf_value*/
     }
 });
 
@@ -17,6 +17,12 @@ $(document).ajaxSend(function () {
 
         if ('notify' in response) {
             syd.notify(response.notify.message, response.notify.status)
+        }
+
+        if ('alerts' in response) {
+            response.alerts.forEach(function(alert) {
+                syd.alert(alert.message, alert.status)
+            })
         }
 
         if ('reload' in response) {
