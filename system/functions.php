@@ -395,6 +395,7 @@ function document($data = [])
     $doc = new App\Document($data);
     $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js');
     $doc->addJs('sydes', '/system/assets/js/sydes.js');
+    $doc->addJs('ajax-router', '/system/assets/js/ajaxRouter.js');
     return $doc;
 }
 
@@ -489,8 +490,12 @@ function redirect($uri = '/', $status = 302, $headers = [])
  */
 function back()
 {
-    $to = app('request')->getHeaderLine('Referer') ?: '/';
-    return redirect($to);
+    if (app('request')->isAjax()) {
+        return ['reload' => 1];
+    } else {
+        $to = app('request')->getHeaderLine('Referer') ?: '/';
+        return redirect($to);
+    }
 }
 
 /**
