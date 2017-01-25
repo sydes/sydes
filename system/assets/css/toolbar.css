@@ -1,0 +1,81 @@
+html {
+    padding-top: 30px;
+}
+
+#toolbar {
+    direction: ltr;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    box-shadow: 0 1px 2px #000;
+    background: #2c313a;
+    color: #fff;
+    font: normal normal normal 16px/30px sans-serif;
+}
+
+#toolbar, #toolbar li, #toolbar ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+#toolbar a {
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: initial;
+    color: #fff;
+
+}
+
+#toolbar .tbs, #toolbar a {
+    padding: 0 12px;
+    display: block;
+}
+
+#toolbar .toolbar-menu:hover > .tbs,
+#toolbar .toolbar-menu:hover > a {
+    background: #50555d;
+    color: #fff;
+}
+
+#toolbar .toolbar-left {
+    float: left;
+}
+
+#toolbar .toolbar-right .toolbar-menu {
+    float: right;
+}
+
+#toolbar .toolbar-menu {
+    display: inline-block;
+    position: relative;
+}
+
+#toolbar ul ul {
+    display: none;
+}
+
+#toolbar .toolbar-menu:hover > ul {
+    display: block;
+    position: absolute;
+    background: #50555d;
+    min-width: 150px;
+}
+
+#toolbar .toolbar-right .toolbar-menu > ul {
+    right: 0;
+}
+
+#toolbar .toolbar-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #6e7279;
+}
+
+#toolbar .toolbar-item a:hover {
+    background: #6e7279;
+    color: #fff;
+}

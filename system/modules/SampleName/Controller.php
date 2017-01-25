@@ -116,6 +116,18 @@ class Controller
          return false;
     }
 })");
+
+        $d->addContextMenu('left', 'edit', [
+            'weight' => 10,
+            'title' => 'edit_item',
+            'url' => '/admin/sample',
+        ]);
+        $d->addContextMenuItem('left', 'edit', [
+            'weight' => 10,
+            'title' => 'add_item',
+            'url' => '/admin/sample/add',
+        ]);
+
         return $d;
     }
 

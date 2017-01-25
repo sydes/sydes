@@ -16,31 +16,6 @@
     <link rel="icon" href="/favicon.png">
 </head>
 <body>
-    <div class="admin-bar">
-        <div class="admin-bar-left">
-            <a href="<?=$site_url;?>"><?=$site_name;?></a>
-        </div>
-
-        <div class="admin-bar-right">
-            <div class="admin-bar-block">
-                <?=H::dropdown('Контент: RU', [
-                    ['title' => 'Контент: ru', 'link' => '/admin/pages?lang=ru'],
-                    ['title' => 'Контент: en', 'link' => '/admin/pages?lang=en'],
-                ], 'right');?>
-            </div>
-
-            <div class="admin-bar-block">
-                <?=H::dropdown(app('user')->username, [
-                    ['title' => t('profile'), 'link' => '/admin/profile'],
-                    ['html' => '<a href="/logout" onclick="event.preventDefault();'.
-                        'document.getElementById(\'logout-form\').submit();">'.t('logout').'</a>'.
-                        '<form id="logout-form" action="/logout" method="POST" style="display: none;">'.
-                        csrf_field().'</form>'],
-                ], 'right');?>
-            </div>
-        </div>
-    </div>
-
     <div class="menu-wrapper">
         <?=$menu;?>
     </div>

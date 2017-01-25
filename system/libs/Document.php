@@ -19,7 +19,9 @@ class Document
     public $internal_scripts = [];
     public $styles = [];
     public $internal_styles = [];
-    public $sydes = ['context_menu' => [], 'js' => ['l10n' => [], 'settings' => []]];
+
+    public $context_menu = ['left' => ['weight' => 0, 'items' => []], 'right' => ['weight' => 2, 'items' => []]];
+    public $js_syd = ['l10n' => [], 'settings' => []];
 
     public function __construct($data = [])
     {
@@ -146,7 +148,7 @@ class Document
      */
     public function addJsL10n($array)
     {
-        $this->sydes['js']['l10n'] = array_merge($this->sydes['js']['l10n'], $array);
+        $this->js_syd['l10n'] = array_merge($this->js_syd['l10n'], $array);
         return $this;
     }
 
@@ -158,7 +160,7 @@ class Document
      */
     public function addJsSettings($array)
     {
-        $this->sydes['js']['settings'] = array_merge($this->sydes['js']['settings'], $array);
+        $this->js_syd['settings'] = array_merge($this->js_syd['settings'], $array);
         return $this;
     }
 
@@ -183,6 +185,51 @@ class Document
             $this->meta[substr($key, 5)] = $value;
             unset($this->data[$key]);
         }
+        return $this;
+    }
+
+    /**
+     * @param string $position
+     * @param string $name
+     * @param array  $params
+     * @return $this
+     */
+    public function addContextMenu($position, $name, $params)
+    {
+        $this->context_menu[$position]['items'][$name] = $params;
+        return $this;
+    }
+
+    /**
+     * @param $position
+     * @param $name
+     * @param $params
+     * @return $this
+     */
+    public function addContextMenuItem($position, $name, $params)
+    {
+        $this->context_menu[$position]['items'][$name]['items'][] = $params;
+        return $this;
+    }
+
+    /**
+     * @param string $position
+     * @param string $name
+     * @return array
+     */
+    public function getContextMenu($position, $name)
+    {
+        return $this->context_menu[$position]['items'][$name];
+    }
+
+    /**
+     * @param string $position
+     * @param string $name
+     * @return $this
+     */
+    public function removeContextMenu($position, $name)
+    {
+        unset($this->context_menu[$position]['items'][$name]);
         return $this;
     }
 }

@@ -67,10 +67,6 @@ class Front extends Base
 
         $this->fillFooter();
 
-        if (app('user')->isEditor()) {
-            $this->footer[] = $this->getToolbar();
-        }
-
         $toReplace = array_merge($doc->data, [
             'language' => app('locale'),
             'head'     => implode("\n    ", $this->head),
@@ -88,36 +84,6 @@ class Front extends Base
         $template = str_replace($find, $replace, $template);
 
         return preg_replace('!{\w+}!', '', $template);
-    }
-
-    private function getToolbar()
-    {
-
-        $menu = [];
-        foreach ($this->document->sydes['context_menu'] as $key => $data) {
-            $menu[$key]['title'] = $data['title'];
-            $menu[$key]['link'] = $data['link'];
-            foreach ($data['children'] as $child) {
-                $modal = '';
-                if ($child['modal']) {
-                    $size = '';
-                    if ($child['modal'] === 'small') {
-                        $size = 'data-size="sm"';
-                    } elseif ($child['modal'] === 'large') {
-                        $size = 'data-size="lg"';
-                    }
-                    $modal = 'data-toggle="modal" data-target="#modal" '.$size.' ';
-                }
-                $menu[$key]['children'][] = '<a '.$modal.'href="'.$child['link'].'">'.$child['title'].'</a>';
-            }
-        }
-
-        return render(DIR_SYSTEM.'/views/toolbar.php', [
-            'page'        => $this->document->data,
-            'theme'       => $this->theme,
-            'menu'        => $menu,
-            'request_uri' => app('request')->getUri()->getPath(),
-        ]);
     }
 
     private function getTemplate($layout)

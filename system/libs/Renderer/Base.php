@@ -59,6 +59,9 @@ class Base
 
     protected function fillHead() {
         $this->head[] = '<title>'.$this->document->title.'</title>';
+        if (app('user')->isEditor()) {
+            $this->document->addCss('toolbar', '/system/assets/css/toolbar.css');
+        }
 
         foreach ($this->document->styles as $pack) {
             foreach ($pack as $file) {
@@ -80,9 +83,10 @@ class Base
         ]);
         $this->document->addJs('token', "var csrf_name = '".app('csrf')->getTokenName()
             ."', csrf_value = '".app('csrf')->getTokenValue()."';");
-        $this->document->addJs('extend', '$.extend(syd, '.json_encode($this->document->sydes['js'], JSON_UNESCAPED_UNICODE).');');
+        $this->document->addJs('extend',
+            '$.extend(syd, '.json_encode($this->document->js_syd, JSON_UNESCAPED_UNICODE).');');
         $this->footer[] = '<ul id="notify"></ul>';
-        $this->footer[] = '<script>'."\n".implode("\n\n", $this->document->internal_scripts)."\n".'</script>';
+        $this->footer[] = "<script>\n".implode("\n\n", $this->document->internal_scripts)."\n</script>";
 
         if (app('user')->isEditor()) {
             $this->footer[] = $this->getToolbar();
@@ -91,58 +95,87 @@ class Base
 
     protected function getToolbar()
     {
-        /*$menu = [];
-        foreach ($this->document->sydes['context_menu'] as $key => $data) {
-            $menu[$key]['title'] = $data['title'];
-            $menu[$key]['link'] = $data['link'];
-            foreach ($data['children'] as $child) {
-                $modal = '';
-                if ($child['modal']) {
-                    $size = '';
-                    if ($child['modal'] === 'small') {
-                        $size = 'data-size="sm"';
-                    } elseif ($child['modal'] === 'large') {
-                        $size = 'data-size="lg"';
-                    }
-                    $modal = 'data-toggle="modal" data-target="#modal" '.$size.' ';
-                }
-                $menu[$key]['children'][] = '<a '.$modal.'href="'.$child['link'].'">'.$child['title'].'</a>';
-            }
-        }
-
-        return render(DIR_SYSTEM.'/views/toolbar.php', [
-            'menu'        => $menu,
-            'request_uri' => app('request')->getUri()->getPath(),
-        ]);*/
-
+       // TODO в админке ссылку на сайт с названием
         $this->document->addContextMenu('left', 'brand_link', [
             'weight' => 0,
-            'title' => 'Administration',
-            'link' => '/admin'
+            'title' => 'admin_center',
+            'url' => '/admin'
         ]);
 
         $this->document->addContextMenu('right', 'profile', [
             'weight' => 0,
-            'title' => 'ArtyGrand',
-            'children' => [
+            'title' => app('user')->username,
+            'items' => [
                 'profile' => [
-                    'title' => 'Profile',
-                    'link' => '/admin/profile',
+                    'title' => 'profile',
+                    'url' => '/admin/profile',
+                ],
+                'div1' => [
+                    'attr' => 'class="divider"',
                 ],
                 'logout' => [
-                    'html' => '<strong>Logout form<strong>',
+                    'html' => '<a href="/logout" onclick="event.preventDefault();'.
+                        'document.getElementById(\'logout-form\').submit();">'.t('logout').'</a>'.
+                        '<form id="logout-form" action="/logout" method="POST" style="display: none;">'.
+                        csrf_field().'</form>',
                 ]
             ]
         ]);
 
         $this->document->addContextMenu('right', 'support', [
             'weight' => 10,
-            'title' => 'Support',
-            'link' => '//sydes.ru/ru/docs/v2/iblocks',
+            'title' => 'support',
+            'url' => '//sydes.ru/ru/docs/v2/iblocks',
             'modal' => 'lg'
         ]);
 
-        return pre($this->document->sydes['context_menu'], true);
-    }
+        $key = 'toolbar.'.md5(json_encode($this->document->context_menu));
+        $toolbar = app('cache')->remember($key, function () {
+            $menuFlat = [];
+            foreach ($this->document->context_menu as $posName => $position) {
+                $menuFlat[] = [
+                    'level' => 1,
+                    'attr' => 'class="toolbar-'.$posName.'"',
+                ];
+                usort($position['items'], 'sortByWeight');
+                foreach ($position['items'] as $menu) {
+                    $menuFlat[] = array_merge([
+                        'level' => 2,
+                        'attr' => 'class="toolbar-menu"',
+                    ], $menu);
 
+                    if (!isset($menu['items'])) {
+                        continue;
+                    }
+
+                    foreach ($menu['items'] as $item) {
+                        $menuFlat[] = array_merge([
+                            'level' => 3,
+                            'attr' => 'class="toolbar-item"',
+                        ], $item);
+                    }
+                }
+            }
+
+            return \H::treeList($menuFlat, function ($item) {
+                if (count($item) < 3 && isset($item['attr'])) {
+                    return '';
+                }
+
+                if (isset($item['modal'])) {
+                    return '<a href="'.$item['url'].'" data-load="modal" data-size="'.$item['modal'].'">'.
+                    t($item['title']).'</a>';
+                } elseif (isset($item['url'])) {
+                    return '<a href="'.$item['url'].'">'.t($item['title']).'</a>';
+                } elseif (isset($item['html'])) {
+                    return $item['html'];
+                } else {
+                    return '<span class="tbs">'.t($item['title']).'</span>';
+                }
+
+            }, ['id' => 'toolbar']);
+        });
+
+        return $toolbar;
+    }
 }
