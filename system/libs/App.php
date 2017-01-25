@@ -228,6 +228,8 @@ class App
             return $content;
         } elseif ($content instanceof Document) {
             return html($this->container['renderer']->render($content));
+        } elseif ($content instanceof View) {
+            return html((string)$content);
         } elseif (is_array($content)) {
             return json($content);
         }

@@ -638,34 +638,14 @@ function model($module)
 }
 
 /**
- * Loads view of some module
- *
- * @param string $template String like module_name/view_name
+ * Loads view for some module
+ * @param string $view module-name/view-name
  * @param array  $data
- * @return string
+ * @return \App\View
  */
-function view($template, $data = [])
+function view($view, $data = [])
 {
-    $part = explode('/', $template);
-    if (count($part) != 2) {
-        throw new \InvalidArgumentException(t('error_view_argument'));
-    }
-
-    app('event')->trigger('before.render.partial', [$template, $data], $template);
-
-    $file_override = DIR_THEME.'/'.app('site')['theme'].'/module/'.$template.'.php';
-    $file = moduleDir($part[0]).'/views/'.$part[1].'.php';
-    if (file_exists($file_override)) {
-        $html = render($file_override, $data);
-    } elseif (file_exists($file)) {
-        $html = render($file, $data);
-    } else {
-        throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
-    }
-
-    app('event')->trigger('after.render.partial', [$html], $template);
-
-    return $html;
+    return new App\View($view, $data);
 }
 
 /**

@@ -29,6 +29,7 @@ class Controller
             ['GET', '/item/{id:[0-9]+}', 'SampleName@item'],
             ['GET', '/string.txt', 'SampleName@textString'],
             ['GET', '/html', 'SampleName@asHtml'],
+            ['GET', '/view', 'SampleName@view'],
             ['GET', '/api.json', 'SampleName@forAjax'],
             ['GET', '/null', 'SampleName@returnNull'],
             ['GET', '/export', 'SampleName@export'],
@@ -71,33 +72,42 @@ class Controller
 
     public function index()
     {
+        $links = [
+            '/'             => 'Front main page for module',
+            '/admin/sample' => 'Admin main page for module',
+            '/item/42'      => 'Page with id',
+            '/string.txt'   => 'Text response',
+            '/html'         => 'Html response',
+            '/view'         => 'Response with rendered module view',
+            '/api.json'     => 'JSON response',
+            '/null'         => 'Null returned',
+            '/export'       => 'Export any content',
+            '/download'     => 'Force downloading',
+            '/not-found'    => 'Error 404',
+            '/forbidden'    => 'Error 403',
+            '/error'        => 'Page with error in code',
+            '/moved'        => 'Redirect to true answer',
+            '/back'         => 'Redirects back',
+            '/ajax-notify'  => 'Ajax notification',
+            '/ajax-alert'   => 'Ajax alert',
+            '/update'       => 'Notify after redirect',
+            '/ajax-update'  => 'Notify after redirect for ajax',
+            '/save'         => 'Alert after redirect',
+            '/ajax-save'    => 'Alert after redirect for ajax',
+            '/ajax-random'  => 'Random response',
+            '/ajax-nowhere' => 'Ajax 404 response',
+            '/sub-module'   => 'Sub-module works too',
+        ];
+
         $d = document([
-            'content' => \H::listLinks([
-                '/'       => 'Front main page for module',
-                '/admin/sample' => 'Admin main page for module',
-                '/item/42'      => 'Page with id',
-                '/string.txt'   => 'Text response',
-                '/html'         => 'Html response',
-                '/api.json'     => 'JSON response',
-                '/null'         => 'Null returned',
-                '/export'       => 'Export any content',
-                '/download'     => 'Force downloading',
-                '/not-found'    => 'Error 404',
-                '/forbidden'    => 'Error 403',
-                '/error'        => 'Page with error in code',
-                '/moved'        => 'Redirect to true answer',
-                '/back'         => 'Redirects back',
-                '/ajax-notify'  => 'Ajax notification',
-                '/ajax-alert'   => 'Ajax alert',
-                '/update'       => 'Notify after redirect',
-                '/ajax-update'  => 'Notify after redirect for ajax',
-                '/save'         => 'Alert after redirect',
-                '/ajax-save'    => 'Alert after redirect for ajax',
-                '/ajax-random'  => 'Random response',
-                '/ajax-nowhere' => 'Ajax 404 response',
-                '/sub-module'   => 'Sub-module works too',
-            ], false, ['id' => 'sample']),
+            'content' => '{links} {view_sample}',
+            'links' => \H::listLinks($links, false, ['id' => 'sample']),
         ]);
+
+        $d->data['view_sample'] = view('sample-name/main', [
+            'key' => 'for index',
+        ]);
+
         $d->title = 'Index page of module';
 
         $d->addJs('my', "$('#sample a').click(function(){
@@ -153,6 +163,13 @@ class Controller
     public function asHtml()
     {
         return html("This is <strong>string</strong><br>\nTrust me");
+    }
+
+    public function view()
+    {
+        return view('sample-name/main', [
+            'key' => 'value',
+        ]);
     }
 
     public function forAjax()

@@ -5,12 +5,12 @@ class Controller
 {
     public function loginForm()
     {
-        return html(view('user/login-signup', [
+        return view('user/login-signup', [
             'autoLogin' => app('user')->autologin,
             'errors' => checkServer(),
             'title' => 'Log in to',
             'signUp' => false,
-        ]));
+        ]);
     }
 
     public function login()
