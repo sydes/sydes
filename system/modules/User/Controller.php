@@ -19,7 +19,7 @@ class Controller
         if (!app('user')->login($r->input('username'), $r->input('password'), $r->has('remember'))) {
             return back();
         }
-        $entry = $_SESSION['entry'];
+        $entry = ifsetor($_SESSION['entry'], '/admin');
         unset($_SESSION['entry']);
         return redirect($entry);
     }
