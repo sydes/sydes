@@ -18,7 +18,7 @@ class Front extends Base
 
     public function render(Document $doc)
     {
-        app('event')->trigger('render.before', [&$doc]);
+        app('event')->trigger('before.render', [&$doc]);
 
         $this->prepare($doc);
 

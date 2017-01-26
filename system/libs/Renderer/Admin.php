@@ -93,7 +93,7 @@ class Admin extends Base
                         'id' => $item['title']
                     ],
                 ];
-                if (strpos($path, $item['url']) === 0) {
+                if ($path == $item['url']) {
                     $mItem['attr']['class'] = 'active';
                 }
                 $mItem['quick_add'] = isset($item['quick_add']);
