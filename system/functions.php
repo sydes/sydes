@@ -594,19 +594,6 @@ function e($str)
     return htmlentities($str, ENT_QUOTES, 'UTF-8', false);
 }
 
-/**
- * Write to log
- *
- * @param $string
- */
-function logger($string)
-{
-    $string = htmlentities($string);
-    $date = date('r');
-    $ip = app('request')->getIp();
-    file_put_contents(DIR_LOG.'/'.date('Ym').'.log', "$date | $ip | $string\n", FILE_APPEND | LOCK_EX);
-}
-
 function restricted()
 {
     if (!app('editor')->isAdmin()) {
