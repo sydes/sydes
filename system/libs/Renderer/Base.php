@@ -59,7 +59,7 @@ class Base
 
     protected function fillHead() {
         $this->head[] = '<title>'.$this->document->title.'</title>';
-        if (app('user')->isEditor()) {
+        if (app('editor')->isLoggedIn()) {
             $this->document->addCss('toolbar', '/system/assets/css/toolbar.css');
         }
 
@@ -88,7 +88,7 @@ class Base
         $this->footer[] = '<ul id="notify"></ul>';
         $this->footer[] = "<script>\n".implode("\n\n", $this->document->internal_scripts)."\n</script>";
 
-        if (app('user')->isEditor()) {
+        if (app('editor')->isLoggedIn()) {
             $this->footer[] = $this->getToolbar();
         }
     }
@@ -104,7 +104,7 @@ class Base
 
         $this->document->addContextMenu('right', 'profile', [
             'weight' => 0,
-            'title' => app('user')->username,
+            'title' => app('editor')->username,
             'items' => [
                 'profile' => [
                     'title' => 'profile',
@@ -114,9 +114,9 @@ class Base
                     'attr' => 'class="divider"',
                 ],
                 'logout' => [
-                    'html' => '<a href="/logout" onclick="event.preventDefault();'.
+                    'html' => '<a href="/auth/logout" onclick="event.preventDefault();'.
                         'document.getElementById(\'logout-form\').submit();">'.t('logout').'</a>'.
-                        '<form id="logout-form" action="/logout" method="POST" style="display: none;">'.
+                        '<form id="logout-form" action="/auth/logout" method="POST" style="display: none;">'.
                         csrf_field().'</form>',
                 ]
             ]

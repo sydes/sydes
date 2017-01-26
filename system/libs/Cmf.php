@@ -92,11 +92,14 @@ class Cmf
 
     public static function installDefaultModules(){
         $modules = [
-            'Page',
-            'Route',
-            'Theme',
+            'Auth',
             'Iblock',
+            'Main',
+            'Page',
+            'Profile',
+            'Route',
             'SampleName',
+            'Theme',
         ];
 
         foreach ($modules as $module) {

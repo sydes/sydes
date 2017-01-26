@@ -6,11 +6,26 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Util;
+namespace Module\Main;
+
+use App\Cmf;
 
 class Controller
 {
     public function install()
+    {
+        Cmf::installModule('main');
+
+        Cmf::addRoutes('main', [
+            ['GET', '/install', 'Main@signUpForm'],
+            ['POST', '/install', 'Main@signUp'],
+
+            ['GET', '/robots.txt', 'Main@robots'],
+            ['GET', '/sitemap.xml', 'Main@sitemap'],
+        ]);
+    }
+
+    public function installSite()
     {
         if (file_exists(DIR_APP.'/config.php')) {
             return 'Installed';
@@ -18,7 +33,7 @@ class Controller
 
         $r = app('request');
         if ($r->isPost()) {
-            \App\Cmf::install([
+            Cmf::install([
                 'email' => $r->input('email'),
                 'username' => $r->input('username'),
                 'password' => $r->input('password'),
@@ -50,7 +65,7 @@ class Controller
             }
         }
 
-        return html(render(DIR_SYSTEM.'/modules/User/views/login-signup.php', [
+        return html(render(DIR_SYSTEM.'/modules/Auth/views/form.php', [
             'locales' => $langs,
             'errors' => checkServer(),
             'title' => 'Sign up for',
@@ -65,7 +80,7 @@ class Controller
 
     public function error($code)
     {
-        return 'error '.$code;
+        abort($code, 'Page not found');
     }
 
     public function redirect($url)
@@ -76,5 +91,10 @@ class Controller
     public function robots()
     {
         return 'robots content';
+    }
+
+    public function sitemap()
+    {
+        return 'sitemap content';
     }
 }

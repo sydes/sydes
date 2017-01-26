@@ -128,10 +128,14 @@ class DefaultServicesProvider
 
         /**
          * @param $c
-         * @return User
+         * @return Editor
          */
-        $c['user'] = function ($c) {
-            return new User($c['rawAppConfig']['user']);
+        $c['editor'] = function ($c) {
+            return new Editor($c['rawAppConfig']['user']);
+        };
+
+        $c['logger'] = function () {
+            return new Logger(DIR_LOG.'/'.date('Ym').'.log');
         };
     }
 }

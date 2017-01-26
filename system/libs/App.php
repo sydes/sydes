@@ -78,11 +78,11 @@ class App
     private function findRoute()
     {
         if (!$this->loadConfig()) {
-            return ['Util@install'];
+            return ['Main@installSite'];
         }
 
         if (!$site = $this->findSite($this->container['request']->getUri()->getHost())) {
-            return ['Util@siteNotFound'];
+            return ['Main@siteNotFound'];
         }
 
         $path = '/'.ltrim($this->container['request']->getUri()->getPath(), '/');
@@ -94,7 +94,7 @@ class App
         if ($this->container['section'] == 'front' && count($locales) > 1) {
 
             if ($path == '/') {
-                return ['Util@redirect', ['url' => '/'.$locales[0]]];
+                return ['Main@redirect', ['url' => '/'.$locales[0]]];
             }
 
             $pathParts = explode('/',$path, 3);
@@ -114,7 +114,7 @@ class App
         if ($routeInfo[0] == Dispatcher::FOUND) {
             return [$routeInfo[1], $routeInfo[2]];
         } elseif (strpos($path, '.')) {
-            abort(404, t('error_page_not_found'));
+            return ['Main@error', ['code' => 404]];
         }
         return model('route')->findOrFail($path);
     }

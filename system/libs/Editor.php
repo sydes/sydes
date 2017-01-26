@@ -8,14 +8,14 @@
  */
 namespace App;
 
-class User
+class Editor
 {
-    private $isEditor;
+    private $isLoggedIn;
     public $email;
     public $username;
     public $password;
     public $mastercode;
-    public $autologin;
+    public $autoLogin;
 
     public function __construct($user)
     {
@@ -27,17 +27,14 @@ class User
     public function login($username, $pass, $remember = null)
     {
         if ($username != $this->username || !password_verify($pass, $this->password)) {
-            logger("{$username} is not logged on. {$pass} - wrong password");
-            sleep(2);
             return false;
         }
 
         $_SESSION['hash'] = md5($username.$this->password.app('request')->getIp());
-        if (!empty($remember) && $this->autologin == 1) {
+        if (!empty($remember) && $this->autoLogin == 1) {
             setcookie('hash', $_SESSION['hash'], time() + 604800);
         }
         setcookie('entered', '1', time() + 604800, '/');
-        logger($username.' is logged on with a password');
         return true;
     }
 
@@ -47,7 +44,7 @@ class User
         setcookie('hash', '');
     }
 
-    public function isLoggedIn()
+    public function checkLogin()
     {
         // already logged in
         if (isset($_SESSION['hash'])) {
@@ -57,27 +54,24 @@ class User
                 $this->logout();
             }
             // login by cookies
-        } elseif ($this->autologin == 1 && isset($_COOKIE['hash'])) {
+        } elseif ($this->autoLogin == 1 && isset($_COOKIE['hash'])) {
             $hash = md5($this->username.$this->password.app('request')->getIp());
             if ($_COOKIE['hash'] == $hash) {
                 $_SESSION['hash'] = $hash;
-                logger($this->username.' is logged on with a cookie');
                 return true;
             } else {
                 $this->logout();
-                logger($this->username.' is not logged on. Wrong cookie');
-                sleep(2);
             }
         }
         return false;
     }
 
-    public function isEditor()
+    public function isLoggedIn()
     {
-        if (is_null($this->isEditor)) {
-            $this->isEditor = $this->isLoggedIn();
+        if (is_null($this->isLoggedIn)) {
+            $this->isLoggedIn = $this->checkLogin();
         }
-        return $this->isEditor;
+        return $this->isLoggedIn;
     }
 
     public function isAdmin()

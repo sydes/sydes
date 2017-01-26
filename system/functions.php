@@ -609,7 +609,7 @@ function logger($string)
 
 function restricted()
 {
-    if (!app('user')->isAdmin()) {
+    if (!app('editor')->isAdmin()) {
         alert(t('error_mastercode_needed'), 'warning');
         $to = ifsetor(app('request')->headers['REFERER'], 'admin');
         throw new \App\Exception\RedirectException($to);

@@ -1,22 +1,10 @@
 <?php
-defined('APP_START') or die;
-
 $events = app('event');
 
 /**
  * Csrf guard
  */
 $events->on('route.found', '*', [app('csrf'), 'check']);
-
-/**
- * Auth middleware :)
- */
-$events->on('route.found', 'admin/*', function () {
-    if (!app('user')->isEditor()) {
-        $_SESSION['entry'] = app('request')->getUri()->getPath();
-        throw new App\Exception\RedirectException('/login');
-    }
-});
 
 /**
  * Check updates for cmf in admin center

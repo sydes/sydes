@@ -253,7 +253,7 @@ class Controller
     public function alertAfterRedirect()
     {
         alert('Not saved', 'danger');
-        return redirect('/sample');
+        return redirect('/item/42');
     }
 
     public function random()

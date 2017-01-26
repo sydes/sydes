@@ -1,44 +1,41 @@
 <?php
-namespace Module\User;
+/**
+ * SyDES - Lightweight CMF for a simple sites with SQLite database
+ *
+ * @package   SyDES
+ * @copyright 2011-2017, ArtyGrand <artygrand.ru>
+ * @license   GNU GPL v3 or later; see LICENSE
+ */
+namespace Module\Profile;
+
+use App\Cmf;
 
 class Controller
 {
-    public function loginForm()
+    public function install()
     {
-        return view('user/login-signup', [
-            'autoLogin' => app('user')->autologin,
-            'errors' => checkServer(),
-            'title' => 'Log in to',
-            'signUp' => false,
+        Cmf::installModule('profile');
+        Cmf::addRoutes('profile', [
+            ['GET',  '/admin/profile', 'Profile@edit'],
+            ['POST', '/admin/profile', 'Profile@update'],
         ]);
     }
 
-    public function login()
+    public function uninstall()
     {
-        $r = app('request');
-        if (!app('user')->login($r->input('username'), $r->input('password'), $r->has('remember'))) {
-            return back();
-        }
-        $entry = ifsetor($_SESSION['entry'], '/admin');
-        unset($_SESSION['entry']);
-        return redirect($entry);
-    }
-
-    public function logout(){
-        app('user')->logout();
-        return redirect();
+        Cmf::removeRoutes('profile');
+        Cmf::uninstallModule('profile');
     }
 
     public function edit()
     {
         $d = document([
-            'content'       => view('user/form', ['autologin' => app('user')->autologin]),
+            'content'       => view('profile/form', ['autologin' => app('user')->autologin]),
             'sidebar_left'  => '',
             'sidebar_right' => \H::saveButton(DIR_APP.'/config.php').\H::mastercodeInput(),
-            'form_url'      => 'admin/user/update',
+            'form_url'      => '/admin/profile',
             'meta_title'    => t('module_profile'),
             'breadcrumbs'   => [
-                ['url' => 'admin/config', 'title' => t('settings')],
                 ['title' => t('module_profile')],
             ],
         ]);
@@ -69,5 +66,4 @@ class Controller
         notify(t('saved'));
         return back();
     }
-
 }
