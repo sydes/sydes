@@ -1,7 +1,7 @@
 <?php
-if (!$this->config('map_show')) {
+if (!$this->data('map_show')) {
     return;
 }
-if ($this->config('map_type')) {
-    $args['template'] = $this->config('map_type');
+if ($this->data('map_type')) {
+    $args['template'] = $this->data('map_type');
 }

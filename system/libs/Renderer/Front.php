@@ -100,7 +100,7 @@ class Front extends Base
 
     private function compile($html)
     {
-        if (!preg_match_all('/{(iblock|t|config):([\w-]+)( .+?)?}/', $html, $matches)) {
+        if (!preg_match_all('/{(iblock|t|data):([\w-]+)( .+?)?}/', $html, $matches)) {
             return $html;
         }
 
@@ -172,7 +172,7 @@ class Front extends Base
         return app('translator')->translate($text);
     }
 
-    public function config($key)
+    public function data($key)
     {
         return ifsetor($this->config['data'][$key], false);
     }

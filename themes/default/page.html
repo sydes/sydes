@@ -30,7 +30,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3">
-                    <a href="" class="logo"><img src="{config:logo}"></a>
+                    <a href="" class="logo"><img src="{data:logo}"></a>
                 </div>
                 <nav class="col-sm-9">
                     {iblock:menu show="main" class="main-menu to-mobile"}
@@ -57,8 +57,8 @@
                 <div class="col-sm-3">
                     <h3>Fusce sit amet</h3>
                     <ul>
-                        <li><a href="#">aliquet est in</a></li>
-                        <li><a href="#">faucibus ac</a></li>
+                        <li><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> {data:phone}</li>
+                        <li><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> {data:address}</li>
                         <li><a href="#">sapien eu vulputate</a></li>
                         <li><a href="#">quis dapibus purus</a></li>
                         <li><a href="#">ut lobortis libero</a></li>
