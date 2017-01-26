@@ -56,24 +56,21 @@ class Router
      * @return array
      * @link   https://github.com/nikic/FastRoute/blob/master/src/Dispatcher.php
      */
-    public function dispatch($method, $uri)
+    public function dispatch($modules, $method, $uri)
     {
-        return $this->createDispatcher()->dispatch($method, $uri);
+        return $this->createDispatcher($modules)->dispatch($method, $uri);
     }
 
     /**
      * @return \FastRoute\Dispatcher
      */
-    protected function createDispatcher()
+    protected function createDispatcher($modules)
     {
-        $routeDefinitionCallback = function (RouteCollector $r) {
-            $routes = include DIR_SYSTEM.'/routes.php';
-            foreach (app('site')['routes'] as $extRoutes) {
-                $routes = array_merge($routes, $extRoutes);
-            }
-
-            foreach ($routes as $route) {
-                $r->addRoute($route[0], $route[1], $route[2]);
+        $routeDefinitionCallback = function (RouteCollector $r) use ($modules) {
+            foreach ($modules as $routes) {
+                foreach ($routes as $route) {
+                    $r->addRoute($route[0], $route[1], $route[2]);
+                }
             }
         };
 

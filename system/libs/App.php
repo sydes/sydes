@@ -110,7 +110,11 @@ class App
         $router->forSite($site);
         $router->cache($this->container['settings']['cacheRouter']);
 
-        $routeInfo = $router->dispatch($this->container['request']->getMethod(), $path);
+        $routeInfo = $router->dispatch(
+            $this->container['site']['routes'],
+            $this->container['request']->getMethod(),
+            $path
+        );
         if ($routeInfo[0] == Dispatcher::FOUND) {
             return [$routeInfo[1], $routeInfo[2]];
         } elseif (strpos($path, '.')) {
