@@ -69,7 +69,7 @@ class Logger
         file_put_contents($this->file, $row, FILE_APPEND | LOCK_EX);
     }
 
-    function interpolate($message, array $context = array())
+    protected function interpolate($message, array $context = array())
     {
         $replace = array();
         foreach ($context as $key => $val) {
