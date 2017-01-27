@@ -85,6 +85,32 @@ class Request extends ServerRequest
     }
 
     /**
+     * Gets the request "intended" method.
+     * The _method request parameter can be used to determine the HTTP method,
+     * The method is always an uppercased string.
+     *
+     * @return string The request method
+     */
+    public function getMethod()
+    {
+        $method = parent::getMethod();
+        if ($method == 'POST') {
+            $method = strtoupper($this->input('_method', 'POST'));
+        }
+        return $method;
+    }
+
+    /**
+     * Gets the "real" request method.
+     *
+     * @return string The request method
+     */
+    public function getRealMethod()
+    {
+        return parent::getMethod();
+    }
+
+    /**
      * Determine if the request contains a non-empty value for an input item.
      *
      * @param string|array $key

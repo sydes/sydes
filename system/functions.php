@@ -712,6 +712,17 @@ function csrf_field()
     return app('csrf')->getField();
 }
 
+/**
+ * Generate a form field to spoof the HTTP verb used by forms.
+ *
+ * @param  string $method
+ * @return string
+ */
+function method_field($method)
+{
+    return '<input type="hidden" name="_method" value="'.$method.'">';
+}
+
 function sortByWeight($a, $b)
 {
     return $a['weight'] - $b['weight'];
