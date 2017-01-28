@@ -26,8 +26,6 @@ class App
 
         $this->handleErrors();
 
-        include DIR_SYSTEM.'/eventHandlers.php';
-
         $this->container['event']->trigger('app.init');
     }
 

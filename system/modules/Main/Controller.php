@@ -22,7 +22,9 @@ class Controller
 
     public function install()
     {
-        Cmf::installModule('main');
+        Cmf::installModule('main', [
+            'handlers' => ['Module\Main\Handlers::init'],
+        ]);
     }
 
     public function installSite()
