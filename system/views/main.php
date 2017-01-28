@@ -43,7 +43,7 @@
             </div>
             <div class="col-sm-3 text-right">
                 <a href="http://sydes.ru" data-toggle="tooltip"
-                   title="<?=t('tip_license');?>">SyDES <?=VERSION;?></a>
+                   title="<?=t('tip_license');?>">SyDES <?=SYDES_VERSION;?></a>
             </div>
         </div>
     </div>
