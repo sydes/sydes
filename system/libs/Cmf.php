@@ -65,7 +65,6 @@ class Cmf
             'work' => 1,
             'need_cache' => 0,
             'modules' => [],
-            'routes' => [],
             'menu' => [
                 'content' => ['weight' => 0,   'title' => 'menu_content', 'icon' => 'file', 'items' => []],
                 'modules' => ['weight' => 100, 'title' => 'menu_modules', 'icon' => 'th-list', 'items' => []],
@@ -90,18 +89,9 @@ class Cmf
         self::installDefaultModules();
     }
 
-    public static function installDefaultModules(){
-        $modules = [
-            'Auth',
-            'Iblock',
-            'Main',
-            'Page',
-            'Profile',
-            'Route',
-            'SampleName',
-            'Theme',
-        ];
-
+    public static function installDefaultModules()
+    {
+        $modules = str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
         foreach ($modules as $module) {
             App::execute([$module.'@install']);
         }
