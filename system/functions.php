@@ -64,11 +64,7 @@ function iblockDir($name)
  */
 function moduleDir($name)
 {
-    $parts = explode('-', $name);
-    foreach ($parts as $i => $part) {
-        $parts[$i] = ucfirst($part);
-    }
-    $name = implode('', $parts);
+    $name = studly_case($name);
 
     foreach ([DIR_APP, DIR_SYSTEM] as $place) {
         $path = $place.'/modules/'.$name;
@@ -731,4 +727,14 @@ function sortByWeight($a, $b)
 function thumbnail($url, $width, $height, array $params = ['resize'])
 {
     return $url;
+}
+
+function studly_case($value)
+{
+    return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $value)));
+}
+
+function camel_case($value)
+{
+    return lcfirst(studly_case($value));
 }
