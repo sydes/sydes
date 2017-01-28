@@ -13,9 +13,6 @@ use App\Cmf;
 class Controller
 {
     public static $routes = [
-        ['GET', '/install', 'Main@signUpForm'],
-        ['POST', '/install', 'Main@signUp'],
-
         ['GET', '/robots.txt', 'Main@robots'],
         ['GET', '/sitemap.xml', 'Main@sitemap'],
     ];
@@ -27,7 +24,7 @@ class Controller
         ]);
     }
 
-    public function installSite()
+    public function installer()
     {
         if (file_exists(DIR_APP.'/config.php')) {
             return 'Installed';
@@ -45,6 +42,9 @@ class Controller
                 'domain' => $r->getUri()->getHost(),
                 'timeZone' => $r->input('time_zone'),
             ]);
+
+            app('editor')->login($r->input('username'), $r->input('password'));
+
             return redirect('/admin/sites/1/edit');
         }
 

@@ -44,6 +44,8 @@ class Cmf
             ],
         ];
 
+        app()['rawAppConfig'] = $app;
+
         array2file($app, DIR_APP.'/config.php');
 
         $langs = ['en', $params['locale']];

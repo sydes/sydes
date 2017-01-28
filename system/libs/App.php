@@ -31,6 +31,11 @@ class App
 
     public function run($silent = false)
     {
+        if (!$this->loadConfig()) {
+            $this->container['emitter']->emit(self::execute(['Main@installer']));
+            return null;
+        }
+
         $route = $this->findRoute();
 
         date_default_timezone_set($this->container['app']['timeZone']);
@@ -75,10 +80,6 @@ class App
 
     private function findRoute()
     {
-        if (!$this->loadConfig()) {
-            return ['Main@installSite'];
-        }
-
         if (!$site = $this->findSite($this->container['request']->getUri()->getHost())) {
             return ['Main@siteNotFound'];
         }
