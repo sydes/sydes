@@ -24,5 +24,5 @@ define('DIR_THUMB',    DIR_APP.'/thumbs');
 
 define('API_HOST', 'http://api.sydes.ru/');
 
-define('SYDES_VERSION', '3.0.0-a');
+define('SYDES_VERSION', '3.0.0-a2');
 define('APP_START', microtime(true));
