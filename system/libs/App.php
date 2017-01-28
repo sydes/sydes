@@ -107,11 +107,12 @@ class App
         $this->container['exceptionPlace'] = 'Site';
 
         $router = $this->container['router'];
-        $router->forSite($site);
-        $router->cache($this->container['settings']['cacheRouter']);
+        if ($this->container['settings']['cacheRouter']) {
+            $router->setCacheFile(DIR_CACHE.'/routes.'.$site.'.cache');
+        }
 
         $routeInfo = $router->dispatch(
-            $this->container['site']['routes'],
+            array_keys($this->container['site']['modules']),
             $this->container['request']->getMethod(),
             $path
         );

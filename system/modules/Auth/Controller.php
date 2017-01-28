@@ -13,25 +13,24 @@ use App\Event;
 
 class Controller
 {
+    public static $routes = [
+        ['GET',  '/auth/login', 'Auth@loginForm'],
+        ['POST', '/auth/login', 'Auth@login'],
+        ['POST', '/auth/logout', 'Auth@logout'],
+        ['GET',  '/password/reset', 'Auth/Password@sendMail'],
+        ['GET',  '/password/reset/{token:[a-f0-9]+}', 'Auth/Password@showResetForm'],
+        ['POST', '/password/reset', 'Auth/Password@reset'],
+    ];
+
     public function install()
     {
         Cmf::installModule('auth', [
             'handlers' => ['Module\Auth\Controller::handlers'],
         ]);
-
-        Cmf::addRoutes('auth', [
-            ['GET',  '/auth/login', 'Auth@loginForm'],
-            ['POST', '/auth/login', 'Auth@login'],
-            ['POST', '/auth/logout', 'Auth@logout'],
-            ['GET',  '/password/reset', 'Auth/Password@sendMail'],
-            ['GET',  '/password/reset/{token:[a-f0-9]+}', 'Auth/Password@showResetForm'],
-            ['POST', '/password/reset', 'Auth/Password@reset'],
-        ]);
     }
 
     public function uninstall()
     {
-        Cmf::removeRoutes('auth');
         Cmf::uninstallModule('auth');
     }
 

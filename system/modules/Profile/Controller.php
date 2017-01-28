@@ -12,18 +12,18 @@ use App\Cmf;
 
 class Controller
 {
+    public static $routes = [
+        ['GET',  '/admin/profile', 'Profile@edit'],
+        ['POST', '/admin/profile', 'Profile@update'],
+    ];
+
     public function install()
     {
         Cmf::installModule('profile');
-        Cmf::addRoutes('profile', [
-            ['GET',  '/admin/profile', 'Profile@edit'],
-            ['POST', '/admin/profile', 'Profile@update'],
-        ]);
     }
 
     public function uninstall()
     {
-        Cmf::removeRoutes('profile');
         Cmf::uninstallModule('profile');
     }
 

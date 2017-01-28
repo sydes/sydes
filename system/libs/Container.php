@@ -58,6 +58,7 @@ class Container extends PimpleContainer
      * All services are shared - that is, they are registered such that the
      * same instance is returned on subsequent calls.
      *
+     * @param $settings
      * @return void
      */
     private function registerDefaultServices($settings)

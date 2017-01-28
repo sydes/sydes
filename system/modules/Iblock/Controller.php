@@ -12,6 +12,9 @@ use App\Cmf;
 
 class Controller
 {
+    public static $routes = [
+        ['GET', '/admin/iblock', 'Iblock@index'],
+    ];
 
     public function __construct()
     {
@@ -22,10 +25,6 @@ class Controller
     {
         Cmf::installModule('iblock');
 
-        Cmf::addRoutes('iblock', [
-            ['GET', '/admin/iblock', 'Iblock@index'],
-        ]);
-
         Cmf::addMenuItem('system', [
             'title' => 'module_iblock',
             'url' => '/admin/iblocks',
@@ -34,7 +33,6 @@ class Controller
 
 	public function uninstall()
     {
-        Cmf::removeRoutes('iblock');
         Cmf::removeMenuItem('system', '/admin/iblocks');
         Cmf::uninstallModule('iblock');
     }

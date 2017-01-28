@@ -10,6 +10,10 @@ namespace Module\Page;
 
 class Controller
 {
+    public static $routes = [
+        ['GET', '/admin/pages', 'Page@index'],
+    ];
+
     public function install()
     {
         //echo 'page installed ';

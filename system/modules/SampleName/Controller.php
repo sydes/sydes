@@ -7,6 +7,34 @@ class Controller
 {
     private $moduleName = 'sample-name';
 
+    public static $routes = [
+        ['GET', '/', 'SampleName@index'],
+        ['GET', '/admin/sample', 'SampleName@index'],
+        ['GET', '/admin/sample/add', 'SampleName@create'],
+        ['GET', '/admin/sample/another', 'SampleName@myMethod'],
+        ['GET', '/item/{id:[0-9]+}', 'SampleName@item'],
+        ['GET', '/string.txt', 'SampleName@textString'],
+        ['GET', '/html', 'SampleName@asHtml'],
+        ['GET', '/view', 'SampleName@view'],
+        ['GET', '/api.json', 'SampleName@forAjax'],
+        ['GET', '/null', 'SampleName@returnNull'],
+        ['GET', '/export', 'SampleName@export'],
+        ['GET', '/download', 'SampleName@download'],
+        ['GET', '/not-found', 'SampleName@notFound'],
+        ['GET', '/forbidden', 'SampleName@forbidden'],
+        ['GET', '/error', 'SampleName@error'],
+        ['GET', '/moved', 'SampleName@moved'],
+        ['GET', '/back', 'SampleName@back'],
+        ['GET', '/ajax-notify', 'SampleName@ajaxNotify'],
+        ['GET', '/ajax-alert', 'SampleName@ajaxAlert'],
+        ['GET', '/update', 'SampleName@notifyAfterRedirect'],
+        ['GET', '/ajax-update', 'SampleName@notifyAfterRedirect'],
+        ['GET', '/save', 'SampleName@alertAfterRedirect'],
+        ['GET', '/ajax-save', 'SampleName@alertAfterRedirect'],
+        ['GET', '/ajax-random', 'SampleName@random'],
+        ['GET', '/sub-module', 'SampleName/SubModule@method'],
+    ];
+
     public function __construct()
     {
         // Define properties and services for every method
@@ -19,34 +47,6 @@ class Controller
         Cmf::installModule($this->moduleName, [
             'handlers' => ['Module\SampleName\Handlers::init'],
             'files' => ['functions.php'],
-         ]);
-
-        Cmf::addRoutes($this->moduleName, [
-            ['GET', '/', 'SampleName@index'],
-            ['GET', '/admin/sample', 'SampleName@index'],
-            ['GET', '/admin/sample/add', 'SampleName@create'],
-            ['GET', '/admin/sample/another', 'SampleName@myMethod'],
-            ['GET', '/item/{id:[0-9]+}', 'SampleName@item'],
-            ['GET', '/string.txt', 'SampleName@textString'],
-            ['GET', '/html', 'SampleName@asHtml'],
-            ['GET', '/view', 'SampleName@view'],
-            ['GET', '/api.json', 'SampleName@forAjax'],
-            ['GET', '/null', 'SampleName@returnNull'],
-            ['GET', '/export', 'SampleName@export'],
-            ['GET', '/download', 'SampleName@download'],
-            ['GET', '/not-found', 'SampleName@notFound'],
-            ['GET', '/forbidden', 'SampleName@forbidden'],
-            ['GET', '/error', 'SampleName@error'],
-            ['GET', '/moved', 'SampleName@moved'],
-            ['GET', '/back', 'SampleName@back'],
-            ['GET', '/ajax-notify', 'SampleName@ajaxNotify'],
-            ['GET', '/ajax-alert', 'SampleName@ajaxAlert'],
-            ['GET', '/update', 'SampleName@notifyAfterRedirect'],
-            ['GET', '/ajax-update', 'SampleName@notifyAfterRedirect'],
-            ['GET', '/save', 'SampleName@alertAfterRedirect'],
-            ['GET', '/ajax-save', 'SampleName@alertAfterRedirect'],
-            ['GET', '/ajax-random', 'SampleName@random'],
-            ['GET', '/sub-module', 'SampleName/SubModule@method'],
         ]);
 
         Cmf::addMenuGroup($this->moduleName, 'menu_sample', 'star', 120);
@@ -63,7 +63,6 @@ class Controller
 
 	public function uninstall()
     {
-        Cmf::removeRoutes($this->moduleName);
         Cmf::removeMenuGroup($this->moduleName);
         Cmf::uninstallModule($this->moduleName);
 

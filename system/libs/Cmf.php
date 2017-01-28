@@ -248,35 +248,6 @@ class Cmf
         }
     }
 
-    /**
-     * @param string $name name of extension
-     * @param array  $data array of arrays ['method', 'uri', 'route']
-     */
-    public static function addRoutes($name, array $data)
-    {
-        $config = app('rawSiteConfig');
-        if (isset($config['routes'][$name])) {
-            $config['routes'][$name] = array_merge($config['routes'][$name], $data);
-        } else {
-            $config['routes'][$name] = $data;
-        }
-
-        self::saveSiteConfig($config);
-    }
-
-    /**
-     * @param string $name name of extension
-     */
-    public static function removeRoutes($name)
-    {
-        $config = app('rawSiteConfig');
-        if (isset($config['routes'][$name])) {
-            unset($config['routes'][$name]);
-
-            self::saveSiteConfig($config);
-        }
-    }
-
     private static function saveSiteConfig($config)
     {
         app()['rawSiteConfig'] = $config;

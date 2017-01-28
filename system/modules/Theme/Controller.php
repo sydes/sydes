@@ -12,6 +12,12 @@ use App\Cmf;
 
 class Controller
 {
+    public static $routes = [
+        ['GET', '/admin/themes', 'Theme@index'],
+        ['GET', '/admin/theme/{name:[a-z-]+}', 'Theme@view'],
+        ['GET', '/admin/theme/layout/{name:[a-z-]+}', 'Theme@viewLayout'],
+        ['POST', '/admin/theme/layout', 'Theme@saveLayout'],
+    ];
 
     public function __construct()
     {
@@ -22,13 +28,6 @@ class Controller
     {
         Cmf::installModule('theme');
 
-        Cmf::addRoutes('theme', [
-            ['GET', '/admin/themes', 'Theme@index'],
-            ['GET', '/admin/theme/{name:[a-z-]+}', 'Theme@view'],
-            ['GET', '/admin/theme/layout/{name:[a-z-]+}', 'Theme@viewLayout'],
-            ['POST', '/admin/theme/layout', 'Theme@saveLayout'],
-        ]);
-
         Cmf::addMenuItem('system', [
             'title' => 'module_theme',
             'url' => '/admin/themes',
@@ -37,7 +36,6 @@ class Controller
 
 	public function uninstall()
     {
-        Cmf::removeRoutes('theme');
         Cmf::removeMenuItem('system', '/admin/themes');
         Cmf::uninstallModule('theme');
     }

@@ -12,17 +12,17 @@ use App\Cmf;
 
 class Controller
 {
+    public static $routes = [
+        ['GET', '/install', 'Main@signUpForm'],
+        ['POST', '/install', 'Main@signUp'],
+
+        ['GET', '/robots.txt', 'Main@robots'],
+        ['GET', '/sitemap.xml', 'Main@sitemap'],
+    ];
+
     public function install()
     {
         Cmf::installModule('main');
-
-        Cmf::addRoutes('main', [
-            ['GET', '/install', 'Main@signUpForm'],
-            ['POST', '/install', 'Main@signUp'],
-
-            ['GET', '/robots.txt', 'Main@robots'],
-            ['GET', '/sitemap.xml', 'Main@sitemap'],
-        ]);
     }
 
     public function installSite()
