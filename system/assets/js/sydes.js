@@ -15,7 +15,7 @@ syd.notify = function (message, status, delay) {
     status = status || 'info';
     delay = delay || 4000;
     if (message != null) {
-        $('#notify').append($('<li class="' + status + '">' + message + '</li>').delay(delay).slideUp());
+        $('#notify').append($('<li class="'+status+'">'+message+'</li>').delay(delay).slideUp());
     }
 };
 
@@ -29,13 +29,13 @@ syd.notify = function (message, status, delay) {
 syd.alert = function (message, status) {
     var duplicate = false;
     $('.alert').each(function () {
-        if ($(this).text() == '×' + message) {
+        if ($(this).text() == '×'+message) {
             duplicate = true;
         }
     });
     status = status || 'info';
     if (message != null && !duplicate) {
-        $('#alerts').append($('<div class="alert alert-' + status + ' alert-dismissible"><button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>' + message + '</div>'));
+        $('#alerts').append($('<div class="alert alert-'+status+' alert-dismissible"><button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>'+message+'</div>'));
     }
 };
 

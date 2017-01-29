@@ -1,11 +1,3 @@
-$.ajaxSetup({
-    type: 'POST',
-    data: {
-        /*csrf_name: csrf_name,
-        csrf_value: csrf_value*/
-    }
-});
-
 $(document).ajaxSend(function () {
     $('html').css('cursor', 'wait');
 }).ajaxSuccess(function (e, xhr) {
@@ -13,7 +5,7 @@ $(document).ajaxSend(function () {
         console.log(xhr.responseText)
     }
     if (xhr.getResponseHeader('Content-Type') == 'application/json') {
-        var response = $.parseJSON(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
 
         if ('notify' in response) {
             syd.notify(response.notify.message, response.notify.status)

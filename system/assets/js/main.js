@@ -15,7 +15,7 @@ $(document).ready(function () {
         $('.ids').prop('checked', $(this).prop('checked'))
     });
     $('select.goto').change(function () {
-        location.href = $(this).data('url') + $(this).val()
+        location.href = $(this).data('url')+$(this).val()
     });
     $('.submit').click(function () {
         ajaxFormApply()
@@ -25,7 +25,7 @@ $(document).ready(function () {
         var size = $(e.relatedTarget).data('size'), dialog = $(this).find('.modal-dialog');
         dialog.removeClass('modal-sm modal-lg');
         if (size) {
-            dialog.addClass('modal-' + size)
+            dialog.addClass('modal-'+size)
         }
         setTimeout(modalPosition, 10)
     }).on('loaded.bs.modal', function () {
@@ -74,7 +74,7 @@ $(document).on('click', '.apply-modal', function () {
 
 $(document).on('click', '.skin-selector a', function () {
     var skin = $(this).attr('title');
-    $('#skin').attr('href', '/system/assets/css/skin.' + skin + '.css');
+    $('#skin').attr('href', '/system/assets/css/skin.'+skin+'.css');
     syd.cookie('skin', skin, 7);
     return false
 });
@@ -100,15 +100,15 @@ function ajaxFormApply() {
     if (form.length) {
         $.ajax({
             url: form.prop('action'),
-            data: form.serialize() + '&act=apply'
+            data: form.serialize()+'&act=apply'
         })
     }
 }
 
 function addHandler(object, event, handler, useCapture) {
     if (object.addEventListener) object.addEventListener(event, handler, useCapture);
-    else if (object.attachEvent) object.attachEvent('on' + event, handler);
-    else object['on' + event] = handler;
+    else if (object.attachEvent) object.attachEvent('on'+event, handler);
+    else object['on'+event] = handler;
 }
 
 function hotSave(evt) {
@@ -128,11 +128,11 @@ function toBuffer(fileUrl, data, allFiles) {
     var body = '';
     for (var key in allFiles) {
         if (allFiles.hasOwnProperty(key)) {
-            body += '<pre>' + allFiles[key]['url'] + '<br>&lt;img src="' + allFiles[key]['url'] + '"></pre>';
+            body += '<pre>'+allFiles[key]['url']+'<br>&lt;img src="'+allFiles[key]['url']+'"></pre>';
         }
     }
-    $('#modal .modal-content').html('<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Ctrl + C</h4></div>' +
-        '<div class="modal-body">' + body + '</div>');
+    $('#modal .modal-content').html('<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Ctrl+C</h4></div>' +
+        '<div class="modal-body">'+body+'</div>');
     $('#modal').modal('show');
 }
 
@@ -153,7 +153,7 @@ function modalPosition() {
 
         $(this).find('.modal-body').css({
             'max-height': function () {
-                return (content - (header + footer));
+                return (content - (header+footer));
             }
         });
 
