@@ -9,8 +9,6 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
     $("[data-toggle=popover]").popover({html: true});
 
-    syd.notify(syd.cookie('notify.message'), syd.cookie('notify.status'));
-
     $('#checkall').click(function () {
         $('.ids').prop('checked', $(this).prop('checked'))
     });
@@ -75,7 +73,7 @@ $(document).on('click', '.apply-modal', function () {
 $(document).on('click', '.skin-selector a', function () {
     var skin = $(this).attr('title');
     $('#skin').attr('href', '/system/assets/css/skin.'+skin+'.css');
-    syd.cookie('skin', skin, 7);
+    localStorage['skin'] = skin;
     return false
 });
 

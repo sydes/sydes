@@ -1,9 +1,10 @@
 $(document).ajaxSend(function () {
     $('html').css('cursor', 'wait');
 }).ajaxSuccess(function (e, xhr) {
-    if (syd.cookie('debug') == '1') {
+    if (localStorage['debug'] == 1) {
         console.log(xhr.responseText)
     }
+
     if (xhr.getResponseHeader('Content-Type') == 'application/json') {
         var response = JSON.parse(xhr.responseText);
 
