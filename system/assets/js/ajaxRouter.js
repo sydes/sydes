@@ -25,6 +25,10 @@ $(document).ajaxSend(function () {
         if ('redirect' in response) {
             location.href = response.redirect
         }
+
+        if ('modal' in response) {
+            syd.modal(response.modal)
+        }
     }
 }).ajaxError(function () {
     $('html').css('cursor', 'auto');

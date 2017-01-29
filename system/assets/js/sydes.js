@@ -40,6 +40,29 @@ syd.alert = function (message, status) {
 };
 
 /**
+ * Creates new modal and show it
+ * @param params
+ *   Array with size, title, body and footer keys
+ */
+syd.modal = function (params) {
+    params.size = params.size || '';
+
+    var id = 'modal-loaded',
+        title_html = '<div class="modal-header"><div class="modal-title">'+params.title+'</div>\
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+            <span aria-hidden="true">&times;</span></button></div>',
+        body_html = params.body ? '<div class="modal-body">'+params.body+'</div>' : '',
+        footer_html = params.footer ? '<div class="modal-footer">'+params.footer+'</div>' : '',
+        modal = '<div class="modal fade" id="'+id+'" tabindex="-1" role="dialog">'+
+            '<div class="modal-dialog '+params.size+'" role="document">'+
+        '<div class="modal-content">'+title_html+body_html+footer_html+'</div></div></div>';
+    $('body').append(modal);
+    $('#'+id).modal('show').on('hidden.bs.modal', function () {
+        $(this).remove();
+    });
+};
+
+/**
  * Translate strings to the page language
  * @param str
  *   A string containing the string to translate.

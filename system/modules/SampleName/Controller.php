@@ -33,6 +33,7 @@ class Controller
         ['GET', '/ajax-save', 'SampleName@alertAfterRedirect'],
         ['GET', '/ajax-random', 'SampleName@random'],
         ['GET', '/sub-module', 'SampleName/SubModule@method'],
+        ['GET', '/ajax-modal', 'SampleName@modal'],
     ];
 
     public function __construct()
@@ -96,6 +97,7 @@ class Controller
             '/ajax-random'  => 'Random response',
             '/ajax-nowhere' => 'Ajax 404 response',
             '/sub-module'   => 'Sub-module works too',
+            '/ajax-modal'   => 'Modal example',
         ];
 
         $d = document([
@@ -275,4 +277,17 @@ class Controller
                 return null;
         }
     }
+
+    public function modal()
+    {
+        return [
+            'modal' => [
+                'title' => 'Hello Modal!',
+                'body' => '<p>This is body text</p>',
+                'footer' => '<button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>',
+                'size' => 'modal-sm',
+            ],
+        ];
+    }
+
 }
