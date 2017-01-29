@@ -115,9 +115,8 @@ class Base
                 ],
                 'logout' => [
                     'html' => '<a href="/auth/logout" onclick="event.preventDefault();'.
-                        'document.getElementById(\'logout-form\').submit();">'.t('logout').'</a>'.
-                        '<form id="logout-form" action="/auth/logout" method="POST" style="display: none;">'.
-                        csrf_field().'</form>',
+                        '$(\'#logout-form\').submit();">'.t('logout').'</a>'.
+                        '<form id="logout-form" action="/auth/logout" method="POST" style="display: none;"></form>',
                 ]
             ]
         ]);

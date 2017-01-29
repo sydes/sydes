@@ -94,8 +94,8 @@ syd.token = function (length) {
 
 // Automatic adds token field to all form
 $(document).on('submit', 'form', function () {
-    if (!$(this).find('input[name="token"]').length) {
-        $(this).append('<input type="hidden" name="token" value="' + token + '">');
+    if (!$(this).find('[name="csrf_name"]').length) {
+        $(this).append('<input type="hidden" name="csrf_name" value="'+csrf_name+'"><input type="hidden" name="csrf_value" value="'+csrf_value+'">');
     }
 });
 
