@@ -1,42 +1,23 @@
-html, body {
-    height: 100%;
-}
 .ani {
     -webkit-transition: all 200ms;
     transition: all 200ms;
 }
-.admin-bar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 10;
-    padding: 0 5px;
-}
-.admin-bar-left {
-    float: left;
-}
-.admin-bar-right {
-    text-align: right;
-}
-.admin-bar-block {
-    display: inline-block;
-}
-.admin-bar-block .dropdown > button {
-    background: transparent;
-    border: none;
-    color: #fff;
-}
 
-.menu-wrapper {width: 200px;position: fixed;height: 100%;}
-.menu-wrapper ul {list-style: none;padding: 0;margin: 0;}
+.menu-wrapper {
+    width: 230px;
+    position: fixed;
+    height: 100%;
+}
+.menu-wrapper ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 #menu {
     position: fixed;
-    width: 200px;
+    width: 230px;
     cursor: default;
-    padding-top: 30px;
 }
-.sticky-top {top: 0;}
-.sticky-bottom {bottom: 0;}
 #menu li {
     position: relative;
 }
@@ -46,8 +27,8 @@ html, body {
     height: 0;
     position: absolute;
     right: 0;
-    top: 5px;
-    border: solid 10px rgba(255, 255, 255, 0);
+    top: 7px;
+    border: solid 10px transparent;
     border-right-color: #fcfcfc;
     pointer-events: none;
 }
@@ -58,23 +39,26 @@ html, body {
     display: block;
 }
 #menu a:not(:only-of-type):first-child {
-    width: 150px;
+    width: 170px;
     display: inline-block;
 }
 #menu a:nth-child(2) {
     float: right;
     padding-left: 10px;
-    width: 50px;
+    width: 60px;
 }
 #menu li > .group {
     font-size: 16px;
     padding: 5px 10px;
 }
-#menu div .glyphicon {
+#menu div .fa {
     margin-right: 10px;
     font-size: 14px;
     width: 14px;
 }
 #main {
-    margin-left: 200px;
+    margin-left: 230px;
+}
+#workarea {
+    padding-top: 15px;
 }
