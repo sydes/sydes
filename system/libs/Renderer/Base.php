@@ -17,12 +17,6 @@ class Base
     protected $head = [];
     protected $footer = [];
 
-    public function render(Document $doc) {
-        $this->prepare($doc);
-        debug_print_backtrace();
-        return 'wut';
-    }
-
     public function prepare(Document $doc)
     {
         $this->document = $doc;
@@ -36,8 +30,8 @@ class Base
             $alerts = '';
             foreach ($_SESSION['alerts'] as $a) {
                 $a['message'] = str_replace(
-                    ["\n", '{',      '\\',   '"'],
-                    ['',   '&#123;', '\\\\', '\"'],
+                    ["\n", '{', '\\', '"'],
+                    ['', '&#123;', '\\\\', '\"'],
                     $a['message']
                 );
                 $alerts .= 'syd.alert("'.$a['message'].'", "'.$a['status'].'");';
@@ -57,24 +51,23 @@ class Base
         }
     }
 
-    protected function fillHead() {
+    protected function fillHead()
+    {
         $this->head[] = '<title>'.$this->document->title.'</title>';
 
-        foreach ($this->document->styles as $pack) {
-            foreach ($pack as $file) {
-                $this->head[] = '<link rel="stylesheet" href="'.$file.'" media="screen">';
-            }
+        $files = $this->prepareAssets($this->document->css, 'css');
+        foreach ($files as $file) {
+            $this->head[] = '<link rel="stylesheet" href="'.$file.'" media="screen">';
         }
-        $this->head[] = empty($this->document->internal_styles) ? '' :
-            '<style>'."\n".implode("\n\n", $this->document->internal_styles)."\n".'</style>';
+
+        $this->head[] = empty($this->document->styles) ? '' :
+            '<style>'."\n".implode("\n\n", $this->document->styles)."\n".'</style>';
+
+        app('event')->trigger('head.filled', [&$this->head]);
     }
 
-    protected function fillFooter() {
-        foreach ($this->document->scripts as $pack) {
-            foreach ($pack as $file) {
-                $this->footer[] = '<script src="'.$file.'"></script>';
-            }
-        }
+    protected function fillFooter()
+    {
         $this->document->addJsSettings([
             'locale' => app('locale'),
         ]);
@@ -82,29 +75,38 @@ class Base
             ."', csrf_value = '".app('csrf')->getTokenValue()."';");
         $this->document->addScript('extend',
             '$.extend(syd, '.json_encode($this->document->js_syd, JSON_UNESCAPED_UNICODE).');');
+
+        $files = $this->prepareAssets($this->document->js, 'js');
+        foreach ($files as $file) {
+            $this->footer[] = '<script src="'.$file.'"></script>';
+        }
+
         $this->footer[] = '<ul id="notify"></ul>';
-        $this->footer[] = "<script>\n".implode("\n\n", $this->document->internal_scripts)."\n</script>";
+
+        $this->footer[] = "<script>\n".implode("\n\n", $this->document->scripts)."\n</script>";
 
         if (app('editor')->isLoggedIn()) {
             $this->footer[] = $this->getToolbar();
         }
+
+        app('event')->trigger('footer.filled', [&$this->footer]);
     }
 
     protected function getToolbar()
     {
         $key = 'toolbar.'.md5(json_encode($this->document->context_menu));
-        $toolbar = app('cache')->remember($key, function () {
+        return app('cache')->remember($key, function () {
             $menuFlat = [];
             foreach ($this->document->context_menu as $posName => $position) {
                 $menuFlat[] = [
                     'level' => 1,
-                    'attr' => 'class="toolbar-'.$posName.'"',
+                    'attr'  => 'class="toolbar-'.$posName.'"',
                 ];
                 usort($position['items'], 'sortByWeight');
                 foreach ($position['items'] as $menu) {
                     $menuFlat[] = array_merge([
                         'level' => 2,
-                        'attr' => 'class="toolbar-menu"',
+                        'attr'  => 'class="toolbar-menu"',
                     ], $menu);
 
                     if (!isset($menu['items'])) {
@@ -114,7 +116,7 @@ class Base
                     foreach ($menu['items'] as $item) {
                         $menuFlat[] = array_merge([
                             'level' => 3,
-                            'attr' => 'class="toolbar-item"',
+                            'attr'  => 'class="toolbar-item"',
                         ], $item);
                     }
                 }
@@ -122,7 +124,7 @@ class Base
 
             return \H::treeList($menuFlat, function ($item) {
                 if (count($item) < 3 && isset($item['attr'])) {
-                    return '';
+                    return ''; // first level
                 }
 
                 if (isset($item['modal'])) {
@@ -135,9 +137,9 @@ class Base
                 } else {
                     return '<span class="tbs">'.t($item['title']).'</span>';
                 }
-
             }, ['id' => 'toolbar']);
         });
+    }
 
     protected function prepareAssets($assets, $type)
     {
@@ -152,7 +154,6 @@ class Base
 
         app('event')->trigger('assets.prepared', [&$files, $type]);
 
-        return $toolbar;
         return $files;
     }
 }
