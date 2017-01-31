@@ -139,6 +139,20 @@ class Base
             }, ['id' => 'toolbar']);
         });
 
+    protected function prepareAssets($assets, $type)
+    {
+        usort($assets, 'sortByWeight');
+        $files = [];
+
+        foreach ($assets as $pack) {
+            $files = array_merge($files, $pack['files']);
+        }
+
+        $files = array_unique($files);
+
+        app('event')->trigger('assets.prepared', [&$files, $type]);
+
         return $toolbar;
+        return $files;
     }
 }
