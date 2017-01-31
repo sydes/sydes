@@ -107,7 +107,7 @@ class Admin extends Base
                 if (strpos($item['icon'], '.')) {
                     $icon = '<img src="'.$item['icon'].'">';
                 } else {
-                    $icon = '<span class="glyphicon glyphicon-'.$item['icon'].'" aria-hidden="true"></span>';
+                    $icon = '<i class="fa fa-'.$item['icon'].'"></i>';
                 }
             }
 
@@ -120,6 +120,6 @@ class Admin extends Base
             }
 
             return $return;
-        }, ['id' => 'menu', 'class' => 'sticky-top'], 2);
+        }, ['id' => 'menu'], 2);
     }
 }

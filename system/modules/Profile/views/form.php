@@ -11,7 +11,7 @@
                 </div>
                 <div class="form-group">
                     <label><?=t('enable_autologin');?></label>
-                    <?=HTML::yesNo('autologin', $autologin);?>
+                    <?=H::yesNo('autologin', $autologin);?>
                 </div>
             </div>
             <div class="col-md-6">

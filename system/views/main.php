@@ -13,7 +13,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/favicon.ico">
 </head>
 <body>
     <div class="menu-wrapper">

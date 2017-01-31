@@ -32,7 +32,7 @@ class Controller
     public function edit()
     {
         $d = document([
-            'content'       => view('profile/form', ['autologin' => app('user')->autologin]),
+            'content'       => view('profile/form', ['autologin' => app('editor')->autologin]),
             'sidebar_left'  => '',
             'sidebar_right' => \H::saveButton(DIR_APP.'/config.php').\H::mastercodeInput(),
             'form_url'      => '/admin/profile',
