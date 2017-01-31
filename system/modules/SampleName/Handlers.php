@@ -1,6 +1,7 @@
 <?php
 namespace Module\SampleName;
 
+use App\Document;
 use App\Event;
 
 class Handlers
@@ -16,14 +17,20 @@ class Handlers
 
         $events->on(
             'module.executed',
-            'front/sample-name/*, admin/sample-name/*',
-            function (&$result) {
-                // do something with $result
-                // you should know type of $result
+            'front/samplename/*, admin/samplename/*',
+            function ($content) {
+                if ($content instanceof Document) {
+                    $content->addContextMenu('right', 'support', [
+                        'weight' => 10,
+                        'title'  => 'support',
+                        'url'    => '/html',
+                        'modal'  => 'sm'
+                    ]);
+                }
             });
     }
 
-    public function handleEvent1(&$result)
+    public function handleEvent1($content)
     {
         // do something with $result
     }

@@ -19,7 +19,9 @@ class Controller
 
     public function install()
     {
-        Cmf::installModule('profile');
+        Cmf::installModule('profile', [
+            'handlers' => ['Module\Profile\Handlers::init'],
+        ]);
     }
 
     public function uninstall()

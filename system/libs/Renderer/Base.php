@@ -95,39 +95,6 @@ class Base
 
     protected function getToolbar()
     {
-       // TODO в админке ссылку на сайт с названием
-        $this->document->addContextMenu('left', 'brand_link', [
-            'weight' => 0,
-            'title' => 'admin_center',
-            'url' => '/admin'
-        ]);
-
-        $this->document->addContextMenu('right', 'profile', [
-            'weight' => 0,
-            'title' => app('editor')->username,
-            'items' => [
-                'profile' => [
-                    'title' => 'profile',
-                    'url' => '/admin/profile',
-                ],
-                'div1' => [
-                    'attr' => 'class="divider"',
-                ],
-                'logout' => [
-                    'html' => '<a href="/auth/logout" onclick="event.preventDefault();'.
-                        '$(\'#logout-form\').submit();">'.t('logout').'</a>'.
-                        '<form id="logout-form" action="/auth/logout" method="POST" style="display: none;"></form>',
-                ]
-            ]
-        ]);
-
-        $this->document->addContextMenu('right', 'support', [
-            'weight' => 10,
-            'title' => 'support',
-            'url' => '//sydes.ru/ru/docs/v2/iblocks',
-            'modal' => 'lg'
-        ]);
-
         $key = 'toolbar.'.md5(json_encode($this->document->context_menu));
         $toolbar = app('cache')->remember($key, function () {
             $menuFlat = [];
