@@ -77,8 +77,10 @@ class Handlers
             $doc->addPackage('fancybox',
                 '//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js',
                 '//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css',
-                11);
+                11
+            );
 
+            $doc->addCss('toolbar', '/system/assets/css/toolbar.css', 9);
         });
     }
 }
