@@ -15,10 +15,10 @@ class Document
     public $base = '';
     public $meta = [];
     public $links = [];
+    public $js = [];
     public $scripts = [];
-    public $internal_scripts = [];
+    public $css = [];
     public $styles = [];
-    public $internal_styles = [];
 
     public $context_menu = ['left' => ['weight' => 0, 'items' => []], 'right' => ['weight' => 2, 'items' => []]];
     public $js_syd = ['l10n' => [], 'settings' => []];
@@ -29,20 +29,34 @@ class Document
     }
 
     /**
-     * Adds a script by url or raw string
+     * Adds a js file by url
      *
-     * @param string       $key    Name of script
-     * @param string|array $source Raw string|Absolute or relative paths
+     * @param string       $key
+     * @param string|array $files
+     * @param int          $weight
      * @return $this
      */
-    public function addJs($key, $source)
+    public function addJs($key, $files, $weight = 300)
     {
-        if (is_string($source) && !preg_match('!^(http|/)!', $source)) {
-            $this->internal_scripts[$key] = $source;
-        } else {
-            $paths = array_values((array)$source);
-            $this->scripts[$key] = $paths;
-        }
+        $this->js[$key] = [
+            'files'  => array_values((array)$files),
+            'weight' => $weight,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Adds a string with js code
+     *
+     * @param string $key
+     * @param string $code
+     * @return $this
+     */
+    public function addScript($key, $code)
+    {
+        $this->scripts[$key] = $code;
+
         return $this;
     }
 
@@ -54,25 +68,40 @@ class Document
      */
     public function removeJs($key)
     {
-        unset($this->scripts[$key], $this->internal_scripts[$key]);
+        unset($this->js[$key], $this->scripts[$key]);
+
         return $this;
     }
 
     /**
-     * Adds a style by url or raw string
+     * Adds a css file by url
      *
-     * @param string       $key    Name of style
-     * @param string|array $source Raw string|Absolute or relative paths
+     * @param string       $key
+     * @param string|array $files
+     * @param int          $weight
      * @return $this
      */
-    public function addCss($key, $source)
+    public function addCss($key, $files, $weight = 300)
     {
-        if (is_string($source) && !preg_match('!^(http|/)!', $source)) {
-            $this->internal_styles[$key] = $source;
-        } else {
-            $paths = array_values((array)$source);
-            $this->styles[$key] = $paths;
-        }
+        $this->css[$key] = [
+            'files'  => array_values((array)$files),
+            'weight' => $weight,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Adds a string with css code
+     *
+     * @param string $key
+     * @param string $code
+     * @return $this
+     */
+    public function addStyle($key, $code)
+    {
+        $this->styles[$key] = $code;
+
         return $this;
     }
 
@@ -84,7 +113,8 @@ class Document
      */
     public function removeCss($key)
     {
-        unset($this->styles[$key], $this->internal_styles[$key]);
+        unset($this->css[$key], $this->styles[$key]);
+
         return $this;
     }
 
@@ -94,11 +124,12 @@ class Document
      * @param              $key
      * @param string|array $js
      * @param string|array $css
+     * @param int          $weight
      * @return $this
      */
-    public function addPackage($key, $js = [], $css = [])
+    public function addPackage($key, $js = [], $css = [], $weight = 300)
     {
-        return $this->addJs($key, $js)->addCss($key, $css);
+        return $this->addJs($key, $js, $weight)->addCss($key, $css, $weight);
     }
 
     /**

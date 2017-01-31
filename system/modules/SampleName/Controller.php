@@ -111,7 +111,7 @@ class Controller
 
         $d->title = 'Index page of module';
 
-        $d->addJs('my', "$('#sample a').click(function(){
+        $d->addScript('my', "$('#sample a').click(function(){
     if ($(this).attr('href').indexOf('/ajax') == 0){
          $.get($(this).attr('href'));
          return false;
@@ -162,7 +162,7 @@ class Controller
             'meta_title' => 'Overridden title',
         ]);
 
-        $d->addJs('my', "console.log('Answer always {$id}')");
+        $d->addScript('my', "console.log('Answer always {$id}')");
 
         alert('You\'ve got a "message"', 'info');
         return $d;

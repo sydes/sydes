@@ -42,7 +42,7 @@ class Base
                 );
                 $alerts .= 'syd.alert("'.$a['message'].'", "'.$a['status'].'");';
             }
-            $this->document->addJs('alerts', $alerts);
+            $this->document->addScript('alerts', $alerts);
             $_SESSION['alerts'] = [];
         }
         $this->document->data['alerts'] = '<div id="alerts"></div>';
@@ -51,7 +51,7 @@ class Base
     protected function addNotify()
     {
         if (isset($_SESSION['notify'])) {
-            $this->document->addJs('notify',
+            $this->document->addScript('notify',
                 'syd.notify("'.$_SESSION['notify']['message'].'", "'.$_SESSION['notify']['status'].'");');
             unset($_SESSION['notify']);
         }
@@ -81,9 +81,9 @@ class Base
         $this->document->addJsSettings([
             'locale' => app('locale'),
         ]);
-        $this->document->addJs('token', "var csrf_name = '".app('csrf')->getTokenName()
+        $this->document->addScript('token', "var csrf_name = '".app('csrf')->getTokenName()
             ."', csrf_value = '".app('csrf')->getTokenValue()."';");
-        $this->document->addJs('extend',
+        $this->document->addScript('extend',
             '$.extend(syd, '.json_encode($this->document->js_syd, JSON_UNESCAPED_UNICODE).');');
         $this->footer[] = '<ul id="notify"></ul>';
         $this->footer[] = "<script>\n".implode("\n\n", $this->document->internal_scripts)."\n</script>";
