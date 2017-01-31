@@ -59,9 +59,6 @@ class Base
 
     protected function fillHead() {
         $this->head[] = '<title>'.$this->document->title.'</title>';
-        if (app('editor')->isLoggedIn()) {
-            $this->document->addCss('toolbar', '/system/assets/css/toolbar.css');
-        }
 
         foreach ($this->document->styles as $pack) {
             foreach ($pack as $file) {

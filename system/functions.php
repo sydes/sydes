@@ -388,11 +388,7 @@ function abort($code, $message = '')
  */
 function document($data = [])
 {
-    $doc = new App\Document($data);
-    $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js');
-    $doc->addJs('sydes', '/system/assets/js/sydes.js');
-    $doc->addJs('ajax-router', '/system/assets/js/ajaxRouter.js');
-    return $doc;
+    return new App\Document($data);
 }
 
 /**
