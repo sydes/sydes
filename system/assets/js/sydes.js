@@ -95,4 +95,18 @@ $(document).on('submit', 'form', function () {
     }
 });
 
+$(document).on('click', '[data-load=modal]', function () {
+    var size = $(this).data('size') || 'md';
+
+    $.get($(this).attr('href'), function(data) {
+        syd.modal({
+            title: '',
+            body: data,
+            size: 'modal-'+size
+        });
+    });
+
+    return false;
+});
+
 })(jQuery);
