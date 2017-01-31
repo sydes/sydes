@@ -17,21 +17,6 @@ class Admin extends Base
         $siteName = app('site')['name'];
         $doc->title .= ' - '.$siteName.' @ SyDES';
         $this->prepare($doc);
-
-        $this->document->addPackage('bootstrap',
-            [
-                '//cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js',
-                '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js',
-            ],
-            [
-                '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
-                '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css',
-            ]
-        );
-        $this->document->addPackage('fancybox',
-            '//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js',
-            '//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css');
-
         $this->fillHead();
         $this->fillFooter();
 

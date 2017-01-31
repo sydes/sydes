@@ -43,10 +43,6 @@ class Front extends Base
 
         app('translator')->setLocale(app('locale'))->loadFrom('theme', $this->theme);
 
-        $doc->addPackage('sydes-front', '/system/assets/js/front.js', '/system/assets/css/front.css');
-        // TODO разделить на администраторские и обычные стили и скрипты
-
-
         $layout = ifsetor($doc->data['layout'], 'page');
         $template = $this->getTemplate($layout);
         $template = str_replace('{content}', ifsetor($doc->data['content']), $template);
