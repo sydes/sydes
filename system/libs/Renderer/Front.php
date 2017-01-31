@@ -27,15 +27,17 @@ class Front extends Base
         $themePath = '/themes/'.$this->theme;
 
         if (isset($this->config['js'])) {
+            $i = 600;
             foreach ($this->config['js'] as $key => $source) {
                 $source = $this->addThemePath($source, $themePath);
-                $this->document->addJs($key, $source);
+                $this->document->addJs($key, $source, $i++);
             }
         }
         if (isset($this->config['css'])) {
+            $i = 600;
             foreach ($this->config['css'] as $key => $source) {
                 $source = $this->addThemePath($source, $themePath);
-                $this->document->addCss($key, $source);
+                $this->document->addCss($key, $source, $i++);
             }
         }
 
