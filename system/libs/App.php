@@ -25,8 +25,6 @@ class App
         Container::setContainer($this->container);
 
         $this->handleErrors();
-
-        $this->container['event']->trigger('app.init');
     }
 
     public function run($silent = false)
