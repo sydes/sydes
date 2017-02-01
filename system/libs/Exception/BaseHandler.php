@@ -16,10 +16,8 @@ class BaseHandler
             return $this->defaultResponse();
         }
 
-        return html($this->defaultTemplate(
-            $e->getMessage(),
-            nl2br($e->getFile().' on '.$e->getLine()."\n\n".$e->getTraceAsString())),
-            500);
+        $content = $debug == 1 ? '' : nl2br($e->getFile().' on '.$e->getLine()."\n\n".$e->getTraceAsString());
+        return html($this->defaultTemplate($e->getMessage(), $content), 500);
     }
 
     protected function defaultResponse()
@@ -27,7 +25,7 @@ class BaseHandler
         return html($this->defaultTemplate(
             '500 Internal Server Error',
             '<p>Sorry, something went wrong</p><p>Try to refresh this page later'.
-            ' or fell free to contact us if the problem persists</p>'),
+            ' or feel free to contact us if the problem persists</p>'),
             500);
     }
 
