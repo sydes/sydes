@@ -101,8 +101,6 @@ class App
             }
         }
 
-        $this->container['exceptionPlace'] = 'Site';
-
         $router = $this->container['router'];
         if ($this->container['settings']['cacheRouter']) {
             $router->setCacheFile(DIR_CACHE.'/routes.'.$site.'.cache');

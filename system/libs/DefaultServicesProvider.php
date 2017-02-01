@@ -29,7 +29,8 @@ class DefaultServicesProvider
          * @return Exception\BaseHandler|Exception\SiteHandler
          */
         $c['exceptionHandler'] = function ($c) {
-            $class = 'App\Exception\\'.$c['exceptionPlace'].'Handler';
+            $place = $c['section'] == 'base' ? 'Base' : 'Site';
+            $class = 'App\Exception\\'.$place.'Handler';
             return new $class;
         };
 
