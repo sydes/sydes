@@ -18,65 +18,54 @@ class Logger
         $this->file = $file;
     }
 
-    public function emergency($message, array $context = array())
+    public function emergency($message, array $context = [])
     {
         $this->log('emergency', $message, $context);
     }
 
-    public function alert($message, array $context = array())
+    public function alert($message, array $context = [])
     {
         $this->log('alert', $message, $context);
     }
 
-    public function critical($message, array $context = array())
+    public function critical($message, array $context = [])
     {
         $this->log('critical', $message, $context);
     }
 
-    public function error($message, array $context = array())
+    public function error($message, array $context = [])
     {
         $this->log('error', $message, $context);
     }
 
-    public function warning($message, array $context = array())
+    public function warning($message, array $context = [])
     {
         $this->log('warning', $message, $context);
     }
 
-    public function notice($message, array $context = array())
+    public function notice($message, array $context = [])
     {
         $this->log('notice', $message, $context);
     }
 
-    public function info($message, array $context = array())
+    public function info($message, array $context = [])
     {
         $this->log('info', $message, $context);
     }
 
-    public function debug($message, array $context = array())
+    public function debug($message, array $context = [])
     {
         $this->log('debug', $message, $context);
     }
 
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         $message = htmlspecialchars($message);
         $date = date('r');
         $ip = app('request')->getIp();
 
-        $row = "$date | $ip | $level | ".$this->interpolate($message, $context)."\n";
+        $row = "$date | $ip | $level | ".str_replace("\n", " ", interpolate($message, $context))."\n";
 
         file_put_contents($this->file, $row, FILE_APPEND | LOCK_EX);
-    }
-
-    protected function interpolate($message, array $context = array())
-    {
-        $replace = array();
-        foreach ($context as $key => $val) {
-            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
-                $replace['{' . $key . '}'] = $val;
-            }
-        }
-        return str_replace("\n", " ", strtr($message, $replace));
     }
 }

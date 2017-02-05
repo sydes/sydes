@@ -141,6 +141,31 @@ function t($text)
 }
 
 /**
+
+/**
+ * @param string $text
+ * @param array  $context
+ * @return string
+ */
+function interpolate($text, array $context = [])
+{
+    if (false === strpos($text, '{') || empty($context)) {
+        return $text;
+    }
+
+    $replace = [];
+    foreach ($context as $key => $val) {
+        if (is_null($val) || is_scalar($val) || (is_object($val) && method_exists($val, "__toString"))) {
+            $replace['{'.$key.'}'] = $val;
+        } elseif (is_object($val)) {
+            $replace['{'.$key.'}'] = '[object '.get_class($val).']';
+        } else {
+            $replace['{'.$key.'}'] = '['.gettype($val).']';
+        }
+    }
+
+    return strtr($text, $replace);
+}
  * Make a slug from the string.
  *
  * @param string $str
