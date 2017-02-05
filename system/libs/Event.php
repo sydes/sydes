@@ -45,7 +45,7 @@ class Event
     public function trigger($event, $params = [], $context = '')
     {
         if (empty($this->events[$event])) {
-            return;
+            return true;
         }
 
         $context = $context ?: $this->context;
@@ -58,6 +58,7 @@ class Event
         $queue->top();
         while ($queue->valid()) {
             $index = $queue->current();
+
             if (!empty($context)) {
                 $contexts = explode(',', $this->events[$event][$index]['contexts']);
                 $current_context = false;
@@ -70,13 +71,17 @@ class Event
             } else {
                 $current_context = true;
             }
+
             if ($current_context && is_callable($this->events[$event][$index]['fn'])) {
                 if (call_user_func_array($this->events[$event][$index]['fn'], $params) === false) {
-                    break;
+                    return false;
                 }
             }
+
             $queue->next();
         }
+
+        return true;
     }
 
     public function setContext($context)
