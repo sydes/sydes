@@ -133,7 +133,7 @@ function app($id = null)
  * Translate string.
  *
  * @param string $text
- * @return mixed
+ * @return string
  */
 function t($text)
 {
@@ -141,6 +141,15 @@ function t($text)
 }
 
 /**
+ * Pluralize translated string.
+ *
+ * @param string $text
+ * @return string
+ */
+function p($text, $count, $context = [])
+{
+    return app('translator')->pluralize($text, $count, $context);
+}
 
 /**
  * @param string $text
@@ -166,6 +175,8 @@ function interpolate($text, array $context = [])
 
     return strtr($text, $replace);
 }
+
+/**
  * Make a slug from the string.
  *
  * @param string $str
