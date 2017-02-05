@@ -48,7 +48,7 @@ class Controller
             return redirect('/admin/sites/1/edit');
         }
 
-        $packages = glob(DIR_LANGUAGE.'/*');
+        $packages = glob(DIR_L10N.'/*');
         $langs = [];
 
         if (empty($packages)) {
@@ -61,7 +61,7 @@ class Controller
             }
         } else {
             foreach ($packages as $package) {
-                $key = str_replace(DIR_LANGUAGE.'/', '', $package);
+                $key = str_replace(DIR_L10N.'/', '', $package);
                 $arr = include $package.'/translation.php';
                 $langs[$key] = $arr['lang_native_name'];
             }
