@@ -52,7 +52,7 @@ class Controller
         $langs = [];
 
         if (empty($packages)) {
-            $data = json_decode(getContentByUrl(API_HOST.'translations/core'), true);
+            $data = app('api')->getTranslations('Main');
             if (!is_array($data)) {
                 return 'Please, download language package manually and unzip into /app/languages';
             }

@@ -17,7 +17,7 @@ class Handlers
 
             $cache = app('cache');
             $cache->remember('update_checked', function () use ($cache) {
-                $need = getContentByUrl(API_HOST.'update?version='.SYDES_VERSION.'&site='.md5($_SERVER['HTTP_HOST']));
+                $need = app('api')->checkUpdate();
                 $updateText = 0;
                 if ($need == 1) {
                     $updateText = t('common_update_cms');
