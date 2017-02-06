@@ -6,7 +6,7 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace App;
+namespace App\L10n;
 
 class Translator
 {
@@ -17,14 +17,14 @@ class Translator
     public function __construct($locale = 'en')
     {
         $this->locale = $locale;
-        $this->installedPackages = str_replace(DIR_LANGUAGE.'/', '', glob(DIR_LANGUAGE.'/*'));
+        $this->installedPackages = str_replace(DIR_L10N.'/', '', glob(DIR_L10N.'/*'));
     }
 
     public function loadPackage($locale = null)
     {
         $locale = $locale ?: $this->locale;
         if (in_array($locale, $this->installedPackages) && !isset($this->container[$locale])) {
-            $this->container[$locale] = include DIR_LANGUAGE.'/'.$locale.'/translation.php';
+            $this->container[$locale] = include DIR_L10N.'/'.$locale.'/translation.php';
         }
         return $this;
     }
@@ -71,4 +71,12 @@ class Translator
             $arr;
     }
 
+    public function pluralize($text, $count, $context = [])
+    {
+        // расширить функцией множки от текущей локали
+        // выбрать нужную строку
+        // подставить контекст как в логгере
+
+        return interpolate($text, $context);
+    }
 }
