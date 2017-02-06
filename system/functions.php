@@ -141,9 +141,11 @@ function t($text)
 }
 
 /**
- * Pluralize translated string.
+ * Pluralize and translate string.
  *
  * @param string $text
+ * @param int    $count
+ * @param array  $context
  * @return string
  */
 function p($text, $count, $context = [])
@@ -545,9 +547,10 @@ function back()
 /**
  * Create a new response with downloadable file
  *
- * @param       $file
- * @param int   $status
- * @param array $headers
+ * @param string $file
+ * @param string $name
+ * @param int    $status
+ * @param array  $headers
  * @return \App\Http\AttachmentResponse
  */
 function download($file, $name = null, $status = 200, $headers = [])
@@ -558,9 +561,10 @@ function download($file, $name = null, $status = 200, $headers = [])
 /**
  * Create a new response with downloadable content
  *
- * @param       $content
- * @param int   $status
- * @param array $headers
+ * @param string $content
+ * @param string $name
+ * @param int    $status
+ * @param array  $headers
  * @return Response
  */
 function downloadContent($content, $name, $status = 200, $headers = [])
