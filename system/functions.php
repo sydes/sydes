@@ -343,16 +343,32 @@ function array2file($array, $filename)
     chmod($filename, 0777);
 }
 
-function getContentByUrl($url)
+/**
+ * Sends GET request like HTTP client
+ * @param string $url
+ * @return mixed|null|string
+ */
+function httpGet($url)
 {
     $data = null;
+    $timeout = 30;
+    $userAgent = 'SyDES '.SYDES_VERSION;
+
     if (ini_get('allow_url_fopen')) {
-        $data = file_get_contents($url);
+        $ctx = stream_context_create([
+            'http' => [
+                'timeout' => $timeout,
+                'user_agent' => $userAgent,
+            ],
+        ]);
+        $data = file_get_contents($url, false, $ctx);
     } elseif (function_exists('curl_init')) {
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
         curl_setopt($ch, CURLOPT_URL, $url);
 
         $data = curl_exec($ch);
@@ -371,7 +387,7 @@ function extractOuterZip($destination, $archive)
 {
     $result = false;
     $temp = DIR_TEMP.'/'.token(6);
-    file_put_contents($temp, getContentByUrl($archive));
+    file_put_contents($temp, httpGet($archive));
 
     $zip = new ZipArchive;
     if ($zip->open($temp) === true) {
