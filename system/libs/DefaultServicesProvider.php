@@ -8,9 +8,10 @@
  */
 namespace App;
 
+use App\Http\ServerRequestFactory;
+use App\L10n\Translator;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\SapiEmitter;
-use App\Http\ServerRequestFactory;
 
 /**
  * Default Service Provider.
@@ -24,31 +25,29 @@ class DefaultServicesProvider
      */
     public function register($c)
     {
-        /**
-         * @param $c
-         * @return Exception\BaseHandler|Exception\SiteHandler
-         */
-        $c['exceptionHandler'] = function ($c) {
-            $place = $c['section'] == 'base' ? 'Base' : 'Site';
-            $class = 'App\Exception\\'.$place.'Handler';
-            return new $class;
+        if (!isset($c['exceptionHandler'])) {
+            /**
+             * @param $c
+             * @return Exception\BaseHandler|Exception\SiteHandler
+             */
+            $c['exceptionHandler'] = function ($c) {
+                $place = $c['section'] == 'base' ? 'Base' : 'Site';
+                $class = 'App\Exception\\'.$place.'Handler';
+                return new $class;
+            };
         };
 
         if (!isset($c['emitter'])) {
             /**
-             * Basic emitter for response
-             *
              * @return SapiEmitter
              */
             $c['emitter'] = function () {
-                return new SapiEmitter;
+                return new SapiEmitter();
             };
         };
 
         if (!isset($c['request'])) {
             /**
-             * PSR-7 Request object
-             *
              * @return ServerRequestInterface
              */
             $c['request'] = function () {
@@ -58,12 +57,10 @@ class DefaultServicesProvider
 
         if (!isset($c['router'])) {
             /**
-             * fast-router bridge
-             *
              * @return Router
              */
             $c['router'] = function () {
-                return new Router;
+                return new Router();
             };
         };
 
@@ -81,7 +78,7 @@ class DefaultServicesProvider
              * @return Translator
              */
             $c['translator'] = function () {
-                return new Translator;
+                return new Translator();
             };
         };
 
@@ -90,7 +87,7 @@ class DefaultServicesProvider
              * @return Event
              */
             $c['event'] = function () {
-                return new Event;
+                return new Event();
             };
         };
 
@@ -99,44 +96,64 @@ class DefaultServicesProvider
              * @return Csrf
              */
             $c['csrf'] = function () {
-                return new Csrf;
+                return new Csrf();
+            };
+        };
+
+        if (!isset($c['db'])) {
+            /**
+             * @param $c
+             * @return Database
+             */
+            $c['db'] = function ($c) {
+                return new Database($c['site']['id']);
+            };
+        };
+
+        if (!isset($c['renderer'])) {
+            /**
+             * @param $c
+             */
+            $c['renderer'] = function ($c) {
+                $class = 'App\Renderer\\'.ucfirst($c['section']);
+                return new $class;
+            };
+        };
+
+        if (!isset($c['theme'])) {
+            /**
+             * @param $c
+             * @return Theme
+             */
+            $c['theme'] = function ($c) {
+                return new Theme($c['site']['theme']);
+            };
+        };
+
+        if (!isset($c['editor'])) {
+            /**
+             * @param $c
+             * @return Editor
+             */
+            $c['editor'] = function ($c) {
+                return new Editor($c['rawAppConfig']['user']);
+            };
+        };
+
+        if (!isset($c['logger'])) {
+            /**
+             * @return Logger
+             */
+            $c['logger'] = function () {
+                return new Logger(DIR_LOG.'/'.date('Ym').'.log');
             };
         };
 
         /**
-         * @param $c
-         * @return Database
+         * @return Api
          */
-        $c['db'] = function ($c) {
-            return new Database($c['site']['id']);
-        };
-
-        /**
-         * @param $c
-         */
-        $c['renderer'] = function ($c) {
-            $class = 'App\Renderer\\'.ucfirst($c['section']);
-            return new $class;
-        };
-
-        /**
-         * @param $c
-         * @return Theme
-         */
-        $c['theme'] = function ($c) {
-            return new Theme($c['site']['theme']);
-        };
-
-        /**
-         * @param $c
-         * @return Editor
-         */
-        $c['editor'] = function ($c) {
-            return new Editor($c['rawAppConfig']['user']);
-        };
-
-        $c['logger'] = function () {
-            return new Logger(DIR_LOG.'/'.date('Ym').'.log');
+        $c['api'] = function () {
+            return new Api();
         };
     }
 }
