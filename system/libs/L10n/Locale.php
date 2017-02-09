@@ -38,8 +38,8 @@ class Locale
         return $this->pluralsCount;
     }
 
-    public function date($format)
+    public function date($format, $timestamp = null)
     {
-        return func_num_args() == 2 ? date($format, func_get_arg(1)) : date($format);
+        return is_null($timestamp) ? date($format) : date($format, $timestamp);
     }
 }
