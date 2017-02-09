@@ -26,6 +26,7 @@
   "autoload": {
     "psr-4": {
       "App\\": "system/libs/",
+      "Locales\\": "app/l10n/locales",
       "Module\\": [
         "app/modules",
         "system/modules"
