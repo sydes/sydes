@@ -16,7 +16,8 @@ class Cmf
             return null;
         }
 
-        $folders = ['', '/cache', '/iblocks', '/languages', '/logs', '/modules', '/sites', '/temp', '/thumbs'];
+        $folders = ['', '/cache', '/iblocks', '/l10n/locales', '/l10n/translations', '/logs',
+            '/modules', '/sites', '/temp', '/thumbs'];
         foreach ($folders as $folder) {
             if (!file_exists(DIR_APP.$folder)) {
                 mkdir(DIR_APP.$folder, 0777, true);
@@ -48,12 +49,11 @@ class Cmf
 
         array2file($app, DIR_APP.'/config.php');
 
-        $langs = ['en', $params['locale']];
-        foreach ($langs as $lang) {
-            $langDir = DIR_LANGUAGE.'/'.$lang;
-            if (!file_exists($langDir)) {
-                mkdir($langDir, 0777, true);
-                extractOuterZip($langDir, API_HOST.'translations/download/core/'.$lang);
+        $locales = ['en', $params['locale']];
+        foreach ($locales as $locale) {
+            $localeFile = DIR_L10N.'/locales/'.ucfirst($locale).'.php';
+            if (!file_exists($localeFile)) {
+                file_put_contents($localeFile, app('api')->getLocale($locale));
             }
         }
 

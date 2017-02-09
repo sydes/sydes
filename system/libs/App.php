@@ -35,13 +35,18 @@ class App
         }
 
         $route = $this->findRoute();
+        $this->container['translator']->init($this->container['app']['locale']);
+
 
         date_default_timezone_set($this->container['app']['timeZone']);
 
-        $locale = $this->container['section'] == 'admin' ?
-            $this->container['app']['locale'] :
-            $this->container['locale'];
-        $this->container['translator']->setLocale($locale)->loadPackage();
+        // TODO find right place
+        if ($this->container['section'] != 'admin') {
+            $locale = $this->container['locale'];
+            $this->container['translator']->setLocale($locale);
+        }
+        $module = self::parseRoute($route[0]);
+        $this->container['translator']->loadFrom('module', $module['path'][0]);
 
         $events = $this->container['event'];
         $events->setContext($this->getEventContext($route[0]));

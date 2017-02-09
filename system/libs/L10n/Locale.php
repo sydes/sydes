@@ -10,12 +10,6 @@ namespace App\L10n;
 
 class Locale
 {
-    private $isoCode;
-    private $englishName;
-    private $nativeName;
-    private $isRtl;
-    private $pluralsCount;
-
     public function getEnglishName() {
         return $this->englishName;
     }

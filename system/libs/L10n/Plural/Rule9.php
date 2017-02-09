@@ -4,7 +4,7 @@ namespace App\L10n\Plural;
 
 trait Rule9
 {
-    private $pluralsCount = 3;
+    protected $pluralsCount = 3;
 
     final public function plural($n)
     {
