@@ -28,6 +28,11 @@ class Cmf
             $params['timeZone'] = '+'.$params['timeZone'];
         }
 
+        $locales = app('api')->getLocales();
+        if (!isset($locales[$params['locale']])) {
+            $params['locale'] = 'en';
+        }
+
         $app = [
             'user' => [
                 'username' => $params['username'],
@@ -51,9 +56,24 @@ class Cmf
 
         $locales = ['en', $params['locale']];
         foreach ($locales as $locale) {
-            $localeFile = DIR_L10N.'/locales/'.ucfirst($locale).'.php';
-            if (!file_exists($localeFile)) {
-                file_put_contents($localeFile, app('api')->getLocale($locale));
+            $file = DIR_L10N.'/locales/'.ucfirst($locale).'.php';
+            if (!file_exists($file)) {
+                file_put_contents($file, app('api')->loadLocale($locale));
+            }
+
+            if ($locale == 'en') {
+                continue;
+            }
+
+            $dir = DIR_L10N.'/translations/'.$locale.'/modules';
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            foreach (self::getDefaultModules() as $module) {
+                $file = $dir.'/'.$module.'.php';
+                if (!file_exists($file)) {
+                    file_put_contents($file, app('api')->loadTranslation($module, $locale));
+                }
             }
         }
 

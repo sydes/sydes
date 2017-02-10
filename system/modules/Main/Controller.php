@@ -48,27 +48,31 @@ class Controller
             return redirect('/admin/sites/1/edit');
         }
 
-        $packages = glob(DIR_L10N.'/*');
-        $langs = [];
+        $installed = glob(DIR_L10N.'/locales/*.php');
+        $locales = [];
 
-        if (empty($packages)) {
+        if (empty($installed)) {
             $data = app('api')->getTranslations('Main');
             if (!is_array($data)) {
-                return 'Please, download language package manually and unzip into /app/languages';
+                return text('Api server down. Please, download language package manually and unzip into /app/l10n');
             }
+
+            $all = app('api')->getLocales();
             foreach ($data as $d) {
-                $langs[$d['language']] = $d['native_name'];
+                $locales[$d] = $all[$d];
             }
         } else {
-            foreach ($packages as $package) {
-                $key = str_replace(DIR_L10N.'/', '', $package);
-                $arr = include $package.'/translation.php';
-                $langs[$key] = $arr['lang_native_name'];
+            foreach ($installed as $package) {
+                $key = str_replace([DIR_L10N.'/locales/', '.php'], '', $package);
+
+                $className = 'Locales\\'.$key;
+                $class = new $className;
+                $locales[$class->getisoCode()] = $class->getNativeName();
             }
         }
 
         return html(render(DIR_SYSTEM.'/modules/Auth/views/form.php', [
-            'locales' => $langs,
+            'locales' => $locales,
             'errors' => checkServer(),
             'title' => 'Sign up for',
             'signUp' => true,
