@@ -154,6 +154,18 @@ function p($text, $count, $context = [])
 }
 
 /**
+ * Translated to current locale function date()
+ *
+ * @param string $format
+ * @param int    $timestamp
+ * @return string
+ */
+function d($format, $timestamp = null)
+{
+    return app('translator')->date($format, $timestamp);
+}
+
+/**
  * @param string $text
  * @param array  $context
  * @return string

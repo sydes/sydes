@@ -123,4 +123,9 @@ class Translator
 
         return interpolate($msg, $context);
     }
+
+    public function date($format, $timestamp = null)
+    {
+        return $this->classes[$this->locale]->date($format, $timestamp);
+    }
 }
