@@ -19,21 +19,37 @@ class Api
 
     public function getLocales()
     {
-        return json_decode($this->get('l10n/locales'), true);
+        return $this->json('locales');
     }
 
-    public function getLocale($locale)
+    public function loadLocale($locale)
     {
-        return $this->get('l10n/locale/'.$locale);
+        return $this->get('locale/'.rawurlencode($locale));
     }
 
     public function getTranslations($module)
     {
-        return json_decode($this->get('translations/'.$module), true);
+        return $this->json('translations/'.rawurlencode($module));
+    }
+
+    public function loadTranslation($module, $locale)
+    {
+        return $this->get('translation/'.rawurlencode($module).'/'.rawurlencode($locale));
     }
 
     public function get($path)
     {
-        return httpGet($this->host.rawurlencode($path).'?token='.md5($_SERVER['HTTP_HOST']));
+        $data = httpGet($this->host.$path.'?token='.md5($_SERVER['HTTP_HOST']));
+
+        return !empty($data) ? $data : false;
+    }
+
+    public function json($path)
+    {
+        if (!$data = $this->get($path)) {
+            return false;
+        }
+
+        return json_decode($data, true);
     }
 }
