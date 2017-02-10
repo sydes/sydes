@@ -111,9 +111,14 @@ class Cmf
         self::installDefaultModules();
     }
 
+    public static function getDefaultModules()
+    {
+        return str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
+    }
+
     public static function installDefaultModules()
     {
-        $modules = str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
+        $modules = self::getDefaultModules();
         foreach ($modules as $module) {
             App::execute([$module.'@install']);
         }
