@@ -11,7 +11,7 @@ namespace App;
 class Theme
 {
     private $theme;
-    private $config;
+    private $config = [];
     private $themeDir;
     private $layoutDir;
     private $configFile;
@@ -100,11 +100,10 @@ class Theme
 
     public function getConfig()
     {
-        if (!empty($this->config)) {
-            return $this->config;
-        } elseif (is_file($this->configFile)) {
+        if (empty($this->config) && is_file($this->configFile)) {
             $this->config = parse_json_file($this->configFile);
         }
+
         return $this->config;
     }
 
