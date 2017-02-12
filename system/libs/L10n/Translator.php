@@ -88,6 +88,10 @@ class Translator
             $base = iblockDir($name);
         }
 
+        if (!$base) {
+            return;
+        }
+
         $paths = [
             $base.'/languages/'.$this->locale.'.php',
             DIR_L10N.'/translations/'.$this->locale.'/'.$type.'s/'.$name.'.php',
