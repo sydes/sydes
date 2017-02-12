@@ -34,7 +34,7 @@ function pre($array, $return = false)
  * Find path to infoBlock in theme or app.
  *
  * @param string $name
- * @return null|string
+ * @return false|string
  */
 function iblockDir($name)
 {
@@ -53,14 +53,14 @@ function iblockDir($name)
         }
     }
 
-    return null;
+    return false;
 }
 
 /**
  * Find path to module in core or user folders.
  *
  * @param string $name
- * @return null|string
+ * @return false|string
  */
 function moduleDir($name)
 {
@@ -72,12 +72,23 @@ function moduleDir($name)
             return $path;
         }
     }
-    return null;
+
+    return false;
 }
 
+/**
+ * Find path to module's assets.
+ *
+ * @param $module
+ * @return false|string
+ */
 function assetsDir($module)
 {
-    return str_replace(DIR_ROOT, '', moduleDir($module)).'/assets';
+    if ($dir = moduleDir($module)) {
+        return str_replace(DIR_ROOT, '', $dir).'/assets';
+    }
+
+    return false;
 }
 
 /**
