@@ -34,22 +34,28 @@ class App
             return null;
         }
 
-        $route = $this->findRoute();
-        $this->container['translator']->init($this->container['app']['locale']);
-
-
         date_default_timezone_set($this->container['app']['timeZone']);
 
-        // TODO find right place
-        if ($this->container['section'] != 'admin') {
-            $locale = $this->container['locale'];
-            $this->container['translator']->setLocale($locale);
+        if (!$site = $this->findSite()) {
+            abort(400, 'Site not found');
         }
+
+        $path = '/'.ltrim($this->container['request']->getUri()->getPath(), '/');
+        if ($path == '/admin' || strpos($path, '/admin/') === 0) {
+            $this->container['section'] = 'admin';
+            $this->container['translator']->init($this->container['app']['locale']);
+        } else {
+            $this->container['section'] = 'front';
+            $this->container['translator']->init($this->container['locale']);
+        }
+
+        $route = $this->findRoute($site, $path);
+
         $module = self::parseRoute($route[0]);
         $this->container['translator']->loadFrom('module', $module['path'][0]);
 
         $events = $this->container['event'];
-        $events->setContext($this->getEventContext($route[0]));
+        $events->setContext($this->getEventContext($module));
         $events->trigger('route.found', [&$route]);
 
         $result = self::execute($route);
@@ -81,31 +87,8 @@ class App
         });
     }
 
-    private function findRoute()
+    private function findRoute($site, $path)
     {
-        if (!$site = $this->findSite($this->container['request']->getUri()->getHost())) {
-            return ['Main@siteNotFound'];
-        }
-
-        $path = '/'.ltrim($this->container['request']->getUri()->getPath(), '/');
-        $this->container['section'] = ($path == '/admin' || strpos($path, '/admin/') === 0) ? 'admin' : 'front';
-
-        // pull locale from path
-        $locales = $this->container['site']['locales'];
-        $this->container['locale'] = $locales[0];
-        if ($this->container['section'] == 'front' && count($locales) > 1) {
-
-            if ($path == '/') {
-                return ['Main@redirect', ['url' => '/'.$locales[0]]];
-            }
-
-            $pathParts = explode('/',$path, 3);
-            if (in_array($pathParts[1], $locales)) {
-                $this->container['locale'] = $pathParts[1];
-                $path = '/'.ltrim(str_replace($pathParts[1], '', $path), '/');
-            }
-        }
-
         $router = $this->container['router'];
         if ($this->container['settings']['cacheRouter']) {
             $router->setCacheFile(DIR_CACHE.'/routes.'.$site.'.cache');
@@ -116,11 +99,13 @@ class App
             $this->container['request']->getMethod(),
             $path
         );
+
         if ($routeInfo[0] == Dispatcher::FOUND) {
             return [$routeInfo[1], $routeInfo[2]];
         } elseif (strpos($path, '.')) {
             return ['Main@error', ['code' => 404]];
         }
+
         return model('route')->findOrFail($path);
     }
 
@@ -137,7 +122,7 @@ class App
         return true;
     }
 
-    private function findSite($host)
+    private function findSite()
     {
         $domains = $this->container['cache']->remember('domains', function () {
             $sites = glob(DIR_SITE.'/s*', GLOB_ONLYDIR);
@@ -152,6 +137,7 @@ class App
             return $domains;
         }, 31536000);
 
+        $host = $this->container['request']->getUri()->getHost();
         if (!isset($domains[$host])) {
             return false;
         }
@@ -161,6 +147,7 @@ class App
         $siteConf = include DIR_SITE.'/'.$site.'/config.php';
         $this->container['rawSiteConfig'] = $siteConf;
         $this->container['site'] = ['id' => $site] + $siteConf;
+        $this->container['locale'] = $siteConf['locales'][0];
 
         $events = $this->container['event'];
         foreach ($siteConf['modules'] as $name => $module) {
@@ -182,8 +169,7 @@ class App
 
     private function getEventContext($route)
     {
-        $route = self::parseRoute($route);
-        return $this->container['section'].'/'.strtolower(implode('/', $route['path'])).'/'.$route['method'];
+        return strtolower($this->container['section'].'/'.implode('/', $route['path']).'/'.$route['method']);
     }
 
     /**
