@@ -15,6 +15,7 @@ class Front extends Base
 {
     private $config;
     private $theme;
+    private $themePath;
 
     public function render(Document $doc)
     {
@@ -24,24 +25,25 @@ class Front extends Base
 
         $this->theme = app('site')['theme'];
         $this->config = app('theme')->getConfig();
-        $themePath = '/themes/'.$this->theme;
+        $this->themePath = '/themes/'.$this->theme;
 
         if (isset($this->config['js'])) {
             $i = 600;
             foreach ($this->config['js'] as $key => $source) {
-                $source = $this->addThemePath($source, $themePath);
+                $source = $this->prependPath($source);
                 $this->document->addJs($key, $source, $i++);
             }
         }
+
         if (isset($this->config['css'])) {
             $i = 600;
             foreach ($this->config['css'] as $key => $source) {
-                $source = $this->addThemePath($source, $themePath);
+                $source = $this->prependPath($source);
                 $this->document->addCss($key, $source, $i++);
             }
         }
 
-        app('translator')->setLocale(app('locale'))->loadFrom('theme', $this->theme);
+        app('translator')->loadFrom('theme', $this->theme);
 
         $layout = ifsetor($doc->data['layout'], 'page');
         $template = $this->getTemplate($layout);
@@ -70,7 +72,7 @@ class Front extends Base
             'head'     => implode("\n    ", $this->head),
             'footer'   => implode("\n    ", $this->footer),
             'year'     => date('Y'),
-            'theme_path' => $themePath,
+            'theme_path' => $this->themePath,
         ]);
 
         $find = $replace = [];
@@ -89,7 +91,8 @@ class Front extends Base
         $theme = app('theme');
         $data = $theme->getLayout($layout);
 
-        while (isset($data['extends'])) {
+        $i = 0;
+        while (isset($data['extends']) && $i++ != 10) {
             $data = $theme->extendLayout($data);
         }
 
@@ -102,26 +105,16 @@ class Front extends Base
             return $html;
         }
 
-        //TODO как то шорткоды добавить
-        for ($i = 0; $i <= $count = count($matches[2]) - 1; $i++) {
+        $count = count($matches[2]) - 1;
+        for ($i = 0; $i <= $count; $i++) {
             $method = $matches[1][$i];
-            $params = [];
-            if ($matches[3][$i]) {
-                $matches[3][$i] = str_replace(['&amp;', '&quot;'], ['&', '"'], $matches[3][$i]);
-                $params = H::parseAttr($matches[3][$i]);
-            }
-            $content = $this->$method($matches[2][$i], $params);
 
-            /*if (Auth::admin() && in_array($method, ['iblock', 'config'])) {
-                if (!$content) {
-                    $content = '&nbsp;';
-                }
-                $tools = '<span data-module="'.$method.'" data-item="'.$matches[2][$i].'" class="block-edit"></span>';
-                if (isset($arParams['template']) && file_exists(DIR_THEME.'/'.$this->theme.'/iblock/'.$matches[2][$i].'/'.$arParams['template'].'.php')) {
-                    $tools .= '<span data-item="'.$matches[2][$i].'" data-template="'.$arParams['template'].'" class="block-template"></span>';
-                }
-                $content = '<div class="block-wrapper"><div class="tools">'.$tools.'</div>'.$content.'</div>';
-            }*/
+            $params = [];
+            if (!empty($matches[3][$i])) {
+                $params = H::parseAttr(str_replace(['&amp;', '&quot;'], ['&', '"'], $matches[3][$i]));
+            }
+
+            $content = $this->$method($matches[2][$i], $params);
 
             $html = str_replace($matches[0][$i], $content, $html);
         }
@@ -131,10 +124,11 @@ class Front extends Base
 
     public function iblock($name, $params = false)
     {
-        $iblockDir = iblockDir($name);
-        if (!$iblockDir) {
+        if (!$iblockDir = iblockDir($name)) {
             return sprintf(t('error_iblock_not_found'), $name);
         }
+
+        app('translator')->loadFrom('iblock', $name);
 
         $args = ['template' => 'default'];
         if ($params) {
@@ -162,7 +156,13 @@ class Front extends Base
             }
         }
 
-        return ob_get_clean();
+        $result = ob_get_clean();
+
+        if (!isset($args['nowrap'])) {
+            $result = '<div class="iblock-'.$name.'">'.$result.'</div>';
+        }
+
+        return $result;
     }
 
     public function t($text)
@@ -175,11 +175,11 @@ class Front extends Base
         return ifsetor($this->config['data'][$key], false);
     }
 
-    private function addThemePath($source, $themePath)
+    private function prependPath($source)
     {
         $arr = [];
         foreach ((array)$source as $path) {
-            $arr[] = ($path[0] != '/' && substr($path, 0, 4) != 'http') ? $themePath.'/'.$path : $path;
+            $arr[] = ($path[0] != '/' && substr($path, 0, 4) != 'http') ? $this->themePath.'/'.$path : $path;
         }
         return $arr;
     }
