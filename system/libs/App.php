@@ -43,11 +43,12 @@ class App
         $path = '/'.ltrim($this->container['request']->getUri()->getPath(), '/');
         if ($path == '/admin' || strpos($path, '/admin/') === 0) {
             $this->container['section'] = 'admin';
-            $this->container['translator']->init($this->container['app']['locale']);
         } else {
             $this->container['section'] = 'front';
-            $this->container['translator']->init($this->container['locale']);
         }
+
+        $this->findLocale($path);
+        $this->container['translator']->init($this->container['locale']);
 
         $route = $this->findRoute($site, $path);
 
@@ -147,7 +148,6 @@ class App
         $siteConf = include DIR_SITE.'/'.$site.'/config.php';
         $this->container['rawSiteConfig'] = $siteConf;
         $this->container['site'] = ['id' => $site] + $siteConf;
-        $this->container['locale'] = $siteConf['locales'][0];
 
         $events = $this->container['event'];
         foreach ($siteConf['modules'] as $name => $module) {
@@ -225,5 +225,37 @@ class App
             return json($content);
         }
         return text((string)$content);
+    }
+
+    private function findLocale(&$path)
+    {
+        if ($this->container['section'] == 'admin') {
+            $this->container['locale'] = $this->container['app']['locale'];
+        } else {
+            $locales = $this->container['site']['locales'];
+            $this->container['locale'] = $locales[0];
+
+            if (count($locales) > 1) {
+
+                if ($this->container['site']['localeIn'] == 'url') {
+                    if ($path == '/') {
+                        throw new \App\Exception\RedirectException('/'.$locales[0]);
+                    }
+
+                    $pathParts = explode('/', $path, 3);
+
+                    if (in_array($pathParts[1], $locales)) {
+                        $this->container['locale'] = $pathParts[1];
+                        unset($pathParts[1]);
+                        $path = count($pathParts) > 1 ? implode('/', $pathParts) : '/';
+                    }
+                } else {
+                    $host = $this->container['request']->getUri()->getHost();
+                    if (isset($this->container['site']['host2locale'][$host])){
+                        $this->container['locale'] = $this->container['site']['host2locale'][$host];
+                    }
+                }
+            }
+        }
     }
 }
