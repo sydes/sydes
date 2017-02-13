@@ -86,7 +86,6 @@ class Cmf
             'locales' => [$params['locale']],
             'localeIn' => 'url',
             'work' => 1,
-            'need_cache' => 0,
             'modules' => [],
             'menu' => [
                 'content' => ['weight' => 0,   'title' => 'menu_content', 'icon' => 'file', 'items' => []],
