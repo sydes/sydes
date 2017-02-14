@@ -16,11 +16,7 @@ class Handlers
         /**
          * Base assets for front and admin
          */
-        $events->on('module.executed', '*', function ($doc) {
-            if (!$doc instanceof Document) {
-                return;
-            }
-
+        $events->on('render.started', '*', function (Document $doc) {
             $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js', 0);
             $doc->addJs('sydes', '/system/assets/js/sydes.js', 1);
             $doc->addJs('ajax-router', '/system/assets/js/ajaxRouter.js', 2);
@@ -30,11 +26,7 @@ class Handlers
         /**
          * Base assets for front
          */
-        $events->on('module.executed', 'front/*', function ($doc) {
-            if (!$doc instanceof Document) {
-                return;
-            }
-
+        $events->on('render.started', 'front/*', function (Document $doc) {
             $doc->addContextMenu('left', 'brand_link', [
                 'weight' => 0,
                 'title' => 'admin_center',
@@ -54,11 +46,7 @@ class Handlers
         /**
          * Base assets for admin
          */
-        $events->on('module.executed', 'admin/*', function ($doc) {
-            if (!$doc instanceof Document) {
-                return;
-            }
-
+        $events->on('render.started', 'admin/*', function (Document $doc) {
             $doc->addContextMenu('left', 'brand_link', [
                 'weight' => 0,
                 'title' => 'site_name',

@@ -39,7 +39,7 @@ class View
     public function __toString()
     {
         $context = $this->module.'/'.$this->view;
-        app('event')->trigger('before.render.view', [&$this->module, &$this->view, &$this->data], $context);
+        app('event')->trigger('view.render.started', [&$this->module, &$this->view, &$this->data], $context);
 
         $file_override = DIR_THEME.'/'.app('site')['theme'].'/modules/'.$this->view.'.php';
         $file = moduleDir($this->module).'/views/'.$this->view.'.php';
@@ -51,7 +51,7 @@ class View
             throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
         }
 
-        app('event')->trigger('after.render.view', [&$html], $context);
+        app('event')->trigger('view.render.ended', [&$html], $context);
 
         return $html;
     }

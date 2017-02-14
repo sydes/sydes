@@ -19,7 +19,7 @@ class Front extends Base
 
     public function render(Document $doc)
     {
-        app('event')->trigger('before.render', [&$doc]);
+        app('event')->trigger('render.started', [$doc]);
 
         $this->prepare($doc);
 
@@ -83,6 +83,7 @@ class Front extends Base
 
         $template = str_replace($find, $replace, $template);
 
+        app('event')->trigger('render.ended', [&$template]);
         return preg_replace('!{\w+}!', '', $template);
     }
 

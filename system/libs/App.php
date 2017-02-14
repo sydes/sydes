@@ -85,7 +85,7 @@ class App
 
         $c = $this->container;
         set_exception_handler(function ($e) use ($c) {
-            $c['event']->trigger('exception', [$e], get_class($e));
+            $c['event']->trigger('exception.thrown', [$e], get_class($e));
             $c['emitter']->emit($c['exceptionHandler']->render($e, $c['settings']['showErrorInfo']));
         });
     }
