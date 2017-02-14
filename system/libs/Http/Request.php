@@ -97,6 +97,7 @@ class Request extends ServerRequest
         if ($method == 'POST') {
             $method = strtoupper($this->input('_method', 'POST'));
         }
+
         return $method;
     }
 
@@ -139,6 +140,7 @@ class Request extends ServerRequest
     {
         $value = $this->input($key);
         $boolOrArray = is_bool($value) || is_array($value);
+
         return !$boolOrArray && trim((string)$value) === '';
     }
 
@@ -159,6 +161,7 @@ class Request extends ServerRequest
         } elseif (isset($getParams[$key])) {
             $result = $getParams[$key];
         }
+
         return $result;
     }
 
@@ -191,6 +194,7 @@ class Request extends ServerRequest
         foreach ($keys as $key) {
             $results[$key] = isset($input[$key]) ? $input[$key] : null;
         }
+
         return $results;
     }
 
@@ -207,6 +211,19 @@ class Request extends ServerRequest
     public function getIp()
     {
         $server = $this->getServerParams();
+
         return $server['REMOTE_ADDR'];
+    }
+
+    /**
+     * @param string $name    the cookie name
+     * @param string $default the default value
+     * @return string
+     */
+    public function cookie($name, $default = null)
+    {
+        $coolies = $this->getCookieParams();
+
+        return isset($coolies[$name]) ? $coolies[$name] : $default;
     }
 }
