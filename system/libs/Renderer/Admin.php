@@ -89,6 +89,10 @@ class Admin extends Base
             }
         }
 
+        foreach (app('site')['modules'] as $module => $void) {
+            app('translator')->loadFrom('module', $module);
+        }
+
         return \H::treeList($menuFlat, function ($item) {
             $icon = '';
             if (isset($item['icon'])) {
