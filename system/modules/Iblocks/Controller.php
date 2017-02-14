@@ -6,14 +6,14 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Iblock;
+namespace Module\Iblocks;
 
 use App\Cmf;
 
 class Controller
 {
     public static $routes = [
-        ['GET', '/admin/iblock', 'Iblock@index'],
+        ['GET', '/admin/iblocks', 'Iblocks@index'],
     ];
 
     public function __construct()
@@ -23,10 +23,10 @@ class Controller
 
 	public function install()
     {
-        Cmf::installModule('iblock');
+        Cmf::installModule('iblocks');
 
         Cmf::addMenuItem('system', [
-            'title' => 'module_iblock',
+            'title' => 'module_iblocks',
             'url' => '/admin/iblocks',
         ], 300);
     }
@@ -34,7 +34,7 @@ class Controller
 	public function uninstall()
     {
         Cmf::removeMenuItem('system', '/admin/iblocks');
-        Cmf::uninstallModule('iblock');
+        Cmf::uninstallModule('iblocks');
     }
 
     public function index()
