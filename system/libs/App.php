@@ -56,7 +56,9 @@ class App
         $this->container['translator']->loadFrom('module', $module['path'][0]);
 
         $events = $this->container['event'];
-        $events->setContext($this->getEventContext($module));
+        $events->setContext(strtolower($this->container['section'].'/'.
+            implode('/', $module['path']).'/'.$module['method']));
+
         $events->trigger('route.found', [&$route]);
 
         $result = self::execute($route);
@@ -165,11 +167,6 @@ class App
         }
 
         return $site;
-    }
-
-    private function getEventContext($route)
-    {
-        return strtolower($this->container['section'].'/'.implode('/', $route['path']).'/'.$route['method']);
     }
 
     /**
