@@ -23,7 +23,7 @@ SyDES is a free open source content management framework for various small or me
 
 ### Old-style
 
-1. Download and unzip [compiled archive](https://github.com/sydes/sydes/releases/download/v3.0.0-a2/sydes-compiled.3.0.0-a2.zip) in site root folder
+1. Download compiled archive from [last release](https://github.com/sydes/sydes/releases) and unzip in site root folder
 2. Open this site in browser
 3. Edit chmod, if needed
 4. Enter login, password, master code and e-mail
