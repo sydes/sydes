@@ -14,6 +14,8 @@ class Admin extends Base
 {
     public function render(Document $doc)
     {
+        app('event')->trigger('render.started', [$doc]);
+
         $siteName = app('site')['name'];
         $doc->title .= ' - '.$siteName.' @ SyDES';
         $this->prepare($doc);
@@ -24,9 +26,8 @@ class Admin extends Base
             'lang' => app('app')['locale'],
             'head'   => implode("\n    ", $this->head),
             'footer' => implode("\n    ", $this->footer),
-            //'context_menu' => $this->site ? $this->getContextMenu() : '',
             'site_name' => $siteName,
-            'site_url' => '//'.app('site')['domains'][0], // TODO доавить ссылку на https
+            'site_url' => '//'.app('site')['domains'][0],
             'menu' => $this->getMenu(),
             'form_url' => '',
             'sidebar_left' => '',
@@ -34,7 +35,7 @@ class Admin extends Base
             'sidebar_right' => '',
             'footer_left' => '',
             'footer_center' => '',
-            'skin' => ifsetor(app('request')->cookie['skin'], 'black'), // TODO getCookieParams
+            'skin' => app('app')['adminSkin'],
             'col_sm' => 12,
             'col_lg' => 12,
         ];
@@ -48,7 +49,9 @@ class Admin extends Base
         }
         $data = array_merge($dummy, $doc->data);
 
-        return render(DIR_SYSTEM.'/views/main.php', $data);
+        $template = render(DIR_SYSTEM.'/views/main.php', $data);
+        app('event')->trigger('render.ended', [&$template]);
+        return $template;
     }
 
     public function getMenu()
