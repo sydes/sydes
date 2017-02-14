@@ -90,18 +90,9 @@ class Cmf
             'menu' => [
                 'content' => ['weight' => 0,   'title' => 'menu_content', 'icon' => 'file', 'items' => []],
                 'modules' => ['weight' => 100, 'title' => 'menu_modules', 'icon' => 'th-list', 'items' => []],
-                'constructors' => ['weight' => 200, 'title' => 'menu_constructors',   'icon' => 'th', 'items' => [
-                    ['weight' => 100, 'title' => 'module_form', 'url' => '/admin/form'],
-                    ['weight' => 200, 'title' => 'module_slider', 'url' => '/admin/slider'],
-                ]],
-                'tools' => ['weight' => 300, 'title' => 'menu_tools',   'icon' => 'wrench', 'items' => [
-                    ['weight' => 100, 'title' => 'module_fileman', 'url' => '#'],
-                    ['weight' => 200, 'title' => 'module_import', 'url' => '/admin/import'],
-                ]],
-                'system' => ['weight' => 400, 'title' => 'menu_system',  'icon' => 'cog', 'items' => [
-                    ['weight' => 100, 'title' => 'module_settings', 'url' => '/admin/settings'],
-                    ['weight' => 400, 'title' => 'module_logs', 'url' => '/admin/logs'],
-                ]],
+                'constructors' => ['weight' => 200, 'title' => 'menu_constructors', 'icon' => 'th', 'items' => []],
+                'tools' => ['weight' => 300, 'title' => 'menu_tools',   'icon' => 'wrench', 'items' => []],
+                'system' => ['weight' => 400, 'title' => 'menu_system',  'icon' => 'cog', 'items' => []],
             ],
         ];
         mkdir(DIR_SITE.'/s1');

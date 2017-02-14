@@ -6,17 +6,29 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Page;
+namespace Module\Pages;
+
+use App\Cmf;
 
 class Controller
 {
     public static $routes = [
-        ['GET', '/admin/pages', 'Page@index'],
+        ['GET', '/admin/pages', 'Pages@index'],
     ];
 
     public function install()
     {
-        //echo 'page installed ';
+        Cmf::installModule('pages');
+    }
+
+    public function uninstall()
+    {
+        Cmf::uninstallModule('pages');
+    }
+
+    public function index()
+    {
+        return 'page index or tree';
     }
 
     public function view($path)
