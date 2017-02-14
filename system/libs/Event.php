@@ -41,6 +41,7 @@ class Event
      * @param string $event
      * @param array  $params
      * @param string $context
+     * @return bool
      */
     public function trigger($event, $params = [], $context = '')
     {
