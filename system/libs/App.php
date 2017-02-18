@@ -41,11 +41,8 @@ class App
         }
 
         $path = '/'.ltrim($this->container['request']->getUri()->getPath(), '/');
-        if ($path == '/admin' || strpos($path, '/admin/') === 0) {
-            $this->container['section'] = 'admin';
-        } else {
-            $this->container['section'] = 'front';
-        }
+
+        $this->container['section'] = ($path == '/admin' || strpos($path, '/admin/') === 0) ? 'admin' : 'front';
 
         $this->findLocale($path);
         $this->container['translator']->init($this->container['locale']);
