@@ -56,10 +56,7 @@ class Cmf
 
         $locales = ['en', $params['locale']];
         foreach ($locales as $locale) {
-            $file = DIR_L10N.'/locales/'.ucfirst($locale).'.php';
-            if (!file_exists($file)) {
-                file_put_contents($file, app('api')->loadLocale($locale));
-            }
+            self::downloadLocale($locale);
 
             if ($locale == 'en') {
                 continue;
@@ -69,11 +66,9 @@ class Cmf
             if (!file_exists($dir)) {
                 mkdir($dir, 0777, true);
             }
+
             foreach (self::getDefaultModules() as $module) {
-                $file = $dir.'/'.$module.'.php';
-                if (!file_exists($file)) {
-                    file_put_contents($file, app('api')->loadTranslation($module, $locale));
-                }
+                self::downloadTranslation($module, $locale);
             }
         }
 
@@ -138,6 +133,33 @@ class Cmf
     public static function remove()
     {
         // wut?
+    }
+
+    /**
+     * @param string $locale iso code
+     */
+    public static function downloadLocale($locale)
+    {
+        $data = app('api')->loadLocale($locale);
+
+        if ($data) {
+            $file = DIR_L10N.'/locales/'.ucfirst($locale).'.php';
+            file_put_contents($file, $data);
+        }
+    }
+
+    /**
+     * @param string $module
+     * @param string $locale iso code
+     */
+    public static function downloadTranslation($module, $locale)
+    {
+        $data = app('api')->loadTranslation($module, $locale);
+
+        if ($data) {
+            $file = DIR_L10N.'/translations/'.$locale.'/modules/'.$module.'.php';
+            file_put_contents($file, $data);
+        }
     }
 
     public static function downloadExtension($type, $name)
