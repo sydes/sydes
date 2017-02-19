@@ -228,15 +228,15 @@ class H
      */
     public static function breadcrumb($crumbs)
     {
-        // TODO ненужен больше?
-        $html = '<ol class="breadcrumb"><li><a href=".">'.t('home').'</a></li>';
+        $html = '<ol class="breadcrumb">';
         foreach ($crumbs as $crumb) {
             if (isset($crumb['url'])) {
-                $html .= '<li><a href="'.$crumb['url'].'">'.$crumb['title'].'</a></li>';
+                $html .= '<li class="breadcrumb-item"><a href="'.$crumb['url'].'">'.$crumb['title'].'</a></li>';
             } else {
-                $html .= '<li class="active">'.$crumb['title'].'</li>';
+                $html .= '<li class="breadcrumb-item active">'.$crumb['title'].'</li>';
             }
         }
+
         return $html.'</ol>';
     }
 
