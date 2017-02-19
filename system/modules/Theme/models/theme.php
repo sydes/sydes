@@ -11,8 +11,8 @@ class ThemeModel
             $theme = new \App\Theme($themeName);
             $config = $theme->getConfig();
 
-            $screenshot = file_exists(DIR_THEME.'/'.$themeName.'/img/screenshot.jpg') ?
-                '/themes/'.$themeName.'/img/screenshot.jpg' :
+            $screenshot = file_exists(DIR_THEME.'/'.$themeName.'/assets/images/screenshot.jpg') ?
+                '/themes/'.$themeName.'/assets/images/screenshot.jpg' :
                 '/system/modules/Theme/assets/img/no-image.jpg';
 
             $return[$themeName] = [

@@ -32,7 +32,7 @@ footer ul{padding-left:20px;}
 footer a{color:#eee;}
 footer a:hover{color:#999;text-decoration:none;}
 
-.scrollup {width:40px;height:40px;opacity:.9;position:fixed;bottom:30px;right:10px;display:none;text-indent:-9999px;background:url('../img/icon-top.png') no-repeat center center #999;z-index:999999;}
+.scrollup {width:40px;height:40px;opacity:.9;position:fixed;bottom:30px;right:10px;display:none;text-indent:-9999px;background:url('../images/icon-top.png') no-repeat center center #999;z-index:999999;}
 
 
 /* only mobile styles */
