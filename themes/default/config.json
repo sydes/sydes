@@ -4,6 +4,7 @@
     "description": "Demonstration of theme with all features",
     "version": "1.0",
     "tags": ["any columns", "gray"],
+    "screenshot": "assets/images/screenshot.jpg",
     "authors": [
       {
         "name": "ArtyGrand",

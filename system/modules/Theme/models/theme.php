@@ -7,20 +7,23 @@ class ThemeModel
         $themes = str_replace(DIR_THEME.'/', '', glob(DIR_THEME.'/*', GLOB_ONLYDIR));
         $return = [];
 
-        foreach ($themes as $themeName) {
-            $theme = new \App\Theme($themeName);
+        foreach ($themes as $name) {
+            $theme = new App\Theme($name);
             $config = $theme->getConfig();
 
-            $screenshot = file_exists(DIR_THEME.'/'.$themeName.'/assets/images/screenshot.jpg') ?
-                '/themes/'.$themeName.'/assets/images/screenshot.jpg' :
-                '/system/modules/Theme/assets/img/no-image.jpg';
+            $return[$name] = array_merge([
+                'name' => 'Nameless Theme',
+                'description' => '',
+                'version' => '1.0',
+                'authors' => [],
+                'tags' => [],
+            ], $config['info']);
 
-            $return[$themeName] = [
-                'name' => $config['info']['name'],
-                'authors' => ifsetor($config['info']['authors'], []),
-                'screenshot' => $screenshot,
-                'version' => ifsetor($config['info']['version'], '1.0'),
-            ];
+            if (isset($config['info']['screenshot'])) {
+                $return[$name]['screenshot'] = '/themes/'.$name.'/'.$config['info']['screenshot'];
+            } else {
+                $return[$name]['screenshot'] = assetsDir('theme').'/img/no-image.jpg';
+            }
         }
 
         return $return;
