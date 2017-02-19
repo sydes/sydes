@@ -21,6 +21,7 @@ class Handlers
             $doc->addJs('sydes', '/system/assets/js/sydes.js', 1);
             $doc->addJs('ajax-router', '/system/assets/js/ajaxRouter.js', 2);
 
+            $doc->addCss('notify', '/system/assets/css/notify.css', 10);
         });
 
         /**
@@ -34,7 +35,7 @@ class Handlers
             ]);
 
             $root = '/system/assets/';
-            $doc->addPackage('sydes-front', $root.'js/front.js', $root.'css/front.css', 9);
+            $doc->addJs('sydes-front', $root.'js/front.js', 9);
 
             if (app('editor')->isLoggedIn()) {
                 $doc->addCss('toolbar', $root.'css/toolbar.css', 10);
