@@ -278,7 +278,7 @@ class Cmf
         }
     }
 
-    private static function saveSiteConfig($config)
+    public static function saveSiteConfig($config)
     {
         app()['rawSiteConfig'] = $config;
         array2file($config, DIR_SITE.'/'.app('site')['id'].'/config.php');
