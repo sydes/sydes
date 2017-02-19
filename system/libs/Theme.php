@@ -111,4 +111,9 @@ class Theme
     {
         return true;
     }
+
+    public function delete()
+    {
+        removeDir($this->themeDir);
+    }
 }
