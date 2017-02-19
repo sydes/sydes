@@ -813,3 +813,18 @@ function camel_case($value)
 {
     return lcfirst(studly_case($value));
 }
+
+function actionConfirmed()
+{
+    return app('request')->has('confirmed');
+}
+
+function confirmAction($message, $return_url)
+{
+    $d = document([
+        'content' => view('main/confirm', [
+            'message' => $message,
+            'return_url' => $return_url,
+        ])]);
+    return $d;
+}
