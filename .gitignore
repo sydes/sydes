@@ -7,3 +7,6 @@
 !/upload/images/no-image.jpg
 
 !.gitkeep
+
+/themes/*
+!themes/default
