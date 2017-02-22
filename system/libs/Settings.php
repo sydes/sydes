@@ -8,7 +8,7 @@
  */
 namespace App;
 
-class Config
+class Settings
 {
 
     /** @var array */
@@ -28,7 +28,7 @@ class Config
         $this->extension = $extension;
         $this->db = $db;
 
-        $stmt = $this->db->query("SELECT key, value FROM config WHERE extension = '{$extension}'");
+        $stmt = $this->db->query("SELECT key, value FROM settings WHERE extension = '{$extension}'");
         $data = $stmt->fetchAll();
         if ($data) {
             foreach ($data as $d) {
@@ -51,12 +51,13 @@ class Config
      */
     public function commit()
     {
-        $this->db->exec("DELETE FROM config WHERE extension = '{$this->extension}'");
-        $stmt = $this->db->prepare("INSERT INTO config (module, key, value) VALUES ('{$this->extension}', :key, :value)");
+        $this->db->exec("DELETE FROM settings WHERE extension = '{$this->extension}'");
+        $stmt = $this->db->prepare("INSERT INTO settings (extension, key, value) VALUES ('{$this->extension}', :key, :value)");
         foreach ($this->data as $key => $value) {
             $stmt->execute(['key' => $key, 'value' => json_encode($value)]);
         }
         $this->changed = false;
+
         return $this;
     }
 
@@ -91,6 +92,7 @@ class Config
             $this->data[$key] = $value;
         }
         $this->changed = true;
+
         return $this;
     }
 
@@ -108,6 +110,7 @@ class Config
             unset($this->data[$key]);
         }
         $this->changed = true;
+
         return $this;
     }
 }

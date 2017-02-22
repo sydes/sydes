@@ -640,11 +640,11 @@ function alert($message, $status = 'success')
  * Creates or loads config for extension
  *
  * @param string $extension
- * @return App\Config
+ * @return App\Settings
  */
-function config($extension)
+function settings($extension)
 {
-    return new App\Config($extension, app('db'));
+    return new App\Settings($extension, app('db'));
 }
 
 if (!function_exists('ifsetor')) {
