@@ -29,6 +29,14 @@ $(document).ajaxSend(function () {
         if ('modal' in response) {
             syd.modal(response.modal)
         }
+
+        if ('script' in response) {
+            syd.eval(response.script)
+        }
+
+        if ('console' in response) {
+            console.log(response.console)
+        }
     }
 }).ajaxError(function () {
     $('html').css('cursor', 'auto');

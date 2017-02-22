@@ -88,6 +88,20 @@ syd.token = function (length) {
     return string;
 };
 
+/**
+ * Execute code via adding in DOM
+ * @param code
+ * @param doc
+ */
+syd.eval = function (code, doc) {
+    doc = doc || window.document;
+
+    var script = doc.createElement("script");
+
+    script.text = code;
+    doc.head.appendChild(script).parentNode.removeChild(script);
+};
+
 // Automatic adds token field to all form
 $(document).on('submit', 'form', function () {
     if (!$(this).find('[name="csrf_name"]').length) {
