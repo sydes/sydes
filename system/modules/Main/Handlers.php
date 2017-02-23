@@ -19,11 +19,12 @@ class Handlers
          * Base assets for front and admin
          */
         $events->on('render.started', '*', function (Document $doc) {
+            $root = '/system/assets/';
             $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js', 0);
-            $doc->addJs('sydes', '/system/assets/js/sydes.js', 1);
-            $doc->addJs('ajax-router', '/system/assets/js/ajaxRouter.js', 2);
+            $doc->addJs('sydes', $root.'js/sydes.js', 1);
+            $doc->addJs('ajax-router', $root.'js/ajaxRouter.js', 2);
 
-            $doc->addCss('notify', '/system/assets/css/notify.css', 10);
+            $doc->addCss('notify', $root.'css/notify.css', 10);
         });
 
         /**
