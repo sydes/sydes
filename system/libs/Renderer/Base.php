@@ -71,8 +71,8 @@ class Base
         $this->document->addJsSettings([
             'locale' => app('locale'),
         ]);
-        $this->document->addScript('token', "var csrf_name = '".app('csrf')->getTokenName()
-            ."', csrf_value = '".app('csrf')->getTokenValue()."';");
+        $this->document->addScript('token', "syd.csrf.name = '".app('csrf')->getTokenName()
+            ."', syd.csrf.value = '".app('csrf')->getTokenValue()."';");
         $this->document->addScript('extend',
             '$.extend(syd, '.json_encode($this->document->js_syd, JSON_UNESCAPED_UNICODE).');');
 

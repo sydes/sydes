@@ -8,6 +8,7 @@
  */
 namespace App;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 
@@ -63,6 +64,18 @@ class Csrf
         }
 
         return $request;
+    }
+
+    public function appendHeader(ResponseInterface &$response)
+    {
+        $request = app('request');
+        if (!in_array($request->getMethod(), ['POST', 'PUT', 'DELETE', 'PATCH']) || !$request->isAjax()) {
+            return;
+        }
+
+        $response = $response
+            ->withHeader('x-csrf-name', $this->getTokenName())
+            ->withHeader('x-csrf-value', $this->getTokenValue());
     }
 
     /**

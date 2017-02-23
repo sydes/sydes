@@ -1,8 +1,22 @@
-$(document).ajaxSend(function () {
+function csrfMethod(method) {
+    return (/^(POST|PUT|DELETE|PATCH)$/.test(method));
+}
+
+$(document).ajaxSend(function (e, xhr, s) {
     $('html').css('cursor', 'wait');
-}).ajaxSuccess(function (e, xhr) {
+
+    if (!s.crossDomain && csrfMethod(s.type)) {
+        s.data = s.data ? s.data+'&' : '';
+        s.data += 'csrf_name='+syd.csrf.name+'&csrf_value='+syd.csrf.value;
+    }
+}).ajaxSuccess(function (e, xhr, s) {
     if (localStorage['debug'] == 1) {
         console.log(xhr.responseText)
+    }
+
+    if (!s.crossDomain && csrfMethod(s.type) && xhr.getResponseHeader('x-csrf-name')) {
+        syd.csrf.name = xhr.getResponseHeader('x-csrf-name');
+        syd.csrf.value = xhr.getResponseHeader('x-csrf-value');
     }
 
     if (xhr.getResponseHeader('Content-Type') == 'application/json') {
@@ -30,7 +44,7 @@ $(document).ajaxSend(function () {
             syd.modal(response.modal)
         }
 
-        if ('script' in response) {
+        if ('script' in response && !s.crossDomain) {
             syd.eval(response.script)
         }
 

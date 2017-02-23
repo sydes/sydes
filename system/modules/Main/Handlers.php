@@ -13,6 +13,8 @@ class Handlers
          */
         $events->on('route.found', '*', [app('csrf'), 'check']);
 
+        $events->on('response.prepared', '*', [app('csrf'), 'appendHeader']);
+
         /**
          * Base assets for front and admin
          */

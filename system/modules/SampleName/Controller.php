@@ -34,6 +34,7 @@ class Controller
         ['GET', '/ajax-random', 'SampleName@random'],
         ['GET', '/sub-module', 'SampleName/SubModule@method'],
         ['GET', '/ajax-modal', 'SampleName@modal'],
+        ['POST', '/csrf', 'SampleName@csrf'],
     ];
 
     public function __construct()
@@ -290,4 +291,10 @@ class Controller
         ];
     }
 
+    public function csrf()
+    {
+        return [
+            'console' => 'Hello, console!'
+        ];
+    }
 }

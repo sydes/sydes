@@ -1,4 +1,4 @@
-var syd = syd || {'settings': {}, 'l10n': {}};
+var syd = syd || {'settings': {}, 'l10n': {}, 'csrf': {}};
 
 (function ($) {
 
