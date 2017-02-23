@@ -176,7 +176,7 @@ class Request extends ServerRequest
     {
         $value = $this->input($key);
         if (is_null($value) || ($value === '')) {
-            throw new \RuntimeException(sprintf(t('error_parameter_required'), $key));
+            throw new \RuntimeException(t('error_parameter_required', ['key' => $key]));
         }
     }
 

@@ -4,6 +4,8 @@
     'menu_tools' => 'Tools',
     'menu_system' => 'System',
 
+    'error_module_folder_not_found' => 'Folder for module {module} is not found',
+
     'yes' => 'Yes',
     'no' => 'No',
 

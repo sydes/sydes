@@ -126,7 +126,7 @@ class Front extends Base
     public function iblock($name, $params = false)
     {
         if (!$iblockDir = iblockDir($name)) {
-            return sprintf(t('error_iblock_not_found'), $name);
+            return t('error_iblock_not_found', ['name' => $name]);
         }
 
         app('translator')->loadFrom('iblock', $name);
@@ -153,7 +153,7 @@ class Front extends Base
                 include $tplOriginal;
             } elseif ($args['template'] != 'default') {
                 ob_end_clean();
-                return sprintf(t('error_iblock_template_not_found'), $args['template'], $name);
+                return t('error_iblock_template_not_found', ['template' => $args['template'], 'name' => $name]);
             }
         }
 

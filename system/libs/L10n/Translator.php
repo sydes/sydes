@@ -69,13 +69,20 @@ class Translator
         return $this->available;
     }
 
-    public function translate($text)
+    /**
+     * @param string $text
+     * @param array  $context
+     * @return string
+     */
+    public function translate($text, array $context = [])
     {
-        return isset($this->container[$this->locale][$text]) ?
+        $translated = isset($this->container[$this->locale][$text]) ?
             $this->container[$this->locale][$text] :
             (isset($this->container['en'][$text]) ?
                 $this->container['en'][$text] :
                 $text);
+
+        return interpolate($translated, $context);
     }
 
     public function loadFrom($type, $name)

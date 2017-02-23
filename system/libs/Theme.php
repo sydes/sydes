@@ -32,7 +32,7 @@ class Theme
     public function getLayout($id)
     {
         if (!$this->hasLayout($id)) {
-            throw new \RuntimeException(sprintf(t('error_layout_not_found'), $id));
+            throw new \RuntimeException(t('error_layout_not_found', ['id' => $id]));
         }
         return $this->parseLayout($id);
     }

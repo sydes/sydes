@@ -82,7 +82,7 @@ class Controller
         }
 
         if (!actionConfirmed()) {
-            return confirmAction(sprintf(t('confirm_theme_deletion'), $name), '/admin/themes');
+            return confirmAction(t('confirm_theme_deletion', ['name' => $name]), '/admin/themes');
         }
 
         $theme = new Theme($name);

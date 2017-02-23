@@ -195,7 +195,7 @@ class App
 
         $path = moduleDir($route['path'][0]);
         if (is_null($path)) {
-            throw new \Exception(sprintf(t('error_module_folder_not_found'), $route['path'][0]));
+            throw new \Exception(t('error_module_folder_not_found', ['module' => $route['path'][0]]));
         }
 
         if (count($route['path']) > 1) {

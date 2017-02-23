@@ -48,7 +48,7 @@ class View
         } elseif (file_exists($file)) {
             $html = render($file, $this->data);
         } else {
-            throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
+            throw new \RuntimeException(t('error_file_not_found', ['file' => $file]));
         }
 
         app('event')->trigger('view.render.ended', [&$html], $context);

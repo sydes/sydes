@@ -141,14 +141,15 @@ function app($id = null)
 }
 
 /**
- * Translate string.
+ * Translate string and insert contextual data.
  *
  * @param string $text
+ * @param array  $context
  * @return string
  */
-function t($text)
+function t($text, array $context = [])
 {
-    return app('translator')->translate($text);
+    return app('translator')->translate($text, $context);
 }
 
 /**
@@ -159,7 +160,7 @@ function t($text)
  * @param array  $context
  * @return string
  */
-function p($text, $count, $context = [])
+function p($text, $count, array $context = [])
 {
     return app('translator')->pluralize($text, $count, $context);
 }
@@ -686,7 +687,7 @@ function model($module)
     $file = moduleDir($part[0]).'/models/'.$part[1].'.php';
 
     if (!file_exists($file)) {
-        throw new \RuntimeException(sprintf(t('error_file_not_found'), $file));
+        throw new \RuntimeException(t('error_file_not_found', ['file' => $file]));
     }
 
     include_once $file;
