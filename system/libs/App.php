@@ -158,7 +158,9 @@ class App
 
             if (isset($module['files'])) {
                 foreach ($module['files'] as $file) {
-                    include moduleDir($name).'/'.$file;
+                    if ($dir = moduleDir($name)) {
+                        include $dir.'/'.$file;
+                    }
                 }
             }
         }
@@ -194,7 +196,7 @@ class App
         $route = self::parseRoute($params[0]);
 
         $path = moduleDir($route['path'][0]);
-        if (is_null($path)) {
+        if (!$path) {
             throw new \Exception(t('error_module_folder_not_found', ['module' => $route['path'][0]]));
         }
 
