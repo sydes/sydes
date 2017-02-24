@@ -8,27 +8,30 @@ class Handlers
 {
     public static function init(Event $events)
     {
-        $events->on('module.executed', '*', function ($content) {
-            if ($content instanceof Document) {
-                $content->addContextMenu('right', 'profile', [
-                    'weight' => 0,
-                    'title' => app('editor')->username,
-                    'items' => [
-                        'profile' => [
-                            'title' => 'profile',
-                            'url' => '/admin/profile',
-                        ],
-                        'div1' => [
-                            'attr' => 'class="divider"',
-                        ],
-                        'logout' => [
-                            'html' => '<a href="/auth/logout" onclick="event.preventDefault();'.
-                                '$(\'#logout-form\').submit();">'.t('logout').'</a>'.
-                                '<form id="logout-form" action="/auth/logout" method="POST" style="display: none;"></form>',
-                        ]
+        $events->on('render.started', '*', function (Document $content) {
+
+            $content->addContextMenu('right', 'profile', [
+                'weight' => 0,
+                'title' => app('editor')->username,
+                'items' => [
+                    'profile' => [
+                        'title' => 'profile',
+                        'url' => '/admin/profile',
+                    ],
+                    'div1' => [
+                        'attr' => 'class="divider"',
+                    ],
+                    'logout' => [
+                        'title' => 'logout',
+                        'url' => '/auth/logout',
+                        'attr' => 'class="toolbar-item" id="logout"',
                     ]
-                ]);
-            }
+                ]
+            ])
+            ->addScript('logout', "$(document).on('click', '#logout a', function (e) {
+                e.preventDefault();$.post($(this).attr('href'));
+            })");
+
         });
     }
 }

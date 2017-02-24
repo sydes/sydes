@@ -102,13 +102,6 @@ syd.eval = function (code, doc) {
     doc.head.appendChild(script).parentNode.removeChild(script);
 };
 
-// Automatic adds token field to all form
-$(document).on('submit', 'form', function () {
-    if (!$(this).find('[name="csrf_name"]').length) {
-        $(this).append('<input type="hidden" name="csrf_name" value="'+csrf_name+'"><input type="hidden" name="csrf_value" value="'+csrf_value+'">');
-    }
-});
-
 $(document).on('click', '[data-load=modal]', function () {
     var size = $(this).data('size') || 'md';
 
