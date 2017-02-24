@@ -70,13 +70,6 @@ $(document).on('click', '.apply-modal', function () {
     }
 });
 
-$(document).on('click', '.skin-selector a', function () {
-    var skin = $(this).attr('title');
-    $('#skin').attr('href', '/system/assets/css/skin.'+skin+'.css');
-    localStorage['skin'] = skin;
-    return false
-});
-
 var ua = navigator.userAgent.toLowerCase(),
     isIE = (ua.indexOf("msie") != -1 && ua.indexOf("opera") == -1),
     isSafari = ua.indexOf("safari") != -1,
