@@ -1,14 +1,16 @@
 function csrfMethod(method) {
-    return (/^(POST|PUT|DELETE|PATCH)$/.test(method));
+    return (/^(POST|PUT|DELETE|PATCH)$/.test(method.toUpperCase()));
 }
 
-$(document).ajaxSend(function (e, xhr, s) {
-    $('html').css('cursor', 'wait');
-
+$.ajaxPrefilter(function(s) {
     if (!s.crossDomain && csrfMethod(s.type)) {
         s.data = s.data ? s.data+'&' : '';
         s.data += 'csrf_name='+syd.csrf.name+'&csrf_value='+syd.csrf.value;
     }
+});
+
+$(document).ajaxSend(function () {
+    $('html').addClass('ajax-works');
 }).ajaxSuccess(function (e, xhr, s) {
     if (localStorage['debug'] == 1) {
         console.log(xhr.responseText)
@@ -53,8 +55,7 @@ $(document).ajaxSend(function (e, xhr, s) {
         }
     }
 }).ajaxError(function () {
-    $('html').css('cursor', 'auto');
-    syd.notify('AJAX 404 (Not Found)', 'danger')
+    syd.notify('AJAX Error', 'danger')
 }).ajaxComplete(function () {
-    $('html').css('cursor', 'auto')
+    $('html').removeClass('ajax-works');
 });
