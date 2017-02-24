@@ -23,7 +23,7 @@ class SiteHandler extends BaseHandler
                 if (app('theme')->hasLayout('error'.$e->getCode())) {
                     $doc->data['layout'] = 'error'.$e->getCode();
                 } else {
-                    $doc->data['content'] = t('error_'.$e->getCode().'_text');
+                    $doc->data['content'] = '<h1>'.t('error_'.$e->getCode().'_text').'</h1><p>'.$e->getMessage().'</p>';
                 }
             } else {
                 alert($e->getMessage(), 'danger');
