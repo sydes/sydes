@@ -24,7 +24,7 @@ class Handlers
             $doc->addJs('sydes', $root.'js/sydes.js', 1);
             $doc->addJs('ajax-router', $root.'js/ajaxRouter.js', 2);
 
-            $doc->addCss('notify', $root.'css/notify.css', 10);
+            $doc->addCss('main', $root.'css/main.css', 10);
         });
 
         /**

@@ -37,3 +37,7 @@
     background-color: #f2dede;
     border-color: #ebccd1;
 }
+
+.ajax-works {
+    cursor: wait;
+}
