@@ -1,5 +1,5 @@
 function csrfMethod(method) {
-    return (/^(POST|PUT|DELETE|PATCH)$/.test(method.toUpperCase()));
+    return (/^(POST|PUT|DELETE|PATCH)$/i.test(method));
 }
 
 $.ajaxPrefilter(function(s) {
