@@ -56,10 +56,12 @@ class Handlers
          * Base assets for admin
          */
         $events->on('render.started', 'admin/*', function (Document $doc) {
+            $doc->title .= ' - '.app('site')['name'].' @ SyDES';
+
             $doc->addContextMenu('left', 'brand_link', [
                 'weight' => 0,
-                'title' => 'site_name',
-                'url' => '/'
+                'title' => app('site')['name'],
+                'url' => '//'.app('site')['domains'][0]
             ]);
 
             $doc->addPackage('bootstrap', [

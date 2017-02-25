@@ -16,8 +16,6 @@ class Admin extends Base
     {
         app('event')->trigger('render.started', [$doc]);
 
-        $siteName = app('site')['name'];
-        $doc->title .= ' - '.$siteName.' @ SyDES';
         $this->prepare($doc);
         $this->fillHead();
         $this->fillFooter();
@@ -26,8 +24,6 @@ class Admin extends Base
             'lang' => app('app')['locale'],
             'head'   => implode("\n    ", $this->head),
             'footer' => implode("\n    ", $this->footer),
-            'site_name' => $siteName,
-            'site_url' => '//'.app('site')['domains'][0],
             'menu' => $this->getMenu(),
             'form_url' => '',
             'sidebar_left' => '',
@@ -35,7 +31,6 @@ class Admin extends Base
             'sidebar_right' => '',
             'footer_left' => '',
             'footer_center' => '',
-            'skin' => app('app')['adminSkin'],
             'col_sm' => 12,
             'col_lg' => 12,
         ];
