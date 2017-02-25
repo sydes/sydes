@@ -24,7 +24,7 @@ class Handlers
             $doc->addJs('sydes', $root.'js/sydes.js', 1);
             $doc->addJs('ajax-router', $root.'js/ajaxRouter.js', 2);
 
-            $doc->addCss('main', $root.'css/main.css', 10);
+            $doc->addCss('main', $root.'css/main.css', 0);
         });
 
         /**
@@ -38,11 +38,11 @@ class Handlers
             ]);
 
             $root = '/system/assets/';
-            $doc->addJs('sydes-front', $root.'js/front.js', 9);
+            $doc->addJs('front', $root.'js/front.js', 10);
 
             if (app('editor')->isLoggedIn()) {
-                $doc->addCss('toolbar', $root.'css/toolbar.css', 10);
-                $doc->addPackage('front-editor', $root.'js/frontEditor.js', $root.'css/frontEditor.css', 11);
+                $doc->addCss('toolbar', $root.'css/toolbar.css', 11);
+                $doc->addPackage('front-editor', $root.'js/frontEditor.js', $root.'css/frontEditor.css', 12);
             }
 
         });
@@ -72,7 +72,13 @@ class Handlers
                 11
             );
 
-            $doc->addCss('toolbar', '/system/assets/css/toolbar.css', 9);
+            $root = '/system/assets/';
+            $doc->addCss('toolbar', $root.'css/toolbar.css', 12);
+            $doc->addCss('admin', $root.'css/admin.css', 14);
+            $doc->addCss('skin', $root.'css/skin.'.app('app')['adminSkin'].'.css', 15);
+
+            $doc->addJs('utils', $root.'js/utils.js', 12);
+            $doc->addJs('admin', $root.'js/admin.js', 14);
         });
     }
 }

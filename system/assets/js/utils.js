@@ -121,7 +121,7 @@ function stickMenu(menu) {
         pos = Math.max(pos, -gap);
         pos = Math.min(pos, 0);
 
-        menu.css('top', pos)
+        menu.css('top', pos);
         prev = $(this).scrollTop();
     });
 }
