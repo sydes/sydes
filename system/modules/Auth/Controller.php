@@ -37,7 +37,7 @@ class Controller
     public function loginForm()
     {
         return view('auth/form', [
-            'autoLogin' => app('editor')->autologin,
+            'autoLogin' => app('user')->autologin,
             'errors' => checkServer(),
             'title' => 'Log in to',
             'signUp' => false,
@@ -48,7 +48,7 @@ class Controller
     {
         $r = app('request');
 
-        if (!app('editor')->login($r->input('username'), $r->input('password'), $r->has('remember'))) {
+        if (!app('user')->login($r->input('username'), $r->input('password'), $r->has('remember'))) {
             app('logger')->info("{name} is not logged on. {pass} - wrong password", [
                 'name' => $r->input('username'),
                 'pass' => $r->input('password'),
@@ -67,7 +67,7 @@ class Controller
 
     public function logout()
     {
-        app('editor')->logout();
+        app('user')->logout();
         return redirect();
     }
 
@@ -77,7 +77,7 @@ class Controller
          * Auth middleware :)
          */
         $events->on('route.found', 'admin/*', function () {
-            if (!app('editor')->isLoggedIn()) {
+            if (!app('user')->isLoggedIn()) {
                 $_SESSION['entry'] = app('request')->getUri()->getPath();
                 throw new \App\Exception\RedirectException('/auth/login');
             }

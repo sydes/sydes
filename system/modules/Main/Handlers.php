@@ -45,7 +45,7 @@ class Handlers
             $root = '/system/assets/';
             $doc->addJs('front', $root.'js/front.js', 10);
 
-            if (app('editor')->isLoggedIn()) {
+            if (app('user')->isLoggedIn()) {
                 $doc->addCss('toolbar', $root.'css/toolbar.css', 11);
                 $doc->addPackage('front-editor', $root.'js/frontEditor.js', $root.'css/frontEditor.css', 12);
             }

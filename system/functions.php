@@ -668,7 +668,7 @@ function e($str)
 
 function restricted()
 {
-    if (!app('editor')->isAdmin()) {
+    if (!app('user')->isAdmin()) {
         alert(t('error_mastercode_needed'), 'warning');
         $to = ifsetor(app('request')->headers['REFERER'], '/admin');
         throw new \App\Exception\RedirectException($to);

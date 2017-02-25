@@ -43,7 +43,7 @@ class Controller
                 'timeZone' => $r->input('time_zone'),
             ]);
 
-            app('editor')->login($r->input('username'), $r->input('password'));
+            app('user')->login($r->input('username'), $r->input('password'));
 
             return redirect('/admin/sites/1/edit');
         }

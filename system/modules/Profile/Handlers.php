@@ -12,7 +12,7 @@ class Handlers
 
             $content->addContextMenu('right', 'profile', [
                 'weight' => 0,
-                'title' => app('editor')->username,
+                'title' => app('user')->username,
                 'items' => [
                     'profile' => [
                         'title' => 'profile',

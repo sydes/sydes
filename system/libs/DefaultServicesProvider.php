@@ -130,13 +130,13 @@ class DefaultServicesProvider
             };
         };
 
-        if (!isset($c['editor'])) {
+        if (!isset($c['user'])) {
             /**
              * @param $c
-             * @return Editor
+             * @return User
              */
-            $c['editor'] = function ($c) {
-                return new Editor($c['rawAppConfig']['user']);
+            $c['user'] = function ($c) {
+                return new User($c['rawAppConfig']['user']);
             };
         };
 

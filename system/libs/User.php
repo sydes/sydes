@@ -8,7 +8,7 @@
  */
 namespace App;
 
-class Editor
+class User
 {
     private $isLoggedIn;
     public $email;

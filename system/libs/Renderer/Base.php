@@ -77,7 +77,7 @@ class Base
 
         $this->footer[] = "<script>\n".implode("\n\n", $this->document->scripts)."\n</script>";
 
-        if (app('editor')->isLoggedIn()) {
+        if (app('user')->isLoggedIn()) {
             $this->footer[] = $this->getToolbar();
         }
 
