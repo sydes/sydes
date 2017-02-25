@@ -156,11 +156,9 @@ class App
                 }
             }
 
-            if (isset($module['files'])) {
+            if (isset($module['files']) && $dir = moduleDir($name)) {
                 foreach ($module['files'] as $file) {
-                    if ($dir = moduleDir($name)) {
-                        include $dir.'/'.$file;
-                    }
+                    include $dir.'/'.$file;
                 }
             }
         }
