@@ -104,7 +104,7 @@ Username: demo\nPassword: demo\nMastercode: demo\nBut we need some info...");
                 $you->say('You updated '.$extension.' '.$name);
             } else {
                 $error = app('cmf')->update();
-                if ($error == false) {
+                if ($error === false) {
                     $you->say('SyDES updated');
                 } else {
                     $you->say('Not updated. There is error: '.$error);
@@ -136,12 +136,12 @@ Username: demo\nPassword: demo\nMastercode: demo\nBut we need some info...");
         $commands->add('download extension name [-i]', function ($extension, $name, $i = false) use ($you) {
 
             $you->say('Downloading...');
-            sleep(1);
+
             $you->say('You downloaded '.$extension.' '.$name);
 
             if ($i) {
                 $you->say('Installation...');
-                sleep(1);
+
                 $you->say('And installed it');
             }
         }, ['Download extension by type and name', [
