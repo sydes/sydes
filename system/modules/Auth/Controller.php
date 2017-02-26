@@ -21,16 +21,16 @@ class Controller
         ['POST', '/password/reset', 'Auth/Password@reset'],
     ];
 
-    public function install()
+    public function install($cmf)
     {
-        app('cmf')->installModule('auth', [
+        $cmf->installModule('auth', [
             'handlers' => ['Module\Auth\Controller::handlers'],
         ]);
     }
 
-    public function uninstall()
+    public function uninstall($cmf)
     {
-        app('cmf')->uninstallModule('auth');
+        $cmf->uninstallModule('auth');
     }
 
     public function loginForm()

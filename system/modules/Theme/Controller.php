@@ -26,20 +26,20 @@ class Controller
 
     }
 
-	public function install()
+	public function install($cmf)
     {
-        app('cmf')->installModule('theme');
+        $cmf->installModule('theme');
 
-        app('cmf')->addMenuItem('system', [
+        $cmf->addMenuItem('system', [
             'title' => 'module_theme',
             'url' => '/admin/themes',
         ], 200);
     }
 
-	public function uninstall()
+	public function uninstall($cmf)
     {
-        app('cmf')->removeMenuItem('system', '/admin/themes');
-        app('cmf')->uninstallModule('theme');
+        $cmf->removeMenuItem('system', '/admin/themes');
+        $cmf->uninstallModule('theme');
     }
 
     public function index()

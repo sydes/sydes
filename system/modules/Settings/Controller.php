@@ -19,20 +19,20 @@ class Controller
 
     }
 
-	public function install()
+	public function install($cmf)
     {
-        app('cmf')->installModule('settings');
+        $cmf->installModule('settings');
 
-        app('cmf')->addMenuItem('system', [
+        $cmf->addMenuItem('system', [
             'title' => 'module_settings',
             'url' => '/admin/settings',
         ], 10);
     }
 
-	public function uninstall()
+	public function uninstall($cmf)
     {
-        app('cmf')->removeMenuItem('system', '/admin/settings');
-        app('cmf')->uninstallModule('settings');
+        $cmf->removeMenuItem('system', '/admin/settings');
+        $cmf->uninstallModule('settings');
     }
 
     public function index()

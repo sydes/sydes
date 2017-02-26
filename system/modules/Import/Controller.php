@@ -19,20 +19,20 @@ class Controller
 
     }
 
-	public function install()
+	public function install($cmf)
     {
-        app('cmf')->installModule('import');
+        $cmf->installModule('import');
 
-        app('cmf')->addMenuItem('tools', [
+        $cmf->addMenuItem('tools', [
             'title' => 'module_import',
             'url' => '/admin/import',
         ], 300);
     }
 
-	public function uninstall()
+	public function uninstall($cmf)
     {
-        app('cmf')->removeMenuItem('tools', '/admin/import');
-        app('cmf')->uninstallModule('import');
+        $cmf->removeMenuItem('tools', '/admin/import');
+        $cmf->uninstallModule('import');
     }
 
     public function index()

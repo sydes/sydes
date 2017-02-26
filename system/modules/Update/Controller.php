@@ -14,22 +14,22 @@ class Controller
         ['GET', '/admin/update', 'Update@index'],
     ];
 
-	public function install()
+	public function install($cmf)
     {
-        app('cmf')->installModule('update', [
+        $cmf->installModule('update', [
             'handlers' => ['Module\Update\Handlers::init'],
         ]);
 
-        app('cmf')->addMenuItem('tools', [
+        $cmf->addMenuItem('tools', [
             'title' => 'module_update',
             'url' => '/admin/update',
         ], 240);
     }
 
-	public function uninstall()
+	public function uninstall($cmf)
     {
-        app('cmf')->removeMenuItem('tools', '/admin/themes');
-        app('cmf')->uninstallModule('update');
+        $cmf->removeMenuItem('tools', '/admin/themes');
+        $cmf->uninstallModule('update');
     }
 
     public function index()

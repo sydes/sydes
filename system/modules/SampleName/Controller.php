@@ -40,11 +40,10 @@ class Controller
         // Define properties and services for every method
     }
 
-	public function install()
+	public function install($cmf)
     {
         // Create tables, if needed
 
-        $cmf = app('cmf');
         $cmf->installModule($this->moduleName, [
             'handlers' => ['Module\SampleName\Handlers::init'],
             'files' => ['functions.php'],
@@ -62,10 +61,10 @@ class Controller
         ], 20);
     }
 
-	public function uninstall()
+	public function uninstall($cmf)
     {
-        app('cmf')->removeMenuGroup($this->moduleName);
-        app('cmf')->uninstallModule($this->moduleName);
+        $cmf->removeMenuGroup($this->moduleName);
+        $cmf->uninstallModule($this->moduleName);
 
         // Remove tables and config, if used
     }

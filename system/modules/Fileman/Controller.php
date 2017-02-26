@@ -19,20 +19,20 @@ class Controller
 
     }
 
-	public function install()
+	public function install($cmf)
     {
-        app('cmf')->installModule('fileman');
+        $cmf->installModule('fileman');
 
-        app('cmf')->addMenuItem('tools', [
+        $cmf->addMenuItem('tools', [
             'title' => 'module_fileman',
             'url' => '#',
         ], 10);
     }
 
-	public function uninstall()
+	public function uninstall($cmf)
     {
-        app('cmf')->removeMenuItem('tools', '#');
-        app('cmf')->uninstallModule('fileman');
+        $cmf->removeMenuItem('tools', '#');
+        $cmf->uninstallModule('fileman');
     }
 
     public function index()

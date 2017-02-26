@@ -19,20 +19,20 @@ class Controller
 
     }
 
-	public function install()
+	public function install($cmf)
     {
-        app('cmf')->installModule('iblocks');
+        $cmf->installModule('iblocks');
 
-        app('cmf')->addMenuItem('system', [
+        $cmf->addMenuItem('system', [
             'title' => 'module_iblocks',
             'url' => '/admin/iblocks',
         ], 300);
     }
 
-	public function uninstall()
+	public function uninstall($cmf)
     {
-        app('cmf')->removeMenuItem('system', '/admin/iblocks');
-        app('cmf')->uninstallModule('iblocks');
+        $cmf->removeMenuItem('system', '/admin/iblocks');
+        $cmf->uninstallModule('iblocks');
     }
 
     public function index()

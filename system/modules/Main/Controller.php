@@ -15,9 +15,9 @@ class Controller
         ['GET', '/sitemap.xml', 'Main@sitemap'],
     ];
 
-    public function install()
+    public function install($cmf)
     {
-        app('cmf')->installModule('main', [
+        $cmf->installModule('main', [
             'handlers' => ['Module\Main\Handlers::init'],
         ]);
     }

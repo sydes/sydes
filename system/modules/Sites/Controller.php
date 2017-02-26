@@ -20,20 +20,20 @@ class Controller
 
     }
 
-	public function install()
+	public function install($cmf)
     {
-        app('cmf')->installModule('sites');
+        $cmf->installModule('sites');
 
-        app('cmf')->addMenuItem('system', [
+        $cmf->addMenuItem('system', [
             'title' => 'module_sites',
             'url' => '/admin/sites',
         ], 10);
     }
 
-	public function uninstall()
+	public function uninstall($cmf)
     {
-        app('cmf')->removeMenuItem('system', '/admin/sites');
-        app('cmf')->uninstallModule('sites');
+        $cmf->removeMenuItem('system', '/admin/sites');
+        $cmf->uninstallModule('sites');
     }
 
     public function index()

@@ -19,20 +19,20 @@ class Controller
 
     }
 
-	public function install()
+	public function install($cmf)
     {
-        app('cmf')->installModule('logs');
+        $cmf->installModule('logs');
 
-        app('cmf')->addMenuItem('system', [
+        $cmf->addMenuItem('system', [
             'title' => 'module_logs',
             'url' => '/admin/logs',
         ], 500);
     }
 
-	public function uninstall()
+	public function uninstall($cmf)
     {
-        app('cmf')->removeMenuItem('system', '/admin/logs');
-        app('cmf')->uninstallModule('logs');
+        $cmf->removeMenuItem('system', '/admin/logs');
+        $cmf->uninstallModule('logs');
     }
 
     public function index()

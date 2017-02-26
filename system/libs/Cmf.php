@@ -106,7 +106,7 @@ class Cmf
     {
         $modules = $this->getDefaultModules();
         foreach ($modules as $module) {
-            App::execute([$module.'@install']);
+            App::execute([$module.'@install', [$this]]);
         }
     }
 

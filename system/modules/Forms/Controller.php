@@ -19,20 +19,20 @@ class Controller
 
     }
 
-	public function install()
+	public function install($cmf)
     {
-        app('cmf')->installModule('forms');
+        $cmf->installModule('forms');
 
-        app('cmf')->addMenuItem('constructors', [
+        $cmf->addMenuItem('constructors', [
             'title' => 'module_forms',
             'url' => '/admin/forms',
         ], 10);
     }
 
-	public function uninstall()
+	public function uninstall($cmf)
     {
-        app('cmf')->removeMenuItem('constructors', '/admin/forms');
-        app('cmf')->uninstallModule('forms');
+        $cmf->removeMenuItem('constructors', '/admin/forms');
+        $cmf->uninstallModule('forms');
     }
 
     public function index()

@@ -14,14 +14,14 @@ class Controller
         ['GET', '/admin/pages', 'Pages@index'],
     ];
 
-    public function install()
+    public function install($cmf)
     {
-        app('cmf')->installModule('pages');
+        $cmf->installModule('pages');
     }
 
-    public function uninstall()
+    public function uninstall($cmf)
     {
-        app('cmf')->uninstallModule('pages');
+        $cmf->uninstallModule('pages');
     }
 
     public function index()
