@@ -815,6 +815,11 @@ function camel_case($value)
     return lcfirst(studly_case($value));
 }
 
+function snake_case($str, $delimiter = '_')
+{
+    return strtolower(preg_replace('/(.)(?=[A-Z])/', '$1'.$delimiter, $str));
+}
+
 function actionConfirmed()
 {
     return app('request')->has('confirmed');
