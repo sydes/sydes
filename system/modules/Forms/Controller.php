@@ -8,8 +8,6 @@
  */
 namespace Module\Forms;
 
-use App\Cmf;
-
 class Controller
 {
     public static $routes = [
@@ -23,9 +21,9 @@ class Controller
 
 	public function install()
     {
-        Cmf::installModule('forms');
+        app('cmf')->installModule('forms');
 
-        Cmf::addMenuItem('constructors', [
+        app('cmf')->addMenuItem('constructors', [
             'title' => 'module_forms',
             'url' => '/admin/forms',
         ], 10);
@@ -33,8 +31,8 @@ class Controller
 
 	public function uninstall()
     {
-        Cmf::removeMenuItem('constructors', '/admin/forms');
-        Cmf::uninstallModule('forms');
+        app('cmf')->removeMenuItem('constructors', '/admin/forms');
+        app('cmf')->uninstallModule('forms');
     }
 
     public function index()

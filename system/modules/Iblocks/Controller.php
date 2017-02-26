@@ -8,8 +8,6 @@
  */
 namespace Module\Iblocks;
 
-use App\Cmf;
-
 class Controller
 {
     public static $routes = [
@@ -23,9 +21,9 @@ class Controller
 
 	public function install()
     {
-        Cmf::installModule('iblocks');
+        app('cmf')->installModule('iblocks');
 
-        Cmf::addMenuItem('system', [
+        app('cmf')->addMenuItem('system', [
             'title' => 'module_iblocks',
             'url' => '/admin/iblocks',
         ], 300);
@@ -33,8 +31,8 @@ class Controller
 
 	public function uninstall()
     {
-        Cmf::removeMenuItem('system', '/admin/iblocks');
-        Cmf::uninstallModule('iblocks');
+        app('cmf')->removeMenuItem('system', '/admin/iblocks');
+        app('cmf')->uninstallModule('iblocks');
     }
 
     public function index()

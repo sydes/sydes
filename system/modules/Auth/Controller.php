@@ -8,7 +8,6 @@
  */
 namespace Module\Auth;
 
-use App\Cmf;
 use App\Event;
 
 class Controller
@@ -24,14 +23,14 @@ class Controller
 
     public function install()
     {
-        Cmf::installModule('auth', [
+        app('cmf')->installModule('auth', [
             'handlers' => ['Module\Auth\Controller::handlers'],
         ]);
     }
 
     public function uninstall()
     {
-        Cmf::uninstallModule('auth');
+        app('cmf')->uninstallModule('auth');
     }
 
     public function loginForm()

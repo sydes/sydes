@@ -8,8 +8,6 @@
  */
 namespace Module\Logs;
 
-use App\Cmf;
-
 class Controller
 {
     public static $routes = [
@@ -23,9 +21,9 @@ class Controller
 
 	public function install()
     {
-        Cmf::installModule('logs');
+        app('cmf')->installModule('logs');
 
-        Cmf::addMenuItem('system', [
+        app('cmf')->addMenuItem('system', [
             'title' => 'module_logs',
             'url' => '/admin/logs',
         ], 500);
@@ -33,8 +31,8 @@ class Controller
 
 	public function uninstall()
     {
-        Cmf::removeMenuItem('system', '/admin/logs');
-        Cmf::uninstallModule('logs');
+        app('cmf')->removeMenuItem('system', '/admin/logs');
+        app('cmf')->uninstallModule('logs');
     }
 
     public function index()

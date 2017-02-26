@@ -10,7 +10,7 @@ namespace App;
 
 class Cmf
 {
-    public static function install($params)
+    public function install($params)
     {
         if (file_exists(DIR_APP.'/config.php')) {
             return null;
@@ -56,7 +56,7 @@ class Cmf
 
         $locales = ['en', $params['locale']];
         foreach ($locales as $locale) {
-            self::downloadLocale($locale);
+            $this->downloadLocale($locale);
 
             if ($locale == 'en') {
                 continue;
@@ -67,8 +67,8 @@ class Cmf
                 mkdir($dir, 0777, true);
             }
 
-            foreach (self::getDefaultModules() as $module) {
-                self::downloadTranslation($module, $locale);
+            foreach ($this->getDefaultModules() as $module) {
+                $this->downloadTranslation($module, $locale);
             }
         }
 
@@ -93,24 +93,24 @@ class Cmf
         mkdir(DIR_SITE.'/s1');
         app()['site'] = ['id' => 's1'];
 
-        self::saveSiteConfig($site);
-        self::installDefaultModules();
+        $this->saveSiteConfig($site);
+        $this->installDefaultModules();
     }
 
-    public static function getDefaultModules()
+    public function getDefaultModules()
     {
         return str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
     }
 
-    public static function installDefaultModules()
+    public function installDefaultModules()
     {
-        $modules = self::getDefaultModules();
+        $modules = $this->getDefaultModules();
         foreach ($modules as $module) {
             App::execute([$module.'@install']);
         }
     }
 
-    public static function update()
+    public function update()
     {
         $error = false;
         /*
@@ -125,12 +125,12 @@ class Cmf
         return $error;
     }
 
-    public static function uninstall()
+    public function uninstall()
     {
         removeDir(DIR_APP);
     }
 
-    public static function remove()
+    public function remove()
     {
         // wut?
     }
@@ -138,7 +138,7 @@ class Cmf
     /**
      * @param string $locale iso code
      */
-    public static function downloadLocale($locale)
+    public function downloadLocale($locale)
     {
         $data = app('api')->loadLocale($locale);
 
@@ -152,7 +152,7 @@ class Cmf
      * @param string $module
      * @param string $locale iso code
      */
-    public static function downloadTranslation($module, $locale)
+    public function downloadTranslation($module, $locale)
     {
         $data = app('api')->loadTranslation($module, $locale);
 
@@ -162,12 +162,12 @@ class Cmf
         }
     }
 
-    public static function downloadExtension($type, $name)
+    public function downloadExtension($type, $name)
     {
         // скачать с сайта
     }
 
-    public static function removeExtension($type, $name)
+    public function removeExtension($type, $name)
     {
         // удалить файлы
     }
@@ -176,7 +176,7 @@ class Cmf
      * @param string $name
      * @param array  $data ['handlers' => [], 'iblocks' => []]
      */
-    public static function installModule($name, array $data = [])
+    public function installModule($name, array $data = [])
     {
         $config = app('rawSiteConfig');
         if (isset($config['modules'][$name])) {
@@ -191,19 +191,19 @@ class Cmf
 
         $config['modules'][$name] = $data;
 
-        self::saveSiteConfig($config);
+        $this->saveSiteConfig($config);
     }
 
     /**
      * @param string $name
      */
-    public static function uninstallModule($name)
+    public function uninstallModule($name)
     {
         $config = app('rawSiteConfig');
         if (isset($config['modules'][$name])) {
             unset($config['modules'][$name]);
 
-            self::saveSiteConfig($config);
+            $this->saveSiteConfig($config);
         }
     }
 
@@ -213,7 +213,7 @@ class Cmf
      * @param string $icon
      * @param int    $weight
      */
-    public static function addMenuGroup($name, $title, $icon = 'asterisk', $weight = 150)
+    public function addMenuGroup($name, $title, $icon = 'asterisk', $weight = 150)
     {
         $config = app('rawSiteConfig');
         if (isset($config['menu'][$name])) {
@@ -226,19 +226,19 @@ class Cmf
             'items' => []
         ];
 
-        self::saveSiteConfig($config);
+        $this->saveSiteConfig($config);
     }
 
     /**
      * @param string $name
      */
-    public static function removeMenuGroup($name)
+    public function removeMenuGroup($name)
     {
         $config = app('rawSiteConfig');
         if (isset($config['menu'][$name])) {
             unset($config['menu'][$name]);
 
-            self::saveSiteConfig($config);
+            $this->saveSiteConfig($config);
         }
     }
 
@@ -247,13 +247,13 @@ class Cmf
      * @param array $data ['title' => '', 'url' => '', 'quick_add' => true]
      * @param int $weight
      */
-    public static function addMenuItem($name, $data, $weight = 150)
+    public function addMenuItem($name, $data, $weight = 150)
     {
         $config = app('rawSiteConfig');
         if (isset($config['menu'][$name])) {
             $config['menu'][$name]['items'][] = array_merge(['weight' => $weight], $data);
 
-            self::saveSiteConfig($config);
+            $this->saveSiteConfig($config);
         }
     }
 
@@ -261,7 +261,7 @@ class Cmf
      * @param string $group
      * @param string $url
      */
-    public static function removeMenuItem($group, $url)
+    public function removeMenuItem($group, $url)
     {
         $config = app('rawSiteConfig');
         if (!isset($config['menu'][$group])) {
@@ -271,14 +271,14 @@ class Cmf
             if ($item['url'] == $url) {
                 unset($config['menu'][$group]['items'][$i]);
 
-                self::saveSiteConfig($config);
+                $this->saveSiteConfig($config);
 
                 break;
             }
         }
     }
 
-    public static function saveSiteConfig($config)
+    public function saveSiteConfig($config)
     {
         app()['rawSiteConfig'] = $config;
         array2file($config, DIR_SITE.'/'.app('site')['id'].'/config.php');

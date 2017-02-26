@@ -8,8 +8,6 @@
  */
 namespace Module\Profile;
 
-use App\Cmf;
-
 class Controller
 {
     public static $routes = [
@@ -19,14 +17,14 @@ class Controller
 
     public function install()
     {
-        Cmf::installModule('profile', [
+        app('cmf')->installModule('profile', [
             'handlers' => ['Module\Profile\Handlers::init'],
         ]);
     }
 
     public function uninstall()
     {
-        Cmf::uninstallModule('profile');
+        app('cmf')->uninstallModule('profile');
     }
 
     public function edit()

@@ -8,8 +8,6 @@
  */
 namespace Module\Pages;
 
-use App\Cmf;
-
 class Controller
 {
     public static $routes = [
@@ -18,12 +16,12 @@ class Controller
 
     public function install()
     {
-        Cmf::installModule('pages');
+        app('cmf')->installModule('pages');
     }
 
     public function uninstall()
     {
-        Cmf::uninstallModule('pages');
+        app('cmf')->uninstallModule('pages');
     }
 
     public function index()

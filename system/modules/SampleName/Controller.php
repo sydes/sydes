@@ -1,8 +1,6 @@
 <?php
 namespace Module\SampleName;
 
-use App\Cmf;
-
 class Controller
 {
     private $moduleName = 'sample-name';
@@ -46,18 +44,19 @@ class Controller
     {
         // Create tables, if needed
 
-        Cmf::installModule($this->moduleName, [
+        $cmf = app('cmf');
+        $cmf->installModule($this->moduleName, [
             'handlers' => ['Module\SampleName\Handlers::init'],
             'files' => ['functions.php'],
         ]);
 
-        Cmf::addMenuGroup($this->moduleName, 'menu_sample', 'star', 120);
-        Cmf::addMenuItem($this->moduleName, [
+        $cmf->addMenuGroup($this->moduleName, 'menu_sample', 'star', 120);
+        $cmf->addMenuItem($this->moduleName, [
             'title' => 'sample_page',
             'url' => '/admin/sample',
             'quick_add' => true,
         ], 10);
-        Cmf::addMenuItem($this->moduleName, [
+        $cmf->addMenuItem($this->moduleName, [
             'title' => 'another_page',
             'url' => '/admin/sample/another'
         ], 20);
@@ -65,8 +64,8 @@ class Controller
 
 	public function uninstall()
     {
-        Cmf::removeMenuGroup($this->moduleName);
-        Cmf::uninstallModule($this->moduleName);
+        app('cmf')->removeMenuGroup($this->moduleName);
+        app('cmf')->uninstallModule($this->moduleName);
 
         // Remove tables and config, if used
     }

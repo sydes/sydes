@@ -8,7 +8,6 @@
  */
 namespace Module\Theme;
 
-use App\Cmf;
 use App\Theme;
 
 class Controller
@@ -29,9 +28,9 @@ class Controller
 
 	public function install()
     {
-        Cmf::installModule('theme');
+        app('cmf')->installModule('theme');
 
-        Cmf::addMenuItem('system', [
+        app('cmf')->addMenuItem('system', [
             'title' => 'module_theme',
             'url' => '/admin/themes',
         ], 200);
@@ -39,8 +38,8 @@ class Controller
 
 	public function uninstall()
     {
-        Cmf::removeMenuItem('system', '/admin/themes');
-        Cmf::uninstallModule('theme');
+        app('cmf')->removeMenuItem('system', '/admin/themes');
+        app('cmf')->uninstallModule('theme');
     }
 
     public function index()
@@ -70,7 +69,7 @@ class Controller
     {
         $config = app('rawSiteConfig');
         $config['theme'] = $name;
-        Cmf::saveSiteConfig($config);
+        app('cmf')->saveSiteConfig($config);
         return back();
     }
 

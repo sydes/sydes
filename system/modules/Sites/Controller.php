@@ -8,8 +8,6 @@
  */
 namespace Module\Sites;
 
-use App\Cmf;
-
 class Controller
 {
     public static $routes = [
@@ -24,9 +22,9 @@ class Controller
 
 	public function install()
     {
-        Cmf::installModule('sites');
+        app('cmf')->installModule('sites');
 
-        Cmf::addMenuItem('system', [
+        app('cmf')->addMenuItem('system', [
             'title' => 'module_sites',
             'url' => '/admin/sites',
         ], 10);
@@ -34,8 +32,8 @@ class Controller
 
 	public function uninstall()
     {
-        Cmf::removeMenuItem('system', '/admin/sites');
-        Cmf::uninstallModule('sites');
+        app('cmf')->removeMenuItem('system', '/admin/sites');
+        app('cmf')->uninstallModule('sites');
     }
 
     public function index()

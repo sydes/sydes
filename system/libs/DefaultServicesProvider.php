@@ -155,5 +155,12 @@ class DefaultServicesProvider
         $c['api'] = function () {
             return new Api();
         };
+
+        /**
+         * @return Cmf
+         */
+        $c['cmf'] = function () {
+            return new Cmf();
+        };
     }
 }

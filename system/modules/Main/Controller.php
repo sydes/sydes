@@ -8,8 +8,6 @@
  */
 namespace Module\Main;
 
-use App\Cmf;
-
 class Controller
 {
     public static $routes = [
@@ -19,7 +17,7 @@ class Controller
 
     public function install()
     {
-        Cmf::installModule('main', [
+        app('cmf')->installModule('main', [
             'handlers' => ['Module\Main\Handlers::init'],
         ]);
     }
@@ -32,7 +30,7 @@ class Controller
 
         $r = app('request');
         if ($r->isPost()) {
-            Cmf::install([
+            app('cmf')->install([
                 'email' => $r->input('email'),
                 'username' => $r->input('username'),
                 'password' => $r->input('password'),

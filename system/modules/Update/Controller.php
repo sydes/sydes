@@ -8,8 +8,6 @@
  */
 namespace Module\Update;
 
-use App\Cmf;
-
 class Controller
 {
     public static $routes = [
@@ -18,11 +16,11 @@ class Controller
 
 	public function install()
     {
-        Cmf::installModule('update', [
+        app('cmf')->installModule('update', [
             'handlers' => ['Module\Update\Handlers::init'],
         ]);
 
-        Cmf::addMenuItem('tools', [
+        app('cmf')->addMenuItem('tools', [
             'title' => 'module_update',
             'url' => '/admin/update',
         ], 240);
@@ -30,8 +28,8 @@ class Controller
 
 	public function uninstall()
     {
-        Cmf::removeMenuItem('tools', '/admin/themes');
-        Cmf::uninstallModule('update');
+        app('cmf')->removeMenuItem('tools', '/admin/themes');
+        app('cmf')->uninstallModule('update');
     }
 
     public function index()
