@@ -40,7 +40,7 @@ class Router
     {
         $callback = function (RouteCollector $r) use ($modules) {
             foreach ($modules as $module) {
-                $class = '\Module\\'.studly_case($module).'\\Controller';
+                $class = 'Module\\'.$module.'\\Controller';
                 if (isset($class::$routes)) {
                     foreach ($class::$routes as $route) {
                         $r->addRoute($route[0], $route[1], $route[2]);

@@ -62,11 +62,10 @@ class Kernel
         }
 
         foreach ($siteConf['modules'] as $name => $module) {
-            if ($dir = moduleDir($name)) {
-                if (file_exists($dir.'/Cli.php')) {
-                    $class = 'Module\\'.studly_case($name).'\\Cli';
-                    new $class($commands, $this->output);
-                }
+            $dir = moduleDir($name);
+            if (file_exists($dir.'/Cli.php')) {
+                $class = 'Module\\'.$name.'\\Cli';
+                new $class($commands, $this->output);
             }
         }
 
