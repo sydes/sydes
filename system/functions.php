@@ -68,7 +68,7 @@ function moduleDir($name)
 
     foreach ([DIR_APP, DIR_SYSTEM] as $place) {
         $path = $place.'/modules/'.$name;
-        if (file_exists($path.'/Controller.php')) {
+        if (is_dir($path)) {
             return $path;
         }
     }
