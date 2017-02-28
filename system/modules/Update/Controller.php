@@ -8,28 +8,25 @@
  */
 namespace Module\Update;
 
+use App\Cmf;
+
 class Controller
 {
     public static $routes = [
         ['GET', '/admin/update', 'Update@index'],
     ];
 
-	public function install($cmf)
+	public function install(Cmf $cmf)
     {
-        $cmf->installModule('update', [
-            'handlers' => ['Module\Update\Handlers::init'],
-        ]);
-
         $cmf->addMenuItem('tools', [
             'title' => 'module_update',
             'url' => '/admin/update',
         ], 240);
     }
 
-	public function uninstall($cmf)
+	public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('tools', '/admin/themes');
-        $cmf->uninstallModule('update');
     }
 
     public function index()

@@ -15,13 +15,6 @@ class Controller
         ['GET', '/sitemap.xml', 'Main@sitemap'],
     ];
 
-    public function install($cmf)
-    {
-        $cmf->installModule('main', [
-            'handlers' => ['Module\Main\Handlers::init'],
-        ]);
-    }
-
     public function installer()
     {
         if (file_exists(DIR_APP.'/config.php')) {

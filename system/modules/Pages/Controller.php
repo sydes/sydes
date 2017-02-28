@@ -8,20 +8,22 @@
  */
 namespace Module\Pages;
 
+use App\Cmf;
+
 class Controller
 {
     public static $routes = [
         ['GET', '/admin/pages', 'Pages@index'],
     ];
 
-    public function install($cmf)
+    public function install(Cmf $cmf)
     {
-        $cmf->installModule('pages');
+        // add menu group
     }
 
-    public function uninstall($cmf)
+    public function uninstall(Cmf $cmf)
     {
-        $cmf->uninstallModule('pages');
+        // remove menu group
     }
 
     public function index()

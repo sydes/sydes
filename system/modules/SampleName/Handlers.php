@@ -6,11 +6,6 @@ use App\Event;
 
 class Handlers
 {
-    public static function init(Event $events)
-    {
-        new self($events);
-    }
-
     public function __construct(Event $events)
     {
         $events->on('module.executed', '*', [$this, 'handleEvent1']);

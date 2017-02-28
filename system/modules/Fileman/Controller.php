@@ -8,6 +8,8 @@
  */
 namespace Module\Fileman;
 
+use App\Cmf;
+
 class Controller
 {
     public static $routes = [
@@ -19,20 +21,17 @@ class Controller
 
     }
 
-	public function install($cmf)
+	public function install(Cmf $cmf)
     {
-        $cmf->installModule('fileman');
-
         $cmf->addMenuItem('tools', [
             'title' => 'module_fileman',
             'url' => '#',
         ], 10);
     }
 
-	public function uninstall($cmf)
+	public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('tools', '#');
-        $cmf->uninstallModule('fileman');
     }
 
     public function index()

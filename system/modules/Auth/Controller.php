@@ -8,8 +8,6 @@
  */
 namespace Module\Auth;
 
-use App\Event;
-
 class Controller
 {
     public static $routes = [
@@ -20,18 +18,6 @@ class Controller
         ['GET',  '/password/reset/{token:[a-f0-9]+}', 'Auth/Password@showResetForm'],
         ['POST', '/password/reset', 'Auth/Password@reset'],
     ];
-
-    public function install($cmf)
-    {
-        $cmf->installModule('auth', [
-            'handlers' => ['Module\Auth\Controller::handlers'],
-        ]);
-    }
-
-    public function uninstall($cmf)
-    {
-        $cmf->uninstallModule('auth');
-    }
 
     public function loginForm()
     {
@@ -68,18 +54,5 @@ class Controller
     {
         app('user')->logout();
         return redirect();
-    }
-
-    public static function handlers(Event $events)
-    {
-        /**
-         * Auth middleware :)
-         */
-        $events->on('route.found', 'admin/*', function () {
-            if (!app('user')->isLoggedIn()) {
-                $_SESSION['entry'] = app('request')->getUri()->getPath();
-                throw new \App\Exception\RedirectException('/auth/login');
-            }
-        });
     }
 }

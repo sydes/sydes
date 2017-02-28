@@ -150,15 +150,16 @@ class App
 
         $events = $this->container['event'];
         foreach ($siteConf['modules'] as $name => $module) {
-            if (isset($module['handlers'])) {
-                foreach ($module['handlers'] as $handler) {
-                    call_user_func_array($handler, [$events]);
-                }
+            $dir = moduleDir($name);
+
+            if (isset($module['handlers']) && file_exists($dir.'/Handlers.php')) {
+                $class = 'Module\\'.$name.'\\Handlers';
+                new $class($events);
             }
 
-            if (isset($module['files']) && $dir = moduleDir($name)) {
+            if (isset($module['files'])) {
                 foreach ($module['files'] as $file) {
-                    include $dir.'/'.$file;
+                    include $dir.'/functions/'.$file;
                 }
             }
         }
@@ -189,7 +190,7 @@ class App
      * @return mixed
      * @throws \Exception
      */
-    public static function execute($params)
+    public static function execute($params, $soft = false)
     {
         $route = self::parseRoute($params[0]);
 
@@ -204,7 +205,18 @@ class App
             $class = 'Module\\'.$route['path'][0].'\Controller';
         }
         $instance = new $class;
-        return call_user_func_array([$instance, $route['method']], ifsetor($params[1], []));
+
+        $result = null;
+        if (method_exists($instance, $route['method'])) {
+            $result = call_user_func_array([$instance, $route['method']], ifsetor($params[1], []));
+        } elseif (!$soft) {
+            throw new \Exception(t('error_method_not_found', [
+                'class' => $class,
+                'method' => $route['method']
+            ]));
+        }
+
+        return $result;
     }
 
     private function prepare($content)

@@ -1,6 +1,8 @@
 <?php
 namespace Module\SampleName;
 
+use App\Cmf;
+
 class Controller
 {
     private $moduleName = 'sample-name';
@@ -40,14 +42,9 @@ class Controller
         // Define properties and services for every method
     }
 
-	public function install($cmf)
+	public function install(Cmf $cmf)
     {
         // Create tables, if needed
-
-        $cmf->installModule($this->moduleName, [
-            'handlers' => ['Module\SampleName\Handlers::init'],
-            'files' => ['functions.php'],
-        ]);
 
         $cmf->addMenuGroup($this->moduleName, 'menu_sample', 'star', 120);
         $cmf->addMenuItem($this->moduleName, [
@@ -61,10 +58,9 @@ class Controller
         ], 20);
     }
 
-	public function uninstall($cmf)
+	public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuGroup($this->moduleName);
-        $cmf->uninstallModule($this->moduleName);
 
         // Remove tables and config, if used
     }

@@ -8,6 +8,8 @@
  */
 namespace Module\Import;
 
+use App\Cmf;
+
 class Controller
 {
     public static $routes = [
@@ -19,20 +21,17 @@ class Controller
 
     }
 
-	public function install($cmf)
+	public function install(Cmf $cmf)
     {
-        $cmf->installModule('import');
-
         $cmf->addMenuItem('tools', [
             'title' => 'module_import',
             'url' => '/admin/import',
         ], 300);
     }
 
-	public function uninstall($cmf)
+	public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('tools', '/admin/import');
-        $cmf->uninstallModule('import');
     }
 
     public function index()

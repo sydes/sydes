@@ -97,16 +97,16 @@ class Cmf
         $this->installDefaultModules();
     }
 
-    public function getDefaultModules()
+    private function getDefaultModules()
     {
         return str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
     }
 
-    public function installDefaultModules()
+    private function installDefaultModules()
     {
         $modules = $this->getDefaultModules();
-        foreach ($modules as $module) {
-            App::execute([$module.'@install', [$this]]);
+        foreach ($modules as $name) {
+            $this->installModule($name);
         }
     }
 
@@ -174,24 +174,41 @@ class Cmf
 
     /**
      * @param string $name
-     * @param array  $data ['handlers' => [], 'iblocks' => []]
      */
-    public function installModule($name, array $data = [])
+    public function installModule($name)
     {
         $config = app('rawSiteConfig');
+        $name = studly_case($name);
         if (isset($config['modules'][$name])) {
             return;
         }
 
-        $dir = moduleDir($name).'/iblocks/';
-        $iblocks = str_replace($dir, '', glob($dir.'*'));
+        $data = [];
+        $dir = moduleDir($name);
+
+        $iblocks = str_replace($dir.'/iblocks/', '', glob($dir.'/iblocks/*'));
         if (!empty($iblocks)){
             $data['iblocks'] = $iblocks;
+        }
+
+        $files = str_replace($dir.'/functions/', '', glob($dir.'/functions/*'));
+        if (!empty($files)){
+            $data['files'] = $files;
+        }
+
+        if (file_exists($dir.'/Handlers.php')){
+            $data['handlers'] = true;
+        }
+
+        if (file_exists($dir.'/Cli.php')){
+            $data['console'] = true;
         }
 
         $config['modules'][$name] = $data;
 
         $this->saveSiteConfig($config);
+
+        App::execute([$name.'@install', [$this]], true);
     }
 
     /**
@@ -200,10 +217,13 @@ class Cmf
     public function uninstallModule($name)
     {
         $config = app('rawSiteConfig');
+        $name = studly_case($name);
         if (isset($config['modules'][$name])) {
             unset($config['modules'][$name]);
 
             $this->saveSiteConfig($config);
+
+            App::execute([$name.'@uninstall', [$this]], true);
         }
     }
 

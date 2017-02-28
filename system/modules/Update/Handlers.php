@@ -5,7 +5,7 @@ use App\Event;
 
 class Handlers
 {
-    public static function init(Event $events)
+    public function __construct(Event $events)
     {
         /**
          * Check updates for cmf in admin center

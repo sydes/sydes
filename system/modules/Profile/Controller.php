@@ -15,18 +15,6 @@ class Controller
         ['POST', '/admin/profile', 'Profile@update'],
     ];
 
-    public function install($cmf)
-    {
-        $cmf->installModule('profile', [
-            'handlers' => ['Module\Profile\Handlers::init'],
-        ]);
-    }
-
-    public function uninstall($cmf)
-    {
-        $cmf->uninstallModule('profile');
-    }
-
     public function edit()
     {
         $d = document([

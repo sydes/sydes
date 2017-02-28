@@ -8,6 +8,8 @@
  */
 namespace Module\Settings;
 
+use App\Cmf;
+
 class Controller
 {
     public static $routes = [
@@ -19,20 +21,17 @@ class Controller
 
     }
 
-	public function install($cmf)
+	public function install(Cmf $cmf)
     {
-        $cmf->installModule('settings');
-
         $cmf->addMenuItem('system', [
             'title' => 'module_settings',
             'url' => '/admin/settings',
         ], 10);
     }
 
-	public function uninstall($cmf)
+	public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('system', '/admin/settings');
-        $cmf->uninstallModule('settings');
     }
 
     public function index()
