@@ -53,7 +53,7 @@ class Event
 
         $queue = new \SplPriorityQueue();
         foreach ($this->events[$event] as $index => $action) {
-            $queue->insert($index, $action['prio']);
+            $queue->insert($index, -$action['prio']);
         }
 
         $queue->top();
