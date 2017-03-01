@@ -31,6 +31,13 @@ class SiteHandler extends BaseHandler
 
             return html(app('renderer')->render($doc), $e->getCode());
 
+        } elseif ($e instanceof ConfirmationException) { // confirmation for deletion
+            $doc = document([
+                'content' => view('main/confirm', [
+                    'message' => t('confirm_deletion'),
+                    'return_url' => app('request')->getHeaderLine('Referer') ?: '/admin',
+                ])]);
+            return html(app('renderer')->render($doc), 200);
         } else { // error
 
             if ($debug == 0) {

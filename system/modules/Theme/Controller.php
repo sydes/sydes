@@ -78,10 +78,6 @@ class Controller
             return back();
         }
 
-        if (!actionConfirmed()) {
-            return confirmAction(t('confirm_theme_deletion', ['name' => $name]), '/admin/themes');
-        }
-
         $theme = new Theme($name);
         $theme->delete();
 

@@ -5,6 +5,7 @@
     'menu_system' => 'System',
 
     'error_module_folder_not_found' => 'Folder for module {module} is not found',
+    'confirm_deletion' => 'Are you really want to delete this?',
 
     'yes' => 'Yes',
     'no' => 'No',

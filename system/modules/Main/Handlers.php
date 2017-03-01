@@ -3,7 +3,7 @@ namespace Module\Main;
 
 use App\Document;
 use App\Event;
-use Zend\Diactoros\Response\JsonResponse;
+use App\Exception\ConfirmationException;
 
 class Handlers
 {
@@ -102,5 +102,11 @@ class Handlers
                 unset($_SESSION['notify']);
             }
         });
+
+        $events->on('route.found', 'admin/*', function () {
+            if (app('request')->isDelete() && !app('request')->has('confirmed')) {
+                throw new ConfirmationException;
+            }
+        }, 15);
     }
 }
