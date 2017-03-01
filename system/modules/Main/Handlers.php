@@ -12,7 +12,7 @@ class Handlers
         /**
          * Csrf guard
          */
-        $events->on('route.found', '*', [app('csrf'), 'check']);
+        $events->on('route.found', '*', [app('csrf'), 'check'], 5);
 
         $events->on('response.prepared', '*', [app('csrf'), 'appendHeader']);
 
