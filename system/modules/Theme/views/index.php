@@ -35,7 +35,9 @@
                         }?>
                     </div>
                     <div>
-                        <form action="/admin/theme/<?=$themeName;?>/delete" method="post" class="pull-right">
+                        <form action="/admin/theme/<?=$themeName;?>" method="post" class="pull-right">
+                            <?=method_field('delete');?>
+                            <?=csrf_field();?>
                             <button type="submit" class="btn btn-outline-danger btn-sm"><?=t('delete');?></button>
                         </form>
                         <form action="/admin/theme/<?=$themeName;?>/activate" method="post">

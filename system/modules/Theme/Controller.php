@@ -19,7 +19,7 @@ class Controller
         ['GET', '/admin/theme/layout/{name:[a-z-]+}', 'Theme@viewLayout'],
         ['POST', '/admin/theme/layout', 'Theme@saveLayout'],
         ['POST', '/admin/theme/{name:[a-z-]+}/activate', 'Theme@activate'],
-        ['POST', '/admin/theme/{name:[a-z-]+}/delete', 'Theme@deleteTheme'],
+        ['DELETE', '/admin/theme/{name:[a-z-]+}', 'Theme@deleteTheme'],
     ];
 
     public function __construct()
