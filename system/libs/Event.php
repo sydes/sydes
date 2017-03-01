@@ -51,7 +51,7 @@ class Event
 
         $context = $context ?: $this->context;
 
-        $queue = new \SplPriorityQueue();
+        $queue = new SplPriorityQueue;
         foreach ($this->events[$event] as $index => $action) {
             $queue->insert($index, -$action['prio']);
         }
