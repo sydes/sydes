@@ -3,6 +3,7 @@ namespace Module\Main;
 
 use App\Document;
 use App\Event;
+use Zend\Diactoros\Response\JsonResponse;
 
 class Handlers
 {
@@ -86,6 +87,20 @@ class Handlers
 
             $doc->addJs('utils', $root.'js/utils.js', 12);
             $doc->addJs('admin', $root.'js/admin.js', 14);
+        });
+
+        $events->on('module.executed', '*', function ($content) {
+            if (!is_array($content)) {
+                return;
+            }
+
+            if (isset($content['alerts'])) {
+                $_SESSION['alerts'] = [];
+            }
+
+            if (isset($content['notify'])) {
+                unset($_SESSION['notify']);
+            }
         });
     }
 }
