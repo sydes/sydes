@@ -187,20 +187,20 @@ class Cmf
         $dir = moduleDir($name);
 
         $iblocks = str_replace($dir.'/iblocks/', '', glob($dir.'/iblocks/*'));
-        if (!empty($iblocks)){
+        if (!empty($iblocks)) {
             $data['iblocks'] = $iblocks;
         }
 
         $files = str_replace($dir.'/functions/', '', glob($dir.'/functions/*'));
-        if (!empty($files)){
+        if (!empty($files)) {
             $data['files'] = $files;
         }
 
-        if (file_exists($dir.'/Handlers.php')){
+        if (file_exists($dir.'/Handlers.php')) {
             $data['handlers'] = true;
         }
 
-        if (file_exists($dir.'/Cli.php')){
+        if (file_exists($dir.'/Cli.php')) {
             $data['console'] = true;
         }
 
