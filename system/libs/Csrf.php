@@ -9,8 +9,6 @@
 namespace App;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-
 
 class Csrf
 {
@@ -50,20 +48,17 @@ class Csrf
             $name = ifsetor($body['csrf_name'], false);
             $value = ifsetor($body['csrf_value'], false);
             if (!$name || !$value || !$this->validateToken($name, $value)) {
-                // Need to regenerate a new token, as the validateToken removed the current one.
-                $request = $this->generateNewToken($request);
-
+                $this->generateToken();
                 abort(400, t('invalid_csrf_token'));
             }
         }
-        $request = $this->generateNewToken($request);
+
+        $this->generateToken();
 
         // Enforce the storage limit
         while (count($this->storage) > $this->storageLimit) {
             array_shift($this->storage);
         }
-
-        return $request;
     }
 
     public function appendHeader(ResponseInterface &$response)
@@ -93,25 +88,6 @@ class Csrf
             'csrf_name' => $name,
             'csrf_value' => $value
         ];
-
-        return $this->keyPair;
-    }
-
-    /**
-     * Generates a new CSRF token and attaches it to the Request Object
-     *
-     * @param  ServerRequestInterface $request PSR7 response object.
-     *
-     * @return ServerRequestInterface PSR7 response object.
-     */
-    public function generateNewToken(ServerRequestInterface $request) {
-
-        $pair = $this->generateToken();
-
-        $request = $request->withAttribute('csrf_name', $pair['csrf_name'])
-            ->withAttribute('csrf_value', $pair['csrf_value']);
-
-        return $request;
     }
 
     /**
@@ -175,7 +151,6 @@ class Csrf
 
     protected function removeFromStorage($name)
     {
-        $this->storage[$name] = ' ';
         unset($this->storage[$name]);
     }
 }
