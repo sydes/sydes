@@ -65,9 +65,7 @@ class Controller
 
     public function activate($name)
     {
-        $config = app('rawSiteConfig');
-        $config['theme'] = $name;
-        app('cmf')->saveSiteConfig($config);
+        model('theme')->activate($name);
         return back();
     }
 

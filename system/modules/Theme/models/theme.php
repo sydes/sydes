@@ -28,4 +28,11 @@ class ThemeModel
 
         return $return;
     }
+
+    public function activate($name)
+    {
+        $config = app('rawSiteConfig');
+        $config['theme'] = $name;
+        app('cmf')->saveSiteConfig($config);
+    }
 }
