@@ -187,6 +187,7 @@ class App
      * Executes passed handler with variables
      *
      * @param array $params ['class@method', ['name' => 'var', ...]]
+     * @param bool  $soft   Don't throw exception if can't execute
      * @return mixed
      * @throws \Exception
      */
