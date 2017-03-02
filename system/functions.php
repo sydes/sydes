@@ -428,28 +428,6 @@ function extractOuterZip($destination, $archive)
 }
 
 /**
- * Gets value from $_POST or $_GET or use default
- *
- * @param        $key
- * @param string $default
- * @return mixed
- */
-function request($key, $default = null)
-{
-    $request = app('request');
-    $postParams = $request->getParsedBody();
-    $getParams = $request->getQueryParams();
-    $result = $default;
-    if (is_array($postParams) && isset($postParams[$key])) {
-        $result = $postParams[$key];
-    } elseif (isset($getParams[$key])) {
-        $result = $getParams[$key];
-    }
-
-    return $result;
-}
-
-/**
  * @param int    $code
  * @param string $message
  * @throws AppException
