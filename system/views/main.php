@@ -21,16 +21,22 @@
     <div id="main" class="container-fluid">
         <div id="alerts"></div>
 
-        <div id="workarea" class="row">
-            <?php if ($form_url){ ?><form name="main-form" method="post" enctype="multipart/form-data" action="<?=$form_url;?>"><?php } ?>
+        <?php if ($form_url) { ?>
+            <form id="workarea" class="row" name="main-form" method="post" enctype="multipart/form-data" action="<?=$form_url;?>">
+        <?php } else { ?>
+            <div id="workarea" class="row">
+        <?php } ?>
                 <?php if ($sidebar_left) { ?>
                     <div class="col-sm-3 col-lg-2 sidebar-left"><?=$sidebar_left;?></div><?php } ?>
                 <?php if ($content) { ?>
                     <div class="col-sm-<?=$col_sm;?> col-lg-<?=$col_lg;?> content"><?=$content;?></div><?php } ?>
                 <?php if ($sidebar_right) { ?>
                     <div class="col-sm-3 col-lg-2 sidebar-right"><?=$sidebar_right;?></div><?php } ?>
-            <?php if ($form_url){ ?></form><?php } ?>
-        </div>
+        <?php if ($form_url) { ?>
+            </form>
+        <?php } else { ?>
+            </div>
+        <?php } ?>
 
         <div id="footer" class="row">
             <div class="col-sm-3">
