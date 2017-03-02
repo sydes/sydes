@@ -55,8 +55,8 @@ class Kernel
     protected function getCommands()
     {
         $commands = new Commands();
-        if (is_dir(DIR_SITE.'/s'.$_SESSION['site'])) {
-            $siteConf = include DIR_SITE.'/s'.$_SESSION['site'].'/config.php';
+        if (is_dir(DIR_SITE.'/'.$_SESSION['site'])) {
+            $siteConf = include DIR_SITE.'/'.$_SESSION['site'].'/config.php';
         } else {
             $siteConf = ['modules' => ['main' => []]];
         }

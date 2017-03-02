@@ -90,8 +90,8 @@ class Cmf
                 'system' => ['weight' => 400, 'title' => 'menu_system',  'icon' => 'cog', 'items' => []],
             ],
         ];
-        mkdir(DIR_SITE.'/s1');
-        app()['site'] = ['id' => 's1'];
+        mkdir(DIR_SITE.'/1');
+        app()['site'] = ['id' => '1'];
 
         $this->saveSiteConfig($site);
         $this->installDefaultModules();
