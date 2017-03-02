@@ -207,7 +207,7 @@ class H
      */
     public static function saveButton($file = '', $button = '')
     {
-        if (is_writable(dirname($file)) && (!$file || is_writable($file))) {
+        if (!$file || (is_writable($file) && is_writable(dirname($file)))) {
             $btn = $button ? $button : '<button type="submit" class="btn btn-primary btn-block">'.t('save').'</button>';
         } else {
             $btn = '<button type="button" class="btn btn-primary btn-block disabled">'.t('not_writeable').'</button>';
