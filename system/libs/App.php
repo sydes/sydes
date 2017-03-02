@@ -36,9 +36,8 @@ class App
 
         date_default_timezone_set($this->container['app']['timeZone']);
 
-        if (!$site = $this->findSite()) {
-            abort(400, 'Site not found');
-        }
+        $this->findSite();
+        $this->loadFilesAndHandlers();
 
         $path = '/'.ltrim($this->container['request']->getUri()->getPath(), '/');
 
@@ -47,7 +46,7 @@ class App
         $this->findLocale($path);
         $this->container['translator']->init($this->container['locale']);
 
-        $route = $this->findRoute($site, $path);
+        $route = $this->findRoute($path);
 
         $module = self::parseRoute($route[0]);
         $this->container['translator']->loadFrom('module', $module['path'][0]);
@@ -87,11 +86,11 @@ class App
         });
     }
 
-    private function findRoute($site, $path)
+    private function findRoute($path)
     {
         $router = $this->container['router'];
         if ($this->container['settings']['cacheRouter']) {
-            $router->setCacheFile(DIR_CACHE.'/routes.'.$site.'.cache');
+            $router->setCacheFile(DIR_CACHE.'/routes.'.$this->container['siteId'].'.cache');
         }
 
         $routeInfo = $router->dispatch(
@@ -139,11 +138,14 @@ class App
 
         $host = $this->container['request']->getUri()->getHost();
         if (!isset($domains[$host])) {
-            return false;
+            abort(400, 'Site not found');
         }
 
         $this->container['siteId'] = $domains[$host];
+    }
 
+    private function loadFilesAndHandlers()
+    {
         $events = $this->container['event'];
         foreach ($this->container['site']->get('modules') as $name => $module) {
             $dir = moduleDir($name);
@@ -159,8 +161,6 @@ class App
                 }
             }
         }
-
-        return $this->container['siteId'];
     }
 
     /**
