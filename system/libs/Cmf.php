@@ -209,6 +209,8 @@ class Cmf
         $this->saveSiteConfig($config);
 
         App::execute([$name.'@install', [$this]], true);
+
+        app('cache')->flush();
     }
 
     /**
@@ -224,6 +226,8 @@ class Cmf
             $this->saveSiteConfig($config);
 
             App::execute([$name.'@uninstall', [$this]], true);
+
+            app('cache')->flush();
         }
     }
 
