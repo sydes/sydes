@@ -44,6 +44,12 @@ class Cli
         $commands->add('install [extension] [name] [-d|--demo]',
             function ($extension, $name, $demo) use ($you) {
                 if ($extension && $name) {
+                    if ($extension == 'module') {
+                        app('cmf')->installModule($name);
+                    } else {
+                        model('theme')->activate($name);
+                    }
+
                     $you->say('You installed '.$extension.' '.$name);
                 } else {
 
@@ -118,7 +124,12 @@ Username: demo\nPassword: demo\nMastercode: demo\nBut we need some info...");
         $commands->add('uninstall [extension] [name] [-d]',
             function ($extension = false, $name = false, $d = false) use ($you) {
                 if ($extension && $name) {
-                    $you->say('You uninstalled '.$extension.' '.$name);
+                    if ($extension == 'module') {
+                        app('cmf')->uninstallModule($name);
+                        $you->say('You uninstalled module '.$name);
+                    } else {
+                        $you->say('You can\'t uninstall theme '.$name);
+                    }
 
                     if ($d) {
                         $you->say('And deleted it');
