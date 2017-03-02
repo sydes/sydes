@@ -95,7 +95,7 @@ class App
         }
 
         $routeInfo = $router->dispatch(
-            array_keys($this->container['site']['modules']),
+            array_keys($this->container['site']->get('modules')),
             $this->container['request']->getMethod(),
             $path
         );
@@ -142,14 +142,10 @@ class App
             return false;
         }
 
-        $site = $domains[$host];
-
-        $siteConf = include DIR_SITE.'/'.$site.'/config.php';
-        $this->container['rawSiteConfig'] = $siteConf;
-        $this->container['site'] = ['id' => $site] + $siteConf;
+        $this->container['siteId'] = $domains[$host];
 
         $events = $this->container['event'];
-        foreach ($siteConf['modules'] as $name => $module) {
+        foreach ($this->container['site']->get('modules') as $name => $module) {
             $dir = moduleDir($name);
 
             if (isset($module['handlers']) && file_exists($dir.'/Handlers.php')) {
@@ -164,7 +160,7 @@ class App
             }
         }
 
-        return $site;
+        return $this->container['siteId'];
     }
 
     /**
@@ -239,12 +235,12 @@ class App
         if ($this->container['section'] == 'admin') {
             $this->container['locale'] = $this->container['app']['locale'];
         } else {
-            $locales = $this->container['site']['locales'];
+            $locales = $this->container['site']->get('locales');
             $this->container['locale'] = $locales[0];
 
             if (count($locales) > 1) {
 
-                if ($this->container['site']['localeIn'] == 'url') {
+                if ($this->container['site']->get('localeIn') == 'url') {
                     if ($path == '/') {
                         throw new \App\Exception\RedirectException('/'.$locales[0]);
                     }
@@ -258,8 +254,8 @@ class App
                     }
                 } else {
                     $host = $this->container['request']->getUri()->getHost();
-                    if (isset($this->container['site']['host2locale'][$host])){
-                        $this->container['locale'] = $this->container['site']['host2locale'][$host];
+                    if (isset($this->container['site']->get('host2locale')[$host])){
+                        $this->container['locale'] = $this->container['site']->get('host2locale')[$host];
                     }
                 }
             }

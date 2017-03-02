@@ -44,7 +44,7 @@ class Controller
     {
         $themes = model('theme')->all();
 
-        $name = app('site')['theme'];
+        $name = app('site')->get('theme');
         $current = $themes[$name];
         unset($themes[$name]);
 
@@ -71,7 +71,7 @@ class Controller
 
     public function deleteTheme($name)
     {
-        if (app('site')['theme'] == $name) {
+        if (app('site')->get('theme') == $name) {
             alert(t('no').'!');
             return back();
         }

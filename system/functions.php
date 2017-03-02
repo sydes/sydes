@@ -38,7 +38,7 @@ function pre($array, $return = false)
  */
 function iblockDir($name)
 {
-    $places = [DIR_THEME.'/'.app('site')['theme'], DIR_APP];
+    $places = [DIR_THEME.'/'.app('site')->get('theme'), DIR_APP];
 
     foreach ($places as $place) {
         $path = $place.'/iblocks/'.$name;
@@ -47,7 +47,7 @@ function iblockDir($name)
         }
     }
 
-    foreach (app('site')['modules'] as $modName => $module) {
+    foreach (app('site')->get('modules') as $modName => $module) {
         if (isset($module['iblocks']) && in_array($name, $module['iblocks'])) {
             return moduleDir($modName).'/iblocks/'.$name;
         }

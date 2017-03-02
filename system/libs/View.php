@@ -41,7 +41,7 @@ class View
         $context = $this->module.'/'.$this->view;
         app('event')->trigger('view.render.started', [&$this->module, &$this->view, &$this->data], $context);
 
-        $file_override = DIR_THEME.'/'.app('site')['theme'].'/modules/'.$this->view.'.php';
+        $file_override = DIR_THEME.'/'.app('site')->get('theme').'/modules/'.$this->view.'.php';
         $file = moduleDir($this->module).'/views/'.$this->view.'.php';
         if (file_exists($file_override)) {
             $html = render($file_override, $this->data);

@@ -31,8 +31,6 @@ class ThemeModel
 
     public function activate($name)
     {
-        $config = app('rawSiteConfig');
-        $config['theme'] = $name;
-        app('cmf')->saveSiteConfig($config);
+        app('site')->update('theme', $name);
     }
 }

@@ -30,6 +30,7 @@ class Kernel
         Container::setContainer($this->container);
 
         $this->output = new Output();
+        $this->container['siteId'] = $_SESSION['site'];
     }
 
     public function run($argv, $argc)

@@ -23,7 +23,7 @@ class Front extends Base
 
         $this->prepare($doc);
 
-        $this->theme = app('site')['theme'];
+        $this->theme = app('site')->get('theme');
         $this->config = app('theme')->getConfig();
         $this->themePath = '/themes/'.$this->theme;
 

@@ -106,7 +106,7 @@ class DefaultServicesProvider
              * @return Database
              */
             $c['db'] = function ($c) {
-                return new Database($c['site']['id']);
+                return new Database($c['siteId']);
             };
         };
 
@@ -126,7 +126,7 @@ class DefaultServicesProvider
              * @return Theme
              */
             $c['theme'] = function ($c) {
-                return new Theme($c['site']['theme']);
+                return new Theme($c['site']->get('theme'));
             };
         };
 
@@ -161,6 +161,10 @@ class DefaultServicesProvider
          */
         $c['cmf'] = function () {
             return new Cmf();
+        };
+
+        $c['site'] = function ($c) {
+            return new SiteConfig($c['siteId']);
         };
     }
 }

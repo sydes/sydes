@@ -51,7 +51,7 @@ class Admin extends Base
 
     public function getMenu()
     {
-        $rawMenu = app('site')['menu'];
+        $rawMenu = app('site')->get('menu');
         $menuFlat = [];
 
         uasort($rawMenu, 'sortByWeight');
@@ -84,7 +84,7 @@ class Admin extends Base
             }
         }
 
-        foreach (app('site')['modules'] as $module => $void) {
+        foreach (app('site')->get('modules') as $module => $void) {
             app('translator')->loadFrom('module', $module);
         }
 

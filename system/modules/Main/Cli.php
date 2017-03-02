@@ -128,7 +128,7 @@ Username: demo\nPassword: demo\nMastercode: demo\nBut we need some info...");
                         app('cmf')->uninstallModule($name);
                         $you->say('You uninstalled module '.$name);
                     } else {
-                        $you->say('You can\'t uninstall theme '.$name);
+                        $you->say('You can\'t uninstall theme');
                     }
 
                     if ($d) {

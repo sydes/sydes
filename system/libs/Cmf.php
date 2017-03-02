@@ -91,9 +91,9 @@ class Cmf
             ],
         ];
         mkdir(DIR_SITE.'/1');
-        app()['site'] = ['id' => '1'];
+        app()['siteId'] = '1';
+        app('site')->update($site);
 
-        $this->saveSiteConfig($site);
         $this->installDefaultModules();
     }
 
@@ -177,9 +177,9 @@ class Cmf
      */
     public function installModule($name)
     {
-        $config = app('rawSiteConfig');
+        $modules = app('site')->get('modules');
         $name = studly_case($name);
-        if (isset($config['modules'][$name])) {
+        if (isset($modules[$name])) {
             return;
         }
 
@@ -204,9 +204,9 @@ class Cmf
             $data['console'] = true;
         }
 
-        $config['modules'][$name] = $data;
+        $modules[$name] = $data;
 
-        $this->saveSiteConfig($config);
+        app('site')->update('modules', $modules);
 
         App::execute([$name.'@install', [$this]], true);
 
@@ -218,12 +218,12 @@ class Cmf
      */
     public function uninstallModule($name)
     {
-        $config = app('rawSiteConfig');
+        $modules = app('site')->get('modules');
         $name = studly_case($name);
-        if (isset($config['modules'][$name])) {
-            unset($config['modules'][$name]);
+        if (isset($modules[$name])) {
+            unset($modules[$name]);
 
-            $this->saveSiteConfig($config);
+            app('site')->update('modules', $modules);
 
             App::execute([$name.'@uninstall', [$this]], true);
 
@@ -239,18 +239,19 @@ class Cmf
      */
     public function addMenuGroup($name, $title, $icon = 'asterisk', $weight = 150)
     {
-        $config = app('rawSiteConfig');
-        if (isset($config['menu'][$name])) {
+        $menu = app('site')->get('menu');
+        if (isset($menu[$name])) {
             return;
         }
-        $config['menu'][$name] = [
+
+        $menu[$name] = [
             'weight' => $weight,
             'title' => $title,
             'icon' => $icon,
             'items' => []
         ];
 
-        $this->saveSiteConfig($config);
+        app('site')->update('menu', $menu);
     }
 
     /**
@@ -258,11 +259,11 @@ class Cmf
      */
     public function removeMenuGroup($name)
     {
-        $config = app('rawSiteConfig');
-        if (isset($config['menu'][$name])) {
-            unset($config['menu'][$name]);
+        $menu = app('site')->get('menu');
+        if (isset($menu[$name])) {
+            unset($menu[$name]);
 
-            $this->saveSiteConfig($config);
+            app('site')->update('menu', $menu);
         }
     }
 
@@ -273,11 +274,11 @@ class Cmf
      */
     public function addMenuItem($name, $data, $weight = 150)
     {
-        $config = app('rawSiteConfig');
-        if (isset($config['menu'][$name])) {
-            $config['menu'][$name]['items'][] = array_merge(['weight' => $weight], $data);
+        $menu = app('site')->get('menu');
+        if (isset($menu[$name])) {
+            $menu[$name]['items'][] = array_merge(['weight' => $weight], $data);
 
-            $this->saveSiteConfig($config);
+            app('site')->update('menu', $menu);
         }
     }
 
@@ -287,24 +288,19 @@ class Cmf
      */
     public function removeMenuItem($group, $url)
     {
-        $config = app('rawSiteConfig');
-        if (!isset($config['menu'][$group])) {
+        $menu = app('site')->get('menu');
+        if (!isset($menu[$group])) {
             return;
         }
-        foreach ($config['menu'][$group]['items'] as $i => $item) {
-            if ($item['url'] == $url) {
-                unset($config['menu'][$group]['items'][$i]);
 
-                $this->saveSiteConfig($config);
+        foreach ($menu[$group]['items'] as $i => $item) {
+            if ($item['url'] == $url) {
+                unset($menu[$group]['items'][$i]);
+
+                app('site')->update('menu', $menu);
 
                 break;
             }
         }
-    }
-
-    public function saveSiteConfig($config)
-    {
-        app()['rawSiteConfig'] = $config;
-        array2file($config, DIR_SITE.'/'.app('site')['id'].'/config.php');
     }
 }
