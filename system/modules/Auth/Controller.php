@@ -6,16 +6,19 @@
  */
 namespace Module\Auth;
 
+use App\Route;
+
 class Controller
 {
-    public static $routes = [
-        ['GET',  '/auth/login', 'Auth@loginForm'],
-        ['POST', '/auth/login', 'Auth@login'],
-        ['POST', '/auth/logout', 'Auth@logout'],
-        ['GET',  '/password/reset', 'Auth/Password@sendMail'],
-        ['GET',  '/password/reset/{token:[a-f0-9]+}', 'Auth/Password@showResetForm'],
-        ['POST', '/password/reset', 'Auth/Password@reset'],
-    ];
+    public static function routes(Route $r)
+    {
+        $r->get('/auth/login', 'Auth@loginForm');
+        $r->post('/auth/login', 'Auth@login');
+        $r->post('/auth/logout', 'Auth@logout');
+        $r->get('/password/reset', 'Auth/Password@sendMail');
+        $r->get('/password/reset/{token:[a-f0-9]+}', 'Auth/Password@showResetForm');
+        $r->post('/password/reset', 'Auth/Password@reset');
+    }
 
     public function loginForm()
     {

@@ -10,15 +10,6 @@ use App\Cmf;
 
 class Controller
 {
-    public static $routes = [
-        ['GET', '/admin/fileman', 'Fileman@index'],
-    ];
-
-    public function __construct()
-    {
-
-    }
-
 	public function install(Cmf $cmf)
     {
         $cmf->addMenuItem('tools', [
@@ -30,13 +21,5 @@ class Controller
 	public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('tools', '#');
-    }
-
-    public function index()
-    {
-        $d = document([
-            'content' => 'fileman settings',
-        ]);
-        return $d;
     }
 }

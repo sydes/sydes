@@ -7,16 +7,13 @@
 namespace Module\Settings;
 
 use App\Cmf;
+use App\Route;
 
 class Controller
 {
-    public static $routes = [
-        ['GET', '/admin/settings', 'Settings@index'],
-    ];
-
-    public function __construct()
+    public static function routes(Route $r)
     {
-
+        $r->get('/admin/settings', 'Settings@index');
     }
 
 	public function install(Cmf $cmf)

@@ -6,8 +6,6 @@
  */
 namespace App;
 
-use FastRoute\RouteCollector;
-
 class Router
 {
     /**
@@ -36,13 +34,11 @@ class Router
      */
     public function dispatch($modules, $method, $uri)
     {
-        $callback = function (RouteCollector $r) use ($modules) {
+        $callback = function (Route $r) use ($modules) {
             foreach ($modules as $module) {
                 $class = 'Module\\'.$module.'\\Controller';
-                if (isset($class::$routes)) {
-                    foreach ($class::$routes as $route) {
-                        $r->addRoute($route[0], $route[1], $route[2]);
-                    }
+                if (method_exists($class, 'routes')) {
+                    $class::routes($r);
                 }
             }
         };
@@ -58,6 +54,7 @@ class Router
         $this->dispatcher = \FastRoute\cachedDispatcher($callback, [
             'cacheFile'     => $this->cacheFile,
             'cacheDisabled' => is_bool($this->cacheFile),
+            'routeCollector' => 'App\\Route',
         ]);
 
         return $this->dispatcher;

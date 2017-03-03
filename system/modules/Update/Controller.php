@@ -7,12 +7,14 @@
 namespace Module\Update;
 
 use App\Cmf;
+use App\Route;
 
 class Controller
 {
-    public static $routes = [
-        ['GET', '/admin/update', 'Update@index'],
-    ];
+    public static function routes(Route $r)
+    {
+        $r->get('/admin/update', 'Update@index');
+    }
 
 	public function install(Cmf $cmf)
     {

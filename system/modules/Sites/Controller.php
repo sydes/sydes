@@ -7,17 +7,15 @@
 namespace Module\Sites;
 
 use App\Cmf;
+use App\Route;
 
 class Controller
 {
-    public static $routes = [
-        ['GET', '/admin/sites', 'Sites@index'],
-        ['GET', '/admin/sites/{id:\d+}/edit', 'Sites@edit'],
-    ];
-
-    public function __construct()
+    public static function routes(Route $r)
     {
-
+        $r->get('/admin/sites', 'Sites@index');
+        $r->get('/admin/sites/{id:\d+}', 'Sites@edit');
+        $r->post('/admin/sites/{id:\d+}', 'Sites@update');
     }
 
 	public function install(Cmf $cmf)

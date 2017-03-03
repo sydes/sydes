@@ -7,16 +7,13 @@
 namespace Module\Iblocks;
 
 use App\Cmf;
+use App\Route;
 
 class Controller
 {
-    public static $routes = [
-        ['GET', '/admin/iblocks', 'Iblocks@index'],
-    ];
-
-    public function __construct()
+    public static function routes(Route $r)
     {
-
+        $r->get('/admin/iblocks', 'Iblocks@index');
     }
 
 	public function install(Cmf $cmf)

@@ -6,12 +6,15 @@
  */
 namespace Module\Main;
 
+use App\Route;
+
 class Controller
 {
-    public static $routes = [
-        ['GET', '/robots.txt', 'Main@robots'],
-        ['GET', '/sitemap.xml', 'Main@sitemap'],
-    ];
+    public static function routes(Route $r)
+    {
+        $r->get('/robots.txt', 'Main@robots');
+        $r->get('/sitemap.xml', 'Main@sitemap');
+    }
 
     public function installer()
     {

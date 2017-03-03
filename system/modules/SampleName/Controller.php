@@ -2,40 +2,42 @@
 namespace Module\SampleName;
 
 use App\Cmf;
+use App\Route;
 
 class Controller
 {
     private $moduleName = 'sample-name';
 
-    public static $routes = [
-        ['GET', '/', 'SampleName@index'],
-        ['GET', '/admin/sample', 'SampleName@index'],
-        ['GET', '/admin/sample/add', 'SampleName@create'],
-        ['GET', '/admin/sample/another', 'SampleName@myMethod'],
-        ['GET', '/item/{id:[0-9]+}', 'SampleName@item'],
-        ['GET', '/string.txt', 'SampleName@textString'],
-        ['GET', '/html', 'SampleName@asHtml'],
-        ['GET', '/view', 'SampleName@view'],
-        ['GET', '/api.json', 'SampleName@forAjax'],
-        ['GET', '/null', 'SampleName@returnNull'],
-        ['GET', '/export', 'SampleName@export'],
-        ['GET', '/download', 'SampleName@download'],
-        ['GET', '/not-found', 'SampleName@notFound'],
-        ['GET', '/forbidden', 'SampleName@forbidden'],
-        ['GET', '/error', 'SampleName@error'],
-        ['GET', '/moved', 'SampleName@moved'],
-        ['GET', '/back', 'SampleName@back'],
-        ['GET', '/ajax-notify', 'SampleName@ajaxNotify'],
-        ['GET', '/ajax-alert', 'SampleName@ajaxAlert'],
-        ['GET', '/update', 'SampleName@notifyAfterRedirect'],
-        ['GET', '/ajax-update', 'SampleName@notifyAfterRedirect'],
-        ['GET', '/save', 'SampleName@alertAfterRedirect'],
-        ['GET', '/ajax-save', 'SampleName@alertAfterRedirect'],
-        ['GET', '/ajax-random', 'SampleName@random'],
-        ['GET', '/sub-module', 'SampleName/SubModule@method'],
-        ['GET', '/ajax-modal', 'SampleName@modal'],
-        ['POST', '/csrf', 'SampleName@csrf'],
-    ];
+    public static function routes(Route $r)
+    {
+        $r->get('/', 'SampleName@index');
+        $r->get('/admin/sample', 'SampleName@index');
+        $r->get('/admin/sample/add', 'SampleName@create');
+        $r->get('/admin/sample/another', 'SampleName@myMethod');
+        $r->get('/item/{id:[0-9]+}', 'SampleName@item');
+        $r->get('/string.txt', 'SampleName@textString');
+        $r->get('/html', 'SampleName@asHtml');
+        $r->get('/view', 'SampleName@view');
+        $r->get('/api.json', 'SampleName@forAjax');
+        $r->get('/null', 'SampleName@returnNull');
+        $r->get('/export', 'SampleName@export');
+        $r->get('/download', 'SampleName@download');
+        $r->get('/not-found', 'SampleName@notFound');
+        $r->get('/forbidden', 'SampleName@forbidden');
+        $r->get('/error', 'SampleName@error');
+        $r->get('/moved', 'SampleName@moved');
+        $r->get('/back', 'SampleName@back');
+        $r->get('/ajax-notify', 'SampleName@ajaxNotify');
+        $r->get('/ajax-alert', 'SampleName@ajaxAlert');
+        $r->get('/update', 'SampleName@notifyAfterRedirect');
+        $r->get('/ajax-update', 'SampleName@notifyAfterRedirect');
+        $r->get('/save', 'SampleName@alertAfterRedirect');
+        $r->get('/ajax-save', 'SampleName@alertAfterRedirect');
+        $r->get('/ajax-random', 'SampleName@random');
+        $r->get('/sub-module', 'SampleName/SubModule@method');
+        $r->get('/ajax-modal', 'SampleName@modal');
+        $r->post('/csrf', 'SampleName@csrf');
+    }
 
     public function __construct()
     {

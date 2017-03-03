@@ -7,12 +7,14 @@
 namespace Module\Pages;
 
 use App\Cmf;
+use App\Route;
 
 class Controller
 {
-    public static $routes = [
-        ['GET', '/admin/pages', 'Pages@index'],
-    ];
+    public static function routes(Route $r)
+    {
+        $r->get('/admin/pages', 'Pages@index');
+    }
 
     public function install(Cmf $cmf)
     {

@@ -7,16 +7,13 @@
 namespace Module\Import;
 
 use App\Cmf;
+use App\Route;
 
 class Controller
 {
-    public static $routes = [
-        ['GET', '/admin/import', 'Import@index'],
-    ];
-
-    public function __construct()
+    public static function routes(Route $r)
     {
-
+        $r->get('/admin/import', 'Import@index');
     }
 
 	public function install(Cmf $cmf)

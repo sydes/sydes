@@ -6,12 +6,15 @@
  */
 namespace Module\Profile;
 
+use App\Route;
+
 class Controller
 {
-    public static $routes = [
-        ['GET',  '/admin/profile', 'Profile@edit'],
-        ['POST', '/admin/profile', 'Profile@update'],
-    ];
+    public static function routes(Route $r)
+    {
+        $r->get('/admin/profile', 'Profile@edit');
+        $r->post('/admin/profile', 'Profile@update');
+    }
 
     public function edit()
     {

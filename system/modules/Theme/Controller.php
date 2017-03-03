@@ -8,21 +8,22 @@ namespace Module\Theme;
 
 use App\Cmf;
 use App\Theme;
+use App\Route;
 
 class Controller
 {
-    public static $routes = [
-        ['GET', '/admin/themes', 'Theme@index'],
-        ['GET', '/admin/theme/{name:[a-z-]+}', 'Theme@view'],
-        ['GET', '/admin/theme/layout/{name:[a-z-]+}', 'Theme@viewLayout'],
-        ['POST', '/admin/theme/layout', 'Theme@saveLayout'],
-        ['POST', '/admin/theme/{name:[a-z-]+}/activate', 'Theme@activate'],
-        ['DELETE', '/admin/theme/{name:[a-z-]+}', 'Theme@deleteTheme'],
-    ];
-
-    public function __construct()
+    public static function routes(Route $r)
     {
+        $r->addGroup('/admin/theme', function (Route $r) {
+            $r->get('s', 'Theme@index');
 
+            $r->get('/{name:[a-z-]+}', 'Theme@view');
+            $r->post('/{name:[a-z-]+}/activate', 'Theme@activate');
+            $r->delete('/{name:[a-z-]+}', 'Theme@deleteTheme');
+
+            $r->get('/layout/{name:[a-z-]+}', 'Theme@viewLayout');
+            $r->post('/layout/{name:[a-z-]+}', 'Theme@saveLayout');
+        });
     }
 
 	public function install(Cmf $cmf)
