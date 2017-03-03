@@ -41,6 +41,7 @@
                             <button type="submit" class="btn btn-outline-danger btn-sm"><?=t('delete');?></button>
                         </form>
                         <form action="/admin/theme/<?=$themeName;?>/activate" method="post">
+                            <?=csrf_field();?>
                             <button type="submit" class="btn btn-success btn-sm"><?=t('activate');?></button>
                         </form>
                     </div>
