@@ -10,6 +10,8 @@ namespace App;
 
 use App\Http\ServerRequestFactory;
 use App\L10n\Translator;
+use App\Settings\Container as Settings;
+use App\Settings\FileDriver;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\SapiEmitter;
 
@@ -164,7 +166,8 @@ class DefaultServicesProvider
         };
 
         $c['site'] = function ($c) {
-            return new SiteConfig($c['siteId']);
+            $path = DIR_SITE.'/'.$c['siteId'].'/config.php';
+            return new Settings($path, new FileDriver());
         };
     }
 }

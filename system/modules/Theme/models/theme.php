@@ -31,6 +31,6 @@ class ThemeModel
 
     public function activate($name)
     {
-        app('site')->update('theme', $name);
+        app('site')->set('theme', $name);
     }
 }

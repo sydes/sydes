@@ -6,35 +6,20 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace App;
+namespace App\Settings;
 
-class Settings
+class Container
 {
-
-    /** @var array */
     private $data = [];
-
-    /** @var string */
-    private $extension;
-
-    /** @var \PDO object */
-    private $db;
-
-    /** @var bool */
+    private $entity;
+    private $driver;
     private $changed = false;
 
-    public function __construct($extension, Database $db)
+    public function __construct($entity, DriverInterface $driver)
     {
-        $this->extension = $extension;
-        $this->db = $db;
-
-        $stmt = $this->db->query("SELECT key, value FROM settings WHERE extension = '{$extension}'");
-        $data = $stmt->fetchAll();
-        if ($data) {
-            foreach ($data as $d) {
-                $this->data[$d['key']] = json_decode($d['value'], true);
-            }
-        }
+        $this->entity = $entity;
+        $this->driver = $driver;
+        $this->data = $driver->get($entity);
     }
 
     public function __destruct()
@@ -51,11 +36,7 @@ class Settings
      */
     public function commit()
     {
-        $this->db->exec("DELETE FROM settings WHERE extension = '{$this->extension}'");
-        $stmt = $this->db->prepare("INSERT INTO settings (extension, key, value) VALUES ('{$this->extension}', :key, :value)");
-        foreach ($this->data as $key => $value) {
-            $stmt->execute(['key' => $key, 'value' => json_encode($value)]);
-        }
+        $this->driver->set($this->entity, $this->data);
         $this->changed = false;
 
         return $this;
@@ -91,6 +72,20 @@ class Settings
         } else {
             $this->data[$key] = $value;
         }
+        $this->changed = true;
+
+        return $this;
+    }
+
+    /**
+     * Replace old values with new ones
+     *
+     * @param array $data
+     * @return $this
+     */
+    public function update(array $data)
+    {
+        $this->data = array_merge($this->data, $data);
         $this->changed = true;
 
         return $this;

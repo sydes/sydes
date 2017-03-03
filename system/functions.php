@@ -619,11 +619,11 @@ function alert($message, $status = 'success')
  * Creates or loads config for extension
  *
  * @param string $extension
- * @return App\Settings
+ * @return App\Settings\Container
  */
 function settings($extension)
 {
-    return new App\Settings($extension, app('db'));
+    return new App\Settings\Container($extension, new \App\Settings\SQLDriver(app('db')));
 }
 
 if (!function_exists('ifsetor')) {

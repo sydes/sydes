@@ -206,7 +206,7 @@ class Cmf
 
         $modules[$name] = $data;
 
-        app('site')->update('modules', $modules);
+        app('site')->set('modules', $modules);
 
         App::execute([$name.'@install', [$this]], true);
 
@@ -223,7 +223,7 @@ class Cmf
         if (isset($modules[$name])) {
             unset($modules[$name]);
 
-            app('site')->update('modules', $modules);
+            app('site')->set('modules', $modules);
 
             App::execute([$name.'@uninstall', [$this]], true);
 
@@ -251,7 +251,7 @@ class Cmf
             'items' => []
         ];
 
-        app('site')->update('menu', $menu);
+        app('site')->set('menu', $menu);
     }
 
     /**
@@ -263,7 +263,7 @@ class Cmf
         if (isset($menu[$name])) {
             unset($menu[$name]);
 
-            app('site')->update('menu', $menu);
+            app('site')->set('menu', $menu);
         }
     }
 
@@ -278,7 +278,7 @@ class Cmf
         if (isset($menu[$name])) {
             $menu[$name]['items'][] = array_merge(['weight' => $weight], $data);
 
-            app('site')->update('menu', $menu);
+            app('site')->set('menu', $menu);
         }
     }
 
@@ -297,7 +297,7 @@ class Cmf
             if ($item['url'] == $url) {
                 unset($menu[$group]['items'][$i]);
 
-                app('site')->update('menu', $menu);
+                app('site')->set('menu', $menu);
 
                 break;
             }
