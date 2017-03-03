@@ -16,7 +16,7 @@ class Controller
         $r->get('/admin/iblocks', 'Iblocks@index');
     }
 
-	public function install(Cmf $cmf)
+    public function install(Cmf $cmf)
     {
         $cmf->addMenuItem('system', [
             'title' => 'module_iblocks',
@@ -24,7 +24,7 @@ class Controller
         ], 300);
     }
 
-	public function uninstall(Cmf $cmf)
+    public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('system', '/admin/iblocks');
     }

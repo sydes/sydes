@@ -16,7 +16,7 @@ class Controller
         $r->get('/admin/logs', 'Logs@index');
     }
 
-	public function install(Cmf $cmf)
+    public function install(Cmf $cmf)
     {
         $cmf->addMenuItem('system', [
             'title' => 'module_logs',
@@ -24,7 +24,7 @@ class Controller
         ], 500);
     }
 
-	public function uninstall(Cmf $cmf)
+    public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('system', '/admin/logs');
     }

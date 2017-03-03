@@ -11,10 +11,10 @@ class Controller
     public function install()
     {
         app('db')->exec("CREATE TABLE routes (
-	alias TEXT NOT NULL,
-	route TEXT NOT NULL,
-	params TEXT,
-	UNIQUE (alias,route)
+    alias TEXT NOT NULL,
+    route TEXT NOT NULL,
+    params TEXT,
+    UNIQUE (alias,route)
 );");
     }
 

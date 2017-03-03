@@ -26,7 +26,7 @@ class Controller
         });
     }
 
-	public function install(Cmf $cmf)
+    public function install(Cmf $cmf)
     {
         $cmf->addMenuItem('system', [
             'title' => 'module_theme',
@@ -34,7 +34,7 @@ class Controller
         ], 200);
     }
 
-	public function uninstall(Cmf $cmf)
+    public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('system', '/admin/themes');
     }

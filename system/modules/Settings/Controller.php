@@ -16,7 +16,7 @@ class Controller
         $r->get('/admin/settings', 'Settings@index');
     }
 
-	public function install(Cmf $cmf)
+    public function install(Cmf $cmf)
     {
         $cmf->addMenuItem('system', [
             'title' => 'module_settings',
@@ -24,7 +24,7 @@ class Controller
         ], 10);
     }
 
-	public function uninstall(Cmf $cmf)
+    public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('system', '/admin/settings');
     }

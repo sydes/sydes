@@ -16,7 +16,7 @@ class Controller
         $r->get('/admin/import', 'Import@index');
     }
 
-	public function install(Cmf $cmf)
+    public function install(Cmf $cmf)
     {
         $cmf->addMenuItem('tools', [
             'title' => 'module_import',
@@ -24,7 +24,7 @@ class Controller
         ], 300);
     }
 
-	public function uninstall(Cmf $cmf)
+    public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('tools', '/admin/import');
     }

@@ -18,7 +18,7 @@ class Controller
         $r->post('/admin/sites/{id:\d+}', 'Sites@update');
     }
 
-	public function install(Cmf $cmf)
+    public function install(Cmf $cmf)
     {
         $cmf->addMenuItem('system', [
             'title' => 'module_sites',
@@ -26,7 +26,7 @@ class Controller
         ], 10);
     }
 
-	public function uninstall(Cmf $cmf)
+    public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('system', '/admin/sites');
     }

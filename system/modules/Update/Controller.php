@@ -16,7 +16,7 @@ class Controller
         $r->get('/admin/update', 'Update@index');
     }
 
-	public function install(Cmf $cmf)
+    public function install(Cmf $cmf)
     {
         $cmf->addMenuItem('tools', [
             'title' => 'module_update',
@@ -24,7 +24,7 @@ class Controller
         ], 240);
     }
 
-	public function uninstall(Cmf $cmf)
+    public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('tools', '/admin/themes');
     }

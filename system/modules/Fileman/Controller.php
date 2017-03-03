@@ -10,7 +10,7 @@ use App\Cmf;
 
 class Controller
 {
-	public function install(Cmf $cmf)
+    public function install(Cmf $cmf)
     {
         $cmf->addMenuItem('tools', [
             'title' => 'module_fileman',
@@ -18,7 +18,7 @@ class Controller
         ], 10);
     }
 
-	public function uninstall(Cmf $cmf)
+    public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuItem('tools', '#');
     }

@@ -44,7 +44,7 @@ class Controller
         // Define properties and services for every method
     }
 
-	public function install(Cmf $cmf)
+    public function install(Cmf $cmf)
     {
         // Create tables, if needed
 
@@ -60,7 +60,7 @@ class Controller
         ], 20);
     }
 
-	public function uninstall(Cmf $cmf)
+    public function uninstall(Cmf $cmf)
     {
         $cmf->removeMenuGroup($this->moduleName);
 

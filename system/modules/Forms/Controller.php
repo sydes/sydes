@@ -16,7 +16,7 @@ class Controller
         $r->get('/admin/forms', 'Forms@index');
     }
 
-	public function install(Cmf $cmf)
+    public function install(Cmf $cmf)
     {
         $cmf->addMenuItem('constructors', [
             'title' => 'module_forms',
@@ -24,7 +24,7 @@ class Controller
         ], 10);
     }
 
-	public function uninstall(Cmf  $cmf)
+    public function uninstall(Cmf  $cmf)
     {
         $cmf->removeMenuItem('constructors', '/admin/forms');
     }

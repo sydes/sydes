@@ -51,7 +51,7 @@ class H
         if (array_values($source) === $source) {
             $source = array_combine($source, $source);
         }
-		$name .= (isset($attr['multiple'])) ? '[]' : '';
+        $name .= (isset($attr['multiple'])) ? '[]' : '';
 
         $html = '<select name="'.$name.'"'.self::attr($attr).'>'.PHP_EOL;
         foreach ($source as $val => $title) {
@@ -399,14 +399,14 @@ class H
         foreach ($data as $key => $d) {
             $active = $current == $key ? ' in' : '';
             $html .= '
-	<div class="panel panel-default">
-		<div class="panel-heading" data-toggle="collapse" data-parent="#accordion'.$id.'" data-target="#'.$key.'">
-			<span class="panel-title">'.$d['title'].'</span>
-		</div>
-		<div id="'.$key.'" class="panel-collapse collapse'.$active.'">
-			<div class="panel-body">'.$d['content'].'</div>
-		</div>
-	</div>';
+    <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion'.$id.'" data-target="#'.$key.'">
+            <span class="panel-title">'.$d['title'].'</span>
+        </div>
+        <div id="'.$key.'" class="panel-collapse collapse'.$active.'">
+            <div class="panel-body">'.$d['content'].'</div>
+        </div>
+    </div>';
         }
         return $html.'</div>';
     }
@@ -414,13 +414,13 @@ class H
     public static function modal($title, $body = '', $footer = '', $form_url = '')
     {
         $html = '
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<h4 class="modal-title">'.$title.'</h4>
-		</div>
-		<div class="modal-body">'.$body.'</div>
-		<div class="modal-footer">'.$footer.'</div>
-		';
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">'.$title.'</h4>
+        </div>
+        <div class="modal-body">'.$body.'</div>
+        <div class="modal-footer">'.$footer.'</div>
+        ';
         if ($form_url) {
             $html = '<form name="modal-form" method="post" enctype="multipart/form-data" action="'.$form_url.'">'.$html.'</form>';
         }
