@@ -202,7 +202,7 @@ class Controller
 
     public function download()
     {
-        return  download(DIR_THEME.'/default/img/logo.png', 'image.png');
+        return  download(DIR_THEME.'/default/assets/images/logo.png', 'image.png');
     }
 
     public function notFound()
