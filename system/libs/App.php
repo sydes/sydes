@@ -6,6 +6,7 @@
  */
 namespace App;
 
+use App\Http\Redirect;
 use FastRoute\Dispatcher;
 use Zend\Diactoros\Response;
 
@@ -216,13 +217,23 @@ class App
 
     private function prepare($content)
     {
-        if ($content instanceof Response) {
+        if ($content instanceof Redirect && app('request')->isAjax()) {
+            return json(['redirect' => $content->getUri()]);
+        } elseif ($content instanceof Response) {
             return $content;
         } elseif ($content instanceof Document) {
             return html($this->container['renderer']->render($content));
         } elseif ($content instanceof View) {
             return html((string)$content);
         } elseif (is_array($content)) {
+            if (isset($content['alerts'])) {
+                $_SESSION['alerts'] = [];
+            }
+
+            if (isset($content['notify'])) {
+                unset($_SESSION['notify']);
+            }
+
             return json($content);
         }
         return text((string)$content);

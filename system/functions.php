@@ -7,6 +7,7 @@
 
 use App\Container;
 use App\Exception\AppException;
+use App\Http\Redirect;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
 
@@ -518,30 +519,22 @@ function json($array, $status = 200, $headers = [])
  * @param string $uri
  * @param int    $status
  * @param array  $headers
- * @return ResponseInterface
+ * @return Redirect
  */
 function redirect($uri = '/', $status = 302, $headers = [])
 {
-    if (app('request')->isAjax()) {
-        return ['redirect' => $uri];
-    } else {
-        return new Response\RedirectResponse($uri, $status, $headers);
-    }
+    return new Redirect($uri, $status, $headers);
 }
 
 /**
  * Create a new redirect response to the previous location.
  *
- * @return Response
+ * @return Redirect
  */
 function back()
 {
-    if (app('request')->isAjax()) {
-        return ['reload' => 1];
-    } else {
-        $to = app('request')->getHeaderLine('Referer') ?: '/';
-        return redirect($to);
-    }
+    $to = app('request')->getHeaderLine('Referer') ?: '/';
+    return redirect($to);
 }
 
 /**

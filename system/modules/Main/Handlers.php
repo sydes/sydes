@@ -89,20 +89,6 @@ class Handlers
             $doc->addJs('admin', $root.'js/admin.js', 14);
         });
 
-        $events->on('module.executed', '*', function ($content) {
-            if (!is_array($content)) {
-                return;
-            }
-
-            if (isset($content['alerts'])) {
-                $_SESSION['alerts'] = [];
-            }
-
-            if (isset($content['notify'])) {
-                unset($_SESSION['notify']);
-            }
-        });
-
         $events->on('route.found', 'admin/*', function () {
             if (app('request')->isDelete() && !app('request')->has('confirmed')) {
                 throw new ConfirmationException;

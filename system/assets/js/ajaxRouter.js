@@ -34,10 +34,6 @@ $(document).ajaxSend(function () {
             })
         }
 
-        if ('reload' in response) {
-            window.location.reload()
-        }
-
         if ('redirect' in response) {
             location.href = response.redirect
         }
