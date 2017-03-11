@@ -65,7 +65,7 @@ class Cli
                     if ($demo) {
 
                         $you->say("You can enter with these credentials:
-Username: demo\nPassword: demo\nMastercode: demo\nBut we need some info...");
+Username: demo\nPassword: demo\nDeveloper password: demo\nBut we need some info...");
 
                     } else {
 
@@ -76,8 +76,8 @@ Username: demo\nPassword: demo\nMastercode: demo\nBut we need some info...");
                         $params['username'] = $you->ask('Username');
                         $you->rewind();
                         $params['password'] = $you->ask('Password');
-                        $params['mastercode'] = $you->ask('Mastercode');
                         $you->rewind();
+                        $params['mastercode'] = $you->ask('Developer password');
                         $you->rewind();
                         $you->say('Good!');
                         $you->say("Now we'll create your site");

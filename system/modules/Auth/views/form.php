@@ -28,7 +28,7 @@
         <div><input class="input" type="text" name="username" placeholder="Username" required></div>
         <div><input class="input" type="password" name="password" placeholder="Password" required></div>
         <?php if ($signUp) { ?>
-            <div><input class="input" type="text" name="mastercode" placeholder="Master code" required></div>
+            <div><input class="input" type="text" name="mastercode" placeholder="Developer password" required></div>
             <div><input class="input" type="email" name="email" placeholder="Email" required></div>
             <div><?=H::select('locale', '', $locales, ['class' => ['input']]);?></div>
             <div class="two">&nbsp;</div><div class="two last"><button type="submit">Create account</button></div>
