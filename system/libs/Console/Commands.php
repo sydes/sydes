@@ -15,6 +15,11 @@ class Commands
         return $this->container[$command];
     }
 
+    public function run($command, array $args = [])
+    {
+        call_user_func_array($this->container[$command][1], $args);
+    }
+
     public function add($expression, $callable, $description = [])
     {
         $tokens = explode(' ', $expression);

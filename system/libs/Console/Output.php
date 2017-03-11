@@ -21,9 +21,14 @@ class Output
         return trim(fgets(STDIN));
     }
 
-    public function revert()
+    public function rewind()
     {
         echo "\e[1A\e[K";
+    }
+
+    public function clear()
+    {
+        echo "\033[2J";
     }
 
     public function status($done, $total, $size = 30)

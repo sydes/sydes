@@ -40,7 +40,7 @@ class Cli
         ]]);
 
         $commands->add('install [extension] [name] [-d|--demo]',
-            function ($extension, $name, $demo) use ($you) {
+            function ($extension, $name, $demo = false) use ($you) {
                 if ($extension && $name) {
                     if ($extension == 'module') {
                         app('cmf')->installModule($name);
@@ -72,24 +72,24 @@ Username: demo\nPassword: demo\nMastercode: demo\nBut we need some info...");
                         $you->say('Ok! Just answer the following questions')
                             ->say('First, create your account');
                         $params['email'] = $you->ask('Email');
-                        $you->revert();
+                        $you->rewind();
                         $params['username'] = $you->ask('Username');
-                        $you->revert();
+                        $you->rewind();
                         $params['password'] = $you->ask('Password');
-                        $you->revert();
                         $params['mastercode'] = $you->ask('Mastercode');
-                        $you->revert();
+                        $you->rewind();
+                        $you->rewind();
                         $you->say('Good!');
                         $you->say("Now we'll create your site");
                         $params['siteName'] = mb_convert_encoding($you->ask('Site name'), 'UTF-8', 'cp866');
-                        $you->revert();
+                        $you->rewind();
                         $params['locale'] = $you->ask('Locale (en)');
-                        $you->revert();
+                        $you->rewind();
 
                     }
 
                     $params['domain'] = $you->ask('Domain (test.com)');
-                    $you->revert();
+                    $you->rewind();
 
                     app('cmf')->install($params);
 
@@ -120,7 +120,7 @@ Username: demo\nPassword: demo\nMastercode: demo\nBut we need some info...");
         ]]);
 
         $commands->add('uninstall [extension] [name] [-d]',
-            function ($extension = false, $name = false, $d = false) use ($you) {
+            function ($extension = false, $name = false, $d = false) use ($commands, $you) {
                 if ($extension && $name) {
                     if ($extension == 'module') {
                         app('cmf')->uninstallModule($name);
@@ -130,7 +130,7 @@ Username: demo\nPassword: demo\nMastercode: demo\nBut we need some info...");
                     }
 
                     if ($d) {
-                        $you->say('And deleted it');
+                        $commands->run('delete', [$extension, $name]);
                     }
                 } else {
                     app('cmf')->uninstall();
@@ -142,16 +142,14 @@ Username: demo\nPassword: demo\nMastercode: demo\nBut we need some info...");
                 '-d' => 'Delete extension after uninstalling',
             ]]);
 
-        $commands->add('download extension name [-i]', function ($extension, $name, $i = false) use ($you) {
+        $commands->add('download extension name [-i]', function ($extension, $name, $i = false) use ($commands, $you) {
 
             $you->say('Downloading...');
 
             $you->say('You downloaded '.$extension.' '.$name);
 
             if ($i) {
-                $you->say('Installation...');
-
-                $you->say('And installed it');
+                $commands->run('install', [$extension, $name]);
             }
         }, ['Download extension by type and name', [
             'extension' => "'module' or 'theme'",
