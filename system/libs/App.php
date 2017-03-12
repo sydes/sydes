@@ -6,6 +6,7 @@
  */
 namespace App;
 
+use App\Exception\RedirectException;
 use App\Http\Redirect;
 use FastRoute\Dispatcher;
 use Zend\Diactoros\Response;
@@ -35,12 +36,14 @@ class App
 
         date_default_timezone_set($this->container['app']['timeZone']);
 
+        $path = '/'.ltrim($this->container['request']->getUri()->getPath(), '/');
+        $this->container['section'] = ($path == '/admin' || strpos($path, '/admin/') === 0) ? 'admin' : 'front';
+
         $this->findSite();
         $this->loadFilesAndHandlers();
 
-        $path = '/'.ltrim($this->container['request']->getUri()->getPath(), '/');
-
-        $this->container['section'] = ($path == '/admin' || strpos($path, '/admin/') === 0) ? 'admin' : 'front';
+        $events = $this->container['event'];
+        $events->trigger('site.found');
 
         $this->findLocale($path);
         $this->container['translator']->init($this->container['locale']);
@@ -50,7 +53,6 @@ class App
         $module = self::parseRoute($route[0]);
         $this->container['translator']->loadFrom('module', $module['path'][0]);
 
-        $events = $this->container['event'];
         $events->setContext(strtolower($this->container['section'].'/'.
             implode('/', $module['path']).'/'.$module['method']));
 
@@ -122,6 +124,12 @@ class App
 
     private function findSite()
     {
+        if ($this->container['section'] == 'admin' && isset($_SESSION['site'])) {
+            $this->container['siteId'] = $_SESSION['site'];
+
+            return;
+        }
+
         $domains = $this->container['cache']->remember('domains', function () {
             $sites = glob(DIR_SITE.'/*', GLOB_ONLYDIR);
             $domains = [];
@@ -141,6 +149,12 @@ class App
         }
 
         $this->container['siteId'] = $domains[$host];
+
+        $mainDomain = $this->container['site']->get('domains')[0];
+        if ($this->container['section'] == 'front' && $mainDomain != $host &&
+            $this->container['site']->get('onlyMainDomain')) {
+            throw new RedirectException('http://'.$mainDomain.$this->container['request']->getUri()->getPath());
+        }
     }
 
     private function loadFilesAndHandlers()
@@ -251,7 +265,7 @@ class App
 
                 if ($this->container['site']->get('localeIn') == 'url') {
                     if ($path == '/') {
-                        throw new \App\Exception\RedirectException('/'.$locales[0]);
+                        throw new RedirectException('/'.$locales[0]);
                     }
 
                     $pathParts = explode('/', $path, 3);

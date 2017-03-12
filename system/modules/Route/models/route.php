@@ -12,6 +12,7 @@ class RouteModel extends Model
     public function add($alias, $route, $params = [])
     {
         $stmt = $this->db->prepare("INSERT OR REPLACE INTO routes VALUES (?, ?, ?)");
+
         return $stmt->execute([
             $alias,
             $route,
@@ -30,6 +31,7 @@ class RouteModel extends Model
         if ($route = $stmt->fetch()) {
             return [$route['route'], json_decode($route['params'], true)];
         }
+
         return ['Main@error', ['code' => 404]];
     }
 
@@ -51,6 +53,7 @@ class RouteModel extends Model
     public function delete($alias)
     {
         $stmt = $this->db->prepare("DELETE FROM routes WHERE alias = ?");
+
         return $stmt->execute([$alias]);
     }
 }

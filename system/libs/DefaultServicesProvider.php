@@ -6,7 +6,6 @@
  */
 namespace App;
 
-use App\Http\ServerRequestFactory;
 use App\L10n\Translator;
 use App\Settings\Container as Settings;
 use App\Settings\FileDriver;
@@ -51,7 +50,19 @@ class DefaultServicesProvider
              * @return ServerRequestInterface
              */
             $c['request'] = function () {
-                return ServerRequestFactory::fromGlobals();
+                $r = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
+                return new Http\Request(
+                    $r->getServerParams(),
+                    $r->getUploadedFiles(),
+                    $r->getUri(),
+                    $r->getMethod(),
+                    $r->getBody(),
+                    $r->getHeaders(),
+                    $r->getCookieParams(),
+                    $r->getQueryParams(),
+                    $r->getParsedBody(),
+                    $r->getProtocolVersion()
+                );
             };
         };
 

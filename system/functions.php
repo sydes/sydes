@@ -343,8 +343,8 @@ function toSlug($str, $strict = true)
 function checkServer()
 {
     $wr = '';
-    foreach (['upload/images','upload/files','upload/_thumbs/Images','upload/_thumbs/Files'] as $path) {
-        if (!is_writable(DIR_ROOT.'/'.$path)) {
+    foreach (['images','files','_thumbs/Images','_thumbs/Files'] as $path) {
+        if (!is_writable(DIR_UPLOAD.'/'.$path)) {
             $wr .= "<li>{$path}</li>";
         }
     }
@@ -787,4 +787,15 @@ function camel_case($value)
 function snake_case($str, $delimiter = '_')
 {
     return strtolower(preg_replace('/(.)(?=[A-Z])/', '$1'.$delimiter, $str));
+}
+
+function str_replace_once($search, $replace, $text)
+{
+    $pos = strpos($text, $search);
+    return $pos!==false ? substr_replace($text, $replace, $pos, strlen($search)) : $text;
+}
+
+function lower($string)
+{
+    return mb_strtolower($string, 'UTF-8');
 }

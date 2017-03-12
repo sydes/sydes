@@ -76,6 +76,7 @@ class Cmf
             'name' => $params['siteName'],
             'theme' => $themes[0],
             'domains' => [$params['domain']],
+            'onlyMainDomain' => 1,
             'locales' => [$params['locale']],
             'localeIn' => 'url',
             'work' => 1,
