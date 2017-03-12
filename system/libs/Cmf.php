@@ -81,11 +81,11 @@ class Cmf
             'work' => 1,
             'modules' => [],
             'menu' => [
-                'content' => ['weight' => 0,   'title' => 'menu_content', 'icon' => 'file', 'items' => []],
-                'modules' => ['weight' => 100, 'title' => 'menu_modules', 'icon' => 'th-list', 'items' => []],
-                'constructors' => ['weight' => 200, 'title' => 'menu_constructors', 'icon' => 'th', 'items' => []],
-                'tools' => ['weight' => 300, 'title' => 'menu_tools',   'icon' => 'wrench', 'items' => []],
-                'system' => ['weight' => 400, 'title' => 'menu_system',  'icon' => 'cog', 'items' => []],
+                'modules' => ['weight' => 500, 'title' => 'menu_modules', 'icon' => 'th-list', 'items' => [
+                    ['weight' => 20, 'title' => 'menu_constructors', 'url' => '#constructors'],
+                    ['weight' => 30, 'title' => 'menu_tools', 'url' => '#tools'],
+                ]],
+                'system' => ['weight' => 1000, 'title' => 'menu_system', 'icon' => 'cog', 'items' => []],
             ],
         ];
         mkdir(DIR_SITE.'/1');
@@ -206,7 +206,7 @@ class Cmf
 
         app('site')->set('modules', $modules);
 
-        App::execute([$name.'@install', [$this]], true);
+        App::execute([$name.'@install', [app('adminMenu')]], true);
 
         app('cache')->flush();
     }
@@ -226,79 +226,6 @@ class Cmf
             App::execute([$name.'@uninstall', [$this]], true);
 
             app('cache')->flush();
-        }
-    }
-
-    /**
-     * @param string $name
-     * @param string $title
-     * @param string $icon
-     * @param int    $weight
-     */
-    public function addMenuGroup($name, $title, $icon = 'asterisk', $weight = 150)
-    {
-        $menu = app('site')->get('menu');
-        if (isset($menu[$name])) {
-            return;
-        }
-
-        $menu[$name] = [
-            'weight' => $weight,
-            'title' => $title,
-            'icon' => $icon,
-            'items' => []
-        ];
-
-        app('site')->set('menu', $menu);
-    }
-
-    /**
-     * @param string $name
-     */
-    public function removeMenuGroup($name)
-    {
-        $menu = app('site')->get('menu');
-        if (isset($menu[$name])) {
-            unset($menu[$name]);
-
-            app('site')->set('menu', $menu);
-        }
-    }
-
-    /**
-     * @param string $name
-     * @param array $data ['title' => '', 'url' => '', 'quick_add' => true]
-     * @param int $weight
-     */
-    public function addMenuItem($name, $data, $weight = 150)
-    {
-        $menu = app('site')->get('menu');
-        if (isset($menu[$name])) {
-            $menu[$name]['items'][] = array_merge(['weight' => $weight], $data);
-
-            app('site')->set('menu', $menu);
-        }
-    }
-
-    /**
-     * @param string $group
-     * @param string $url
-     */
-    public function removeMenuItem($group, $url)
-    {
-        $menu = app('site')->get('menu');
-        if (!isset($menu[$group])) {
-            return;
-        }
-
-        foreach ($menu[$group]['items'] as $i => $item) {
-            if ($item['url'] == $url) {
-                unset($menu[$group]['items'][$i]);
-
-                app('site')->set('menu', $menu);
-
-                break;
-            }
         }
     }
 }

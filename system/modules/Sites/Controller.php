@@ -6,7 +6,7 @@
  */
 namespace Module\Sites;
 
-use App\Cmf;
+use App\AdminMenu;
 use App\Route;
 
 class Controller
@@ -18,17 +18,17 @@ class Controller
         $r->post('/admin/sites/{id:\d+}', 'Sites@update');
     }
 
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
-        $cmf->addMenuItem('system', [
+        $menu->addItem('system', [
             'title' => 'module_sites',
             'url' => '/admin/sites',
         ], 10);
     }
 
-    public function uninstall(Cmf $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        $cmf->removeMenuItem('system', '/admin/sites');
+        $menu->removeItem('system', '/admin/sites');
     }
 
     public function index()

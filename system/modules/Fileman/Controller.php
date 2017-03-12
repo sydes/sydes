@@ -6,20 +6,20 @@
  */
 namespace Module\Fileman;
 
-use App\Cmf;
+use App\AdminMenu;
 
 class Controller
 {
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
-        $cmf->addMenuItem('tools', [
+        $menu->addItem('modules', [
             'title' => 'module_fileman',
-            'url' => '#',
+            'url' => '#fileman',
         ], 10);
     }
 
-    public function uninstall(Cmf $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        $cmf->removeMenuItem('tools', '#');
+        $menu->removeItem('modules', '#fileman');
     }
 }

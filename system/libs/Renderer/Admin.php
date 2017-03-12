@@ -79,6 +79,17 @@ class Admin extends Base
                 }
                 $mItem['quick_add'] = isset($item['quick_add']);
                 $menuFlat[] = $mItem;
+
+                if (isset($item['items'])) {
+                    foreach ($item['items'] as $subItem) {
+                        $menuFlat[] = [
+                            'level' => 3,
+                            'title' => $subItem['title'],
+                            'url' => $subItem['url'],
+                            'quick_add' => false,
+                        ];
+                    }
+                }
             }
         }
 
@@ -105,6 +116,6 @@ class Admin extends Base
             }
 
             return $return;
-        }, ['id' => 'menu'], 2);
+        }, ['id' => 'menu'], 3);
     }
 }

@@ -6,7 +6,7 @@
  */
 namespace Module\Import;
 
-use App\Cmf;
+use App\AdminMenu;
 use App\Route;
 
 class Controller
@@ -16,17 +16,17 @@ class Controller
         $r->get('/admin/import', 'Import@index');
     }
 
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
-        $cmf->addMenuItem('tools', [
+        $menu->addSubItem('modules', '#tools', [
             'title' => 'module_import',
             'url' => '/admin/import',
         ], 300);
     }
 
-    public function uninstall(Cmf $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        $cmf->removeMenuItem('tools', '/admin/import');
+        $menu->removeSubItem('modules', '#tools', '/admin/import');
     }
 
     public function index()

@@ -6,7 +6,7 @@
  */
 namespace Module\Theme;
 
-use App\Cmf;
+use App\AdminMenu;
 use App\Theme;
 use App\Route;
 
@@ -26,17 +26,17 @@ class Controller
         });
     }
 
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
-        $cmf->addMenuItem('system', [
+        $menu->addItem('system', [
             'title' => 'module_theme',
             'url' => '/admin/themes',
         ], 200);
     }
 
-    public function uninstall(Cmf $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        $cmf->removeMenuItem('system', '/admin/themes');
+        $menu->removeItem('system', '/admin/themes');
     }
 
     public function index()

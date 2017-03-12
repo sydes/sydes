@@ -6,7 +6,7 @@
  */
 namespace Module\Forms;
 
-use App\Cmf;
+use App\AdminMenu;
 use App\Route;
 
 class Controller
@@ -16,17 +16,17 @@ class Controller
         $r->get('/admin/forms', 'Forms@index');
     }
 
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
-        $cmf->addMenuItem('constructors', [
+        $menu->addSubItem('modules', '#constructors', [
             'title' => 'module_forms',
             'url' => '/admin/forms',
         ], 10);
     }
 
-    public function uninstall(Cmf  $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        $cmf->removeMenuItem('constructors', '/admin/forms');
+        $menu->removeSubItem('modules', '#constructors', '/admin/forms');
     }
 
     public function index()

@@ -6,7 +6,7 @@
  */
 namespace Module\Logs;
 
-use App\Cmf;
+use App\AdminMenu;
 use App\Route;
 
 class Controller
@@ -16,17 +16,17 @@ class Controller
         $r->get('/admin/logs', 'Logs@index');
     }
 
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
-        $cmf->addMenuItem('system', [
+        $menu->addItem('system', [
             'title' => 'module_logs',
             'url' => '/admin/logs',
         ], 500);
     }
 
-    public function uninstall(Cmf $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        $cmf->removeMenuItem('system', '/admin/logs');
+        $menu->removeItem('system', '/admin/logs');
     }
 
     public function index()

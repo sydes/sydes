@@ -167,5 +167,9 @@ class DefaultServicesProvider
             $path = DIR_SITE.'/'.$c['siteId'].'/config.php';
             return new Settings($path, new FileDriver());
         };
+
+        $c['adminMenu'] = function ($c) {
+            return new AdminMenu($c['site']->get('menu'));
+        };
     }
 }

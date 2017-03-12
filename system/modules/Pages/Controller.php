@@ -6,7 +6,7 @@
  */
 namespace Module\Pages;
 
-use App\Cmf;
+use App\AdminMenu;
 use App\Route;
 
 class Controller
@@ -16,14 +16,19 @@ class Controller
         $r->get('/admin/pages', 'Pages@index');
     }
 
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
-        // add menu group
+        $menu->addGroup('pages', 'menu_pages', 'file', 0);
+        $menu->addItem('pages', [
+            'title' => 'News',
+            'url' => '/admin/pages/news',
+            'quick_add' => true,
+        ], 10);
     }
 
-    public function uninstall(Cmf $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        // remove menu group
+        $menu->removeGroup('pages');
     }
 
     public function index()

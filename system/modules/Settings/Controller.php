@@ -6,7 +6,7 @@
  */
 namespace Module\Settings;
 
-use App\Cmf;
+use App\AdminMenu;
 use App\Route;
 
 class Controller
@@ -16,17 +16,17 @@ class Controller
         $r->get('/admin/settings', 'Settings@index');
     }
 
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
-        $cmf->addMenuItem('system', [
+        $menu->addItem('system', [
             'title' => 'module_settings',
             'url' => '/admin/settings',
         ], 10);
     }
 
-    public function uninstall(Cmf $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        $cmf->removeMenuItem('system', '/admin/settings');
+        $menu->removeItem('system', '/admin/settings');
     }
 
     public function index()

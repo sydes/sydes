@@ -6,7 +6,7 @@
  */
 namespace Module\Iblocks;
 
-use App\Cmf;
+use App\AdminMenu;
 use App\Route;
 
 class Controller
@@ -16,17 +16,17 @@ class Controller
         $r->get('/admin/iblocks', 'Iblocks@index');
     }
 
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
-        $cmf->addMenuItem('system', [
+        $menu->addItem('system', [
             'title' => 'module_iblocks',
             'url' => '/admin/iblocks',
         ], 300);
     }
 
-    public function uninstall(Cmf $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        $cmf->removeMenuItem('system', '/admin/iblocks');
+        $menu->removeItem('system', '/admin/iblocks');
     }
 
     public function index()

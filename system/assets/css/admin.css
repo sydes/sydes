@@ -56,6 +56,19 @@
     font-size: 14px;
     width: 14px;
 }
+#menu ul ul {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: -200px;
+    width: 200px;
+}
+#menu ul li:hover > ul {
+    display: block;
+}
+#menu ul ul a {
+    padding: 5px 10px;
+}
 #main {
     margin-left: 230px;
     padding-top: 15px;

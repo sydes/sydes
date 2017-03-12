@@ -6,7 +6,7 @@
  */
 namespace Module\Update;
 
-use App\Cmf;
+use App\AdminMenu;
 use App\Route;
 
 class Controller
@@ -16,17 +16,17 @@ class Controller
         $r->get('/admin/update', 'Update@index');
     }
 
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
-        $cmf->addMenuItem('tools', [
+        $menu->addSubItem('modules', '#tools', [
             'title' => 'module_update',
             'url' => '/admin/update',
         ], 240);
     }
 
-    public function uninstall(Cmf $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        $cmf->removeMenuItem('tools', '/admin/themes');
+        $menu->removeSubItem('modules', '#tools', '/admin/themes');
     }
 
     public function index()

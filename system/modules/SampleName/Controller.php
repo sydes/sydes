@@ -1,7 +1,7 @@
 <?php
 namespace Module\SampleName;
 
-use App\Cmf;
+use App\AdminMenu;
 use App\Route;
 
 class Controller
@@ -44,25 +44,25 @@ class Controller
         // Define properties and services for every method
     }
 
-    public function install(Cmf $cmf)
+    public function install(AdminMenu $menu)
     {
         // Create tables, if needed
 
-        $cmf->addMenuGroup($this->moduleName, 'menu_sample', 'star', 120);
-        $cmf->addMenuItem($this->moduleName, [
+        $menu->addGroup($this->moduleName, 'menu_sample', 'star', 120);
+        $menu->addItem($this->moduleName, [
             'title' => 'sample_page',
             'url' => '/admin/sample',
             'quick_add' => true,
         ], 10);
-        $cmf->addMenuItem($this->moduleName, [
+        $menu->addItem($this->moduleName, [
             'title' => 'another_page',
             'url' => '/admin/sample/another'
         ], 20);
     }
 
-    public function uninstall(Cmf $cmf)
+    public function uninstall(AdminMenu $menu)
     {
-        $cmf->removeMenuGroup($this->moduleName);
+        $menu->removeGroup($this->moduleName);
 
         // Remove tables and config, if used
     }
