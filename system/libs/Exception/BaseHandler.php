@@ -8,7 +8,7 @@ namespace App\Exception;
 
 class BaseHandler
 {
-    public function render(\Exception $e, $debug)
+    public function render($e, $debug)
     {
         if ($debug == 0) {
             return $this->defaultResponse();

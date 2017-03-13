@@ -8,7 +8,7 @@ namespace App\Exception;
 
 class SiteHandler extends BaseHandler
 {
-    public function render(\Exception $e, $debug)
+    public function render($e, $debug)
     {
         if ($e instanceof RedirectException) { // redirect
 
