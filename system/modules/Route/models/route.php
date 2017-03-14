@@ -1,7 +1,10 @@
 <?php
+
+namespace Module\Route\Models;
+
 use App\Model;
 
-class RouteModel extends Model
+class Route extends Model
 {
     /**
      * @param string $alias

@@ -1,6 +1,8 @@
 <?php
 
-class ThemeModel
+namespace Module\Theme\Models;
+
+class Theme
 {
     public function all()
     {
@@ -8,7 +10,7 @@ class ThemeModel
         $return = [];
 
         foreach ($themes as $name) {
-            $theme = new App\Theme($name);
+            $theme = new \App\Theme($name);
             $config = $theme->getConfig();
 
             $return[$name] = array_merge([

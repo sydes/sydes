@@ -645,28 +645,22 @@ function restricted()
 }
 
 /**
- * Loads model of some module
+ * Loads model of the specified module
  *
- * @param string $module String like module_name or module_name/model_name
- * @return mixed
+ * @param string $module Use like module-name or module-name/model-name
+ * @return object
  */
 function model($module)
 {
     $part = strpos($module, '/') !== false ? explode('/', $module) : [$module, $module];
-    $file = moduleDir($part[0]).'/models/'.$part[1].'.php';
-
-    if (!file_exists($file)) {
-        throw new \RuntimeException(t('error_file_not_found', ['file' => $file]));
-    }
-
-    include_once $file;
-    $class = ucfirst($part[1]).'Model';
+    $class = 'Module\\'.studly_case($part[0]).'\\Models\\'.studly_case($part[1]);
 
     return new $class();
 }
 
 /**
  * Loads view for some module
+ *
  * @param string $view module-name/view-name
  * @param array  $data
  * @return \App\View
