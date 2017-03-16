@@ -43,7 +43,6 @@ class Cmf
                 'timeZone' => 'Etc/GMT'.$params['timeZone'],
                 'dateFormat' => 'd.m.Y',
                 'locale' => $params['locale'],
-                'adminSkin' => 'black',
                 'emailFrom' => '',
             ],
         ];

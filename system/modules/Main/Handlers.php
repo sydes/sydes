@@ -81,7 +81,7 @@ class Handlers
             $root = '/system/assets/';
             $doc->addCss('toolbar', $root.'css/toolbar.css', 12);
             $doc->addCss('admin', $root.'css/admin.css', 14);
-            $doc->addCss('skin', $root.'css/skin.'.app('app')['adminSkin'].'.css', 15);
+            $doc->addCss('skin', $root.'css/skin.black.css', 15);
 
             $doc->addJs('utils', $root.'js/utils.js', 12);
             $doc->addJs('admin', $root.'js/admin.js', 14);
