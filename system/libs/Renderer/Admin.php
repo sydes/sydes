@@ -14,6 +14,8 @@ class Admin extends Base
     {
         app('event')->trigger('render.started', [$doc]);
 
+        $doc->title .= ' - '.app('site')->get('name').' @ SyDES';
+
         $this->prepare($doc);
         $this->fillHead();
         $this->fillFooter();

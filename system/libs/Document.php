@@ -194,30 +194,6 @@ class Document
     }
 
     /**
-     * Gets title and other meta tags from data array
-     *
-     * @return $this
-     */
-    public function findMetaTags()
-    {
-        if (isset($this->data['meta_title'])) {
-            $this->title = $this->data['meta_title'];
-            unset($this->data['meta_title']);
-        } elseif (isset($this->data['title'])) {
-            $this->title = $this->data['title'];
-        }
-
-        foreach ($this->data as $key => $value) {
-            if (substr($key, 0, 5) != 'meta_') {
-                continue;
-            }
-            $this->meta[substr($key, 5)] = $value;
-            unset($this->data[$key]);
-        }
-        return $this;
-    }
-
-    /**
      * @param string $position
      * @param string $name
      * @param array  $params

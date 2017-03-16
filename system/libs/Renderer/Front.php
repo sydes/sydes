@@ -49,9 +49,7 @@ class Front extends Base
         $template = $this->compile($template);
         unset($doc->data['content']);
 
-        $doc->findMetaTags();
-
-        $doc->meta['generator'] = 'SyDES';
+        $this->findMetaTags($doc);
         foreach ($doc->meta as $name => $content) {
             $whatName = in_array(substr($name, 0, 3), ['og:', 'fb:', 'al:']) ? 'property' : 'name';
             $this->head[] = '<meta '.$whatName.'="'.$name.'" content="'.$content.'">';
@@ -181,5 +179,24 @@ class Front extends Base
             $arr[] = ($path[0] != '/' && substr($path, 0, 4) != 'http') ? $this->themePath.'/'.$path : $path;
         }
         return $arr;
+    }
+
+    public function findMetaTags($doc)
+    {
+        if (isset($doc->data['meta_title'])) {
+            $doc->title = $doc->data['meta_title'];
+            unset($doc->data['meta_title']);
+        } elseif (isset($doc->data['title'])) {
+            $doc->title = $doc->data['title'];
+        }
+
+        foreach ($doc->data as $key => $value) {
+            if (substr($key, 0, 5) == 'meta_') {
+                $doc->meta[substr($key, 5)] = $value;
+                unset($doc->data[$key]);
+            }
+        }
+
+        $doc->meta['generator'] = 'SyDES';
     }
 }
