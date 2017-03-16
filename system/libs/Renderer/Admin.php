@@ -31,6 +31,8 @@ class Admin extends Base
             'footer_center' => '',
             'col_sm' => 12,
             'col_lg' => 12,
+            'title' => '',
+            'heading_actions' => [],
         ];
         if (!empty($doc->data['sidebar_left'])){
             $dummy['col_sm'] = $dummy['col_sm']-3;
@@ -42,7 +44,7 @@ class Admin extends Base
         }
         $data = array_merge($dummy, $doc->data);
 
-        $template = render(DIR_SYSTEM.'/views/main.php', $data);
+        $template = render(DIR_SYSTEM.'/modules/Main/views/admin.php', $data);
         app('event')->trigger('render.ended', [&$template]);
         return $template;
     }

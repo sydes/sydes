@@ -19,6 +19,19 @@
     </div>
 
     <div id="main" class="container-fluid">
+        <?php if ($title || $heading_actions) { ?>
+        <div class="page-heading row">
+            <div class="col-sm-4">
+                <h1><?=$title;?></h1>
+            </div>
+            <div class="col-sm-8 text-right">
+                <?php foreach ($heading_actions as $action) {
+                    echo H::link($action['href'], $action['title'], ['class' => 'btn btn-'.$action['style']]), ' ';
+                } ?>
+            </div>
+        </div>
+        <?php } ?>
+
         <div id="alerts"></div>
 
         <?php if ($form_url) { ?>

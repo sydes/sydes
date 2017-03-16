@@ -50,10 +50,11 @@ class Controller
         $content = view('theme/index', ['themes' => $themes, 'current' => $current]);
 
         $d = document([
+            'title' => t('module_theme'),
             'content' => $content,
         ]);
         $d->addCss('module-theme', assetsDir('theme').'/css/style.css');
-        $d->title = t('module_theme');
+
         return $d;
     }
 
@@ -65,6 +66,7 @@ class Controller
     public function activate($name)
     {
         model('theme')->activate($name);
+
         return back();
     }
 
@@ -72,6 +74,7 @@ class Controller
     {
         if (app('site')->get('theme') == $name) {
             alert(t('no').'!');
+
             return back();
         }
 
@@ -79,6 +82,7 @@ class Controller
         $theme->delete();
 
         notify(t('deleted'));
+
         return redirect('/admin/themes');
     }
 }

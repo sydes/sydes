@@ -98,6 +98,7 @@ class Controller
         ];
 
         $d = document([
+            'title' => 'Index page of module',
             'content' => '{links} {view_sample}',
             'links' => \H::listLinks($links, false, ['id' => 'sample']),
         ]);
@@ -105,8 +106,6 @@ class Controller
         $d->data['view_sample'] = view('sample-name/main', [
             'key' => 'for index',
         ]);
-
-        $d->title = 'Index page of module';
 
         $d->addScript('my', "$('#sample a').click(function(){
     if ($(this).attr('href').indexOf('/ajax') == 0){
@@ -132,19 +131,21 @@ class Controller
     public function create()
     {
         $d = document([
+            'title' => 'Add item',
             'content' => 'Here will be form',
         ]);
-        $d->title = 'Add item';
+
         return $d;
     }
 
     public function myMethod()
     {
         $d = document([
+            'title' => 'Another page',
             'content' => sampleHello().' Content for <strong>/admin/sample/another</strong><br>
                 <a href="/admin/sample">Back</a>',
         ]);
-        $d->title = 'Another page';
+
         return $d;
     }
 
