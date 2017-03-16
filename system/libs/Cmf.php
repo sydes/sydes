@@ -64,7 +64,7 @@ class Cmf
                 mkdir($dir, 0777, true);
             }
 
-            foreach ($this->getDefaultModules() as $module) {
+            foreach (model('modules')->getDefault() as $module) {
                 $this->downloadTranslation($module, $locale);
             }
         }
@@ -95,16 +95,11 @@ class Cmf
         $this->installDefaultModules();
     }
 
-    private function getDefaultModules()
-    {
-        return str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
-    }
-
     private function installDefaultModules()
     {
-        $modules = $this->getDefaultModules();
-        foreach ($modules as $name) {
-            model('modules')->install($name);
+        $m = model('modules');
+        foreach ($m->getDefault() as $name) {
+            $m->install($name);
         }
     }
 
