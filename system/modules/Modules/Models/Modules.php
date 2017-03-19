@@ -94,10 +94,17 @@ class Modules
         $ret = [];
         $modules = $this->filter($type);
         foreach ($modules as $module) {
-            $ret[$module] = $this->getManifest($module);
+            $ret[snake_case($module, '-')] = $this->getManifest($module);
         }
 
         return $ret;
+    }
+
+    public function all()
+    {
+        $this->load();
+
+        return array_merge($this->list['default'], $this->list['custom']);
     }
 
     /**
@@ -108,13 +115,7 @@ class Modules
      */
     public function filter($type)
     {
-        if (empty($this->list)) {
-            $installed = array_keys(app('site')->get('modules'));
-            $this->list['default'] = str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
-            $this->list['custom'] = str_replace(DIR_APP.'/modules/', '', glob(DIR_APP.'/modules/*', GLOB_ONLYDIR));
-            $this->list['uninstalled'] = array_diff($this->list['custom'], $installed);
-            $this->list['installed'] = array_diff($installed, $this->list['default']);
-        }
+        $this->load();
 
         if (!array_key_exists($type, $this->list)) {
             throw new \OutOfBoundsException('$type should be default, custom, installed or uninstalled');
@@ -146,5 +147,16 @@ class Modules
         }
 
         return $matrix;
+    }
+
+    private function load()
+    {
+        if (empty($this->list)) {
+            $installed = array_keys(app('site')->get('modules'));
+            $this->list['default'] = str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
+            $this->list['custom'] = str_replace(DIR_APP.'/modules/', '', glob(DIR_APP.'/modules/*', GLOB_ONLYDIR));
+            $this->list['uninstalled'] = array_diff($this->list['custom'], $installed);
+            $this->list['installed'] = array_diff($installed, $this->list['default']);
+        }
     }
 }

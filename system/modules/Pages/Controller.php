@@ -18,7 +18,7 @@ class Controller
 
     public function install(AdminMenu $menu)
     {
-        $menu->addGroup('pages', 'menu_pages', 'file', 0);
+        $menu->addGroup('pages', 'module_pages', 'file', 0);
         $menu->addItem('pages/news', [
             'title' => 'News',
             'url' => '/admin/pages/news',

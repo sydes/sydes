@@ -47,6 +47,19 @@ class Controller
     {
         $m = model('modules');
 
+        $translated = [];
+        foreach ($m->all() as $module) {
+            app('translator')->loadFrom('module', $module);
+
+            $mod = snake_case($module, '-');
+            $name = t('module_'.$mod);
+            $description = t('module_'.$mod.'_description');
+            $translated[$mod] = [
+                'name' => $name != 'module_'.$mod ? $name : false,
+                'description' => $description != 'module_'.$mod.'_description' ? $description : false,
+            ];
+        }
+
         $d = document([
             'title' => t('module_modules'),
             'header_actions' => [
@@ -61,6 +74,7 @@ class Controller
                 'installed' => $m->getList('installed'),
                 'uploaded' => $m->getList('uninstalled'),
                 'default' => $m->getList('default'),
+                'translated' => $translated,
             ]),
         ]);
 
