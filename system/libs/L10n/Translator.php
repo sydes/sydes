@@ -130,7 +130,7 @@ class Translator
         $n = $this->classes[$this->locale]->plural($count);
         $msg = $this->container[$this->locale][$text][$n];
 
-        return interpolate($msg, $context);
+        return interpolate($msg, $context+['n' => $count]);
     }
 
     public function date($format, $timestamp = null)
