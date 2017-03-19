@@ -2,12 +2,33 @@
 
 namespace Module\Modules\Models;
 
+use App\Settings\Container;
+use App\Settings\JsonDriver;
+use App\SplPriorityQueue;
+
 class Modules
 {
+    private $list = [];
+
+    /**
+     * @param string|array $modules
+     */
+    public function install($modules)
+    {
+        foreach ((array)$modules as $module) {
+            $mods = $this->withRequired($module);
+            $mods = array_reverse($mods);
+
+            foreach ($mods as $module => $void) {
+                $this->register($module);
+            }
+        }
+    }
+
     /**
      * @param string $name
      */
-    public function install($name)
+    public function register($name)
     {
         $modules = app('site')->get('modules');
         $name = studly_case($name);
@@ -61,5 +82,70 @@ class Modules
 
             app('cache')->flush();
         }
+    }
+
+    /**
+     * Returns manifests for modules
+     *
+     * @param string $type 'default', 'custom', 'installed' or 'uninstalled'
+     * @return array
+     */
+    public function getList($type)
+    {
+        $ret = [];
+        $modules = $this->filter($type);
+        foreach ($modules as $module) {
+            $ret[$module] = $this->getManifest($module);
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Returns names of modules
+     *
+     * @param string $type 'default', 'custom', 'installed' or 'uninstalled'
+     * @return array
+     */
+    public function filter($type)
+    {
+        if (empty($this->list)) {
+            $installed = array_keys(app('site')->get('modules'));
+            $this->list['default'] = str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
+            $this->list['custom'] = str_replace(DIR_APP.'/modules/', '', glob(DIR_APP.'/modules/*', GLOB_ONLYDIR));
+            $this->list['uninstalled'] = array_diff($this->list['custom'], $installed);
+            $this->list['installed'] = array_diff($installed, $this->list['default']);
+        }
+
+        if (!array_key_exists($type, $this->list)) {
+            throw new \OutOfBoundsException('$type should be default, custom, installed or uninstalled');
+        }
+
+        return $this->list[$type];
+    }
+
+    /**
+     * Returns manifest for module
+     *
+     * @param string $name
+     * @return Container
+     */
+    public function getManifest($name)
+    {
+        return new Container(moduleDir($name).'/module.json', new JsonDriver());
+    }
+
+    public function withRequired($module)
+    {
+        static $matrix = [];
+
+        $matrix[$module] = true;
+
+        $require = $this->getManifest($module)->get('require', []);
+        foreach ($require as $mod) {
+            $this->withRequired($mod);
+        }
+
+        return $matrix;
     }
 }
