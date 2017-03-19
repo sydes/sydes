@@ -1,0 +1,8 @@
+{
+  "name": "Themes",
+  "description": "Themes manager and layout editor",
+  "version": "1.0",
+  "require": [
+    "Modules"
+  ]
+}

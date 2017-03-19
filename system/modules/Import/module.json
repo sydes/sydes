@@ -1,0 +1,8 @@
+{
+  "name": "Import/Export",
+  "description": "Import or export you tables",
+  "version": "1.0",
+  "require": [
+    "Modules"
+  ]
+}

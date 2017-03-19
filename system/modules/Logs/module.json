@@ -1,0 +1,8 @@
+{
+  "name": "Logs",
+  "description": "Just logs",
+  "version": "1.0",
+  "require": [
+    "Modules"
+  ]
+}

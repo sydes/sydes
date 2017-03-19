@@ -1,0 +1,8 @@
+{
+  "name": "Settings",
+  "description": "Base settings for application",
+  "version": "1.0",
+  "require": [
+    "Modules"
+  ]
+}

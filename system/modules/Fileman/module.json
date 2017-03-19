@@ -1,0 +1,8 @@
+{
+  "name": "File manager",
+  "description": "Default file manager",
+  "version": "1.0",
+  "require": [
+    "Modules"
+  ]
+}

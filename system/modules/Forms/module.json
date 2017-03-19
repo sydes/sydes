@@ -1,0 +1,8 @@
+{
+  "name": "Form constructor",
+  "description": "Default form constructor",
+  "version": "1.0",
+  "require": [
+    "Modules"
+  ]
+}

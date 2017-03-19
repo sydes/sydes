@@ -1,0 +1,8 @@
+{
+  "name": "Sites",
+  "description": "Sites manager",
+  "version": "1.0",
+  "require": [
+    "Modules"
+  ]
+}
