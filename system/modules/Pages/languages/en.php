@@ -1,4 +1,4 @@
 <?php
 return array(
-    'menu_pages' => 'Pages',
+    'module_pages' => 'Pages',
 );

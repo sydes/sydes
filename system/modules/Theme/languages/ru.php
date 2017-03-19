@@ -1,5 +1,5 @@
 <?php
 return array(
     'module_theme' => 'Темы',
-    'new_theme' => 'Новая тема',
+    'add_theme' => 'Добавить тему',
 );

@@ -1,4 +1,4 @@
 <?php
 return array(
-    'module_update' => 'Update',
+    'module_update' => 'Updates',
 );
