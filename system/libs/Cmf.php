@@ -51,6 +51,25 @@ class Cmf
 
         array2file($app, DIR_APP.'/config.php');
 
+        $themes = str_replace(DIR_THEME.'/', '', glob(DIR_THEME.'/*', GLOB_ONLYDIR));
+
+        $site = [
+            'name' => $params['siteName'],
+            'theme' => $themes[0],
+            'domains' => [$params['domain']],
+            'onlyMainDomain' => 1,
+            'locales' => [$params['locale']],
+            'localeIn' => 'url',
+            'work' => 1,
+            'modules' => [],
+            'menu' => [],
+        ];
+        mkdir(DIR_SITE.'/1');
+        app()['siteId'] = '1';
+        app('site')->update($site);
+
+        $modules = model('modules');
+
         $locales = ['en', $params['locale']];
         foreach ($locales as $locale) {
             $this->downloadLocale($locale);
@@ -64,43 +83,12 @@ class Cmf
                 mkdir($dir, 0777, true);
             }
 
-            foreach (model('modules')->getDefault() as $module) {
+            foreach ($modules->filter('default') as $module) {
                 $this->downloadTranslation($module, $locale);
             }
         }
 
-        $themes = str_replace(DIR_THEME.'/', '', glob(DIR_THEME.'/*', GLOB_ONLYDIR));
-
-        $site = [
-            'name' => $params['siteName'],
-            'theme' => $themes[0],
-            'domains' => [$params['domain']],
-            'onlyMainDomain' => 1,
-            'locales' => [$params['locale']],
-            'localeIn' => 'url',
-            'work' => 1,
-            'modules' => [],
-            'menu' => [
-                'modules' => ['weight' => 500, 'title' => 'menu_modules', 'icon' => 'th-list', 'items' => [
-                    ['weight' => 20, 'title' => 'menu_constructors', 'url' => '#constructors'],
-                    ['weight' => 30, 'title' => 'menu_tools', 'url' => '#tools'],
-                ]],
-                'system' => ['weight' => 1000, 'title' => 'menu_system', 'icon' => 'cog', 'items' => []],
-            ],
-        ];
-        mkdir(DIR_SITE.'/1');
-        app()['siteId'] = '1';
-        app('site')->update($site);
-
-        $this->installDefaultModules();
-    }
-
-    private function installDefaultModules()
-    {
-        $m = model('modules');
-        foreach ($m->getDefault() as $name) {
-            $m->install($name);
-        }
+        $modules->install($modules->filter('default'));
     }
 
     public function update()
