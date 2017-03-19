@@ -14,7 +14,7 @@ class Admin extends Base
     {
         app('event')->trigger('render.started', [$doc]);
 
-        $doc->title .= ' - '.app('site')->get('name').' @ SyDES';
+        $doc->title = ifsetor($doc->data['title'], $doc->title).' - '.app('site')->get('name').' @ SyDES';
 
         $this->prepare($doc);
         $this->fillHead();
@@ -34,7 +34,7 @@ class Admin extends Base
             'col_sm' => 12,
             'col_lg' => 12,
             'title' => '',
-            'heading_actions' => [],
+            'header_actions' => [],
         ];
         if (!empty($doc->data['sidebar_left'])){
             $dummy['col_sm'] = $dummy['col_sm']-3;
