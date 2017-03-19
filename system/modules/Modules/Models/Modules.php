@@ -4,7 +4,6 @@ namespace Module\Modules\Models;
 
 use App\Settings\Container;
 use App\Settings\JsonDriver;
-use App\SplPriorityQueue;
 
 class Modules
 {
