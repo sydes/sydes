@@ -106,4 +106,13 @@ class Container
 
         return $this;
     }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function has($key)
+    {
+        return array_key_exists($key, $this->data);
+    }
 }
