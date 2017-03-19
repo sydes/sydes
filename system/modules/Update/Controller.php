@@ -18,15 +18,10 @@ class Controller
 
     public function install(AdminMenu $menu)
     {
-        $menu->addSubItem('modules', '#tools', [
+        $menu->addItem('modules/tools/update', [
             'title' => 'module_update',
             'url' => '/admin/update',
-        ], 240);
-    }
-
-    public function uninstall(AdminMenu $menu)
-    {
-        $menu->removeSubItem('modules', '#tools', '/admin/themes');
+        ], 20);
     }
 
     public function index()

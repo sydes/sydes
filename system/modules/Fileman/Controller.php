@@ -12,14 +12,9 @@ class Controller
 {
     public function install(AdminMenu $menu)
     {
-        $menu->addItem('modules', [
+        $menu->addItem('modules/fileman', [
             'title' => 'module_fileman',
-            'url' => '#fileman',
-        ], 10);
-    }
-
-    public function uninstall(AdminMenu $menu)
-    {
-        $menu->removeItem('modules', '#fileman');
+            'url' => '#',
+        ], 0);
     }
 }

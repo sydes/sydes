@@ -67,15 +67,15 @@ class Admin extends Base
                 'icon' => $group['icon'],
                 'attr' => 'id="menu_'.$groupName.'"',
             ];
-            usort($group['items'], 'sortByWeight');
+            uasort($group['items'], 'sortByWeight');
             $path = app('request')->getUri()->getPath();
-            foreach ($group['items'] as $item) {
+            foreach ($group['items'] as $itemName => $item) {
                 $mItem = [
                     'level' => 2,
                     'title' => $item['title'],
                     'url' => $item['url'],
                     'attr' => [
-                        'id' => $item['title']
+                        'id' => $itemName
                     ],
                 ];
                 if ($path == $item['url']) {

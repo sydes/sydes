@@ -19,16 +19,11 @@ class Controller
     public function install(AdminMenu $menu)
     {
         $menu->addGroup('pages', 'menu_pages', 'file', 0);
-        $menu->addItem('pages', [
+        $menu->addItem('pages/news', [
             'title' => 'News',
             'url' => '/admin/pages/news',
             'quick_add' => true,
         ], 10);
-    }
-
-    public function uninstall(AdminMenu $menu)
-    {
-        $menu->removeGroup('pages');
     }
 
     public function index()

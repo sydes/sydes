@@ -20,15 +20,10 @@ class Controller
 
     public function install(AdminMenu $menu)
     {
-        $menu->addItem('system', [
+        $menu->addItem('system/sites', [
             'title' => 'module_sites',
             'url' => '/admin/sites',
-        ], 10);
-    }
-
-    public function uninstall(AdminMenu $menu)
-    {
-        $menu->removeItem('system', '/admin/sites');
+        ], 40);
     }
 
     public function index()

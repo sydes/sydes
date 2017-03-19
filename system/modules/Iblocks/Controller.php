@@ -18,15 +18,10 @@ class Controller
 
     public function install(AdminMenu $menu)
     {
-        $menu->addItem('system', [
+        $menu->addItem('system/iblocks', [
             'title' => 'module_iblocks',
             'url' => '/admin/iblocks',
-        ], 300);
-    }
-
-    public function uninstall(AdminMenu $menu)
-    {
-        $menu->removeItem('system', '/admin/iblocks');
+        ], 30);
     }
 
     public function index()

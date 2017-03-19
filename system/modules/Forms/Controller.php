@@ -18,15 +18,10 @@ class Controller
 
     public function install(AdminMenu $menu)
     {
-        $menu->addSubItem('modules', '#constructors', [
+        $menu->addItem('modules/constructors/forms', [
             'title' => 'module_forms',
             'url' => '/admin/forms',
         ], 10);
-    }
-
-    public function uninstall(AdminMenu $menu)
-    {
-        $menu->removeSubItem('modules', '#constructors', '/admin/forms');
     }
 
     public function index()

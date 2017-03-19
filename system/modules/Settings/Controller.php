@@ -18,15 +18,10 @@ class Controller
 
     public function install(AdminMenu $menu)
     {
-        $menu->addItem('system', [
+        $menu->addItem('system/settings', [
             'title' => 'module_settings',
             'url' => '/admin/settings',
-        ], 10);
-    }
-
-    public function uninstall(AdminMenu $menu)
-    {
-        $menu->removeItem('system', '/admin/settings');
+        ], 0);
     }
 
     public function index()

@@ -18,15 +18,10 @@ class Controller
 
     public function install(AdminMenu $menu)
     {
-        $menu->addItem('system', [
+        $menu->addItem('system/logs', [
             'title' => 'module_logs',
             'url' => '/admin/logs',
-        ], 500);
-    }
-
-    public function uninstall(AdminMenu $menu)
-    {
-        $menu->removeItem('system', '/admin/logs');
+        ], 100);
     }
 
     public function index()

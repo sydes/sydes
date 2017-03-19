@@ -20,25 +20,27 @@ class AdminMenu
      * @param string $title
      * @param string $icon
      * @param int    $weight
+     * @return $this
      */
     public function addGroup($group, $title, $icon = 'asterisk', $weight = 150)
     {
-        if (isset($this->menu[$group])) {
-            return;
+        if (!isset($this->menu[$group])) {
+            $this->menu[$group] = [
+                'weight' => $weight,
+                'title'  => $title,
+                'icon'   => $icon,
+                'items'  => [],
+            ];
+
+            app('site')->set('menu', $this->menu);
         }
 
-        $this->menu[$group] = [
-            'weight' => $weight,
-            'title'  => $title,
-            'icon'   => $icon,
-            'items'  => [],
-        ];
-
-        app('site')->set('menu', $this->menu);
+        return $this;
     }
 
     /**
      * @param string $group
+     * @return $this
      */
     public function removeGroup($group)
     {
@@ -47,89 +49,63 @@ class AdminMenu
 
             app('site')->set('menu', $this->menu);
         }
+
+        return $this;
     }
 
     /**
-     * @param string $group
+     * @param string $path group/item/subItem
      * @param array  $data ['title' => '', 'url' => '', 'quick_add' => true]
      * @param int    $weight
+     * @return $this
      */
-    public function addItem($group, $data, $weight = 150)
+    public function addItem($path, $data, $weight = 150)
     {
-        if (isset($this->menu[$group])) {
-            $this->menu[$group]['items'][] = array_merge(['weight' => $weight], $data);
+        $path = explode('/', $path);
+        $item = array_pop($path);
 
-            app('site')->set('menu', $this->menu);
-        }
+        $temp = &$this->selectBy($path);
+        $temp['items'][$item] = array_merge(['weight' => $weight], $data);
+
+        app('site')->set('menu', $this->menu);
+
+        return $this;
     }
 
     /**
-     * @param string $group
-     * @param string $url
+     * @param string $path
+     * @return $this
      */
-    public function removeItem($group, $url)
+    public function removeItem($path)
     {
-        if (!isset($this->menu[$group])) {
-            return;
-        }
+        $path = explode('/', $path);
+        $item = array_pop($path);
 
-        foreach ($this->menu[$group]['items'] as $i => $item) {
-            if ($item['url'] == $url) {
-                unset($this->menu[$group]['items'][$i]);
+        $temp = &$this->selectBy($path);
+        unset($temp['items'][$item]);
 
-                app('site')->set('menu', $this->menu);
+        app('site')->set('menu', $this->menu);
 
-                break;
-            }
-        }
+        return $this;
     }
 
-    /**
-     * @param string $group
-     * @param string $itemUrl
-     * @param array  $data ['title' => '', 'url' => '']
-     * @param int    $weight
-     */
-    public function addSubItem($group, $itemUrl, $data, $weight = 150)
+    private function &selectBy($parts)
     {
+        $group = array_shift($parts);
+
         if (!isset($this->menu[$group])) {
-            return;
+            throw new \OutOfBoundsException('Menu group "'.$group.'" not found');
         }
 
-        foreach ($this->menu[$group]['items'] as $i => $item) {
-            if ($item['url'] == $itemUrl) {
-                $this->menu[$group]['items'][$i]['items'][] = array_merge(['weight' => $weight], $data);
-
-                app('site')->set('menu', $this->menu);
-
-                break;
+        $temp = &$this->menu[$group];
+        foreach ($parts as $part) {
+            if (!isset($temp['items'][$part])) {
+                throw new \OutOfBoundsException('Path "'.implode('/', $parts).'" not found in menu');
             }
-        }
-    }
 
-    /**
-     * @param string $group
-     * @param string $itemUrl
-     * @param string $url
-     */
-    public function removeSubItem($group, $itemUrl, $url)
-    {
-        if (!isset($this->menu[$group])) {
-            return;
+            $temp = &$temp['items'][$part];
         }
 
-        foreach ($this->menu[$group]['items'] as $i => $item) {
-            if ($item['url'] == $itemUrl) {
-                foreach ($item['items'] as $j => $subItem) {
-                    if ($subItem['url'] == $url) {
-                        unset($this->menu[$group]['items'][$i]['items'][$j]);
-
-                        app('site')->set('menu', $this->menu);
-
-                        break 2;
-                    }
-                }
-            }
-        }
+        return $temp;
     }
 }

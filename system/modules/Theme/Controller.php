@@ -28,15 +28,10 @@ class Controller
 
     public function install(AdminMenu $menu)
     {
-        $menu->addItem('system', [
+        $menu->addItem('system/themes', [
             'title' => 'module_theme',
             'url' => '/admin/themes',
-        ], 200);
-    }
-
-    public function uninstall(AdminMenu $menu)
-    {
-        $menu->removeItem('system', '/admin/themes');
+        ], 20);
     }
 
     public function index()

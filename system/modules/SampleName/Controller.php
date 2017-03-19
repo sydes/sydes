@@ -6,8 +6,6 @@ use App\Route;
 
 class Controller
 {
-    private $moduleName = 'sample-name';
-
     public static function routes(Route $r)
     {
         $r->get('/', 'SampleName@index');
@@ -48,21 +46,21 @@ class Controller
     {
         // Create tables, if needed
 
-        $menu->addGroup($this->moduleName, 'menu_sample', 'star', 120);
-        $menu->addItem($this->moduleName, [
-            'title' => 'sample_page',
-            'url' => '/admin/sample',
-            'quick_add' => true,
-        ], 10);
-        $menu->addItem($this->moduleName, [
-            'title' => 'another_page',
-            'url' => '/admin/sample/another'
-        ], 20);
+        $menu->addGroup('sample', 'menu_sample', 'star', 120)
+            ->addItem('sample/page', [
+                'title' => 'sample_page',
+                'url' => '/admin/sample',
+                'quick_add' => true,
+            ], 10)
+            ->addItem('sample/other', [
+                'title' => 'another_page',
+                'url' => '/admin/sample/another'
+            ], 20);
     }
 
     public function uninstall(AdminMenu $menu)
     {
-        $menu->removeGroup($this->moduleName);
+        $menu->removeGroup('sample');
 
         // Remove tables and config, if used
     }
