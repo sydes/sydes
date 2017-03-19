@@ -1,10 +1,7 @@
 $(document).ready(function () {
     stickMenu($('#menu'));
 
-    if ($('.tab-container .col-xs-2').width() < 183) {
-        $('.tab-container .col-xs-2').toggleClass('col-xs-2 col-xs-3');
-        $('.tab-container .col-xs-10').toggleClass('col-xs-10 col-xs-9')
-    }
+    $('.page-wrapper').css('minHeight', $(document).height()-30);
 
     $('[data-toggle="tooltip"]').tooltip();
     $("[data-toggle=popover]").popover({html: true});

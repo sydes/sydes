@@ -1,12 +1,17 @@
 .ani {
-    -webkit-transition: all 200ms;
-    transition: all 200ms;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+}
+
+.btn {
+    border-radius: 0;
 }
 
 .menu-wrapper {
     width: 230px;
     position: fixed;
     height: 100%;
+    z-index: 1;
 }
 .menu-wrapper ul {
     list-style: none;
@@ -29,7 +34,6 @@
     right: 0;
     top: 7px;
     border: solid 10px transparent;
-    border-right-color: #fcfcfc;
     pointer-events: none;
 }
 #menu a {
@@ -69,9 +73,49 @@
 #menu ul ul a {
     padding: 5px 10px;
 }
-#main {
+
+.page-wrapper {
+    position: relative;
     margin-left: 230px;
-    padding-top: 15px;
+    margin-right: 0;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.page-wrapper::before, .page-wrapper::after {
+    content: '';
+    display: table;
+}
+
+.header {
+    padding: 1rem 0;
+}
+
+.header h1 {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+#alerts {
+    margin-top: 15px;
+}
+
+.main {
+    margin: 0 -15px 45px;
+}
+
+.footer {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 10px 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .confirmation {
@@ -82,4 +126,17 @@
 }
 .confirmation .btn {
     padding: 6px 48px;
+}
+
+.box {
+    border: 0;
+    border-radius: 0;
+    margin-bottom: 1.25rem;
+    padding: 1.25rem;
+}
+
+.btn-group-sm>.btn+.dropdown-toggle-split,
+.btn-sm+.dropdown-toggle-split {
+    padding-right: .7rem;
+    padding-left: .7rem;
 }

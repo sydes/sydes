@@ -18,14 +18,14 @@
         <?=$menu;?>
     </div>
 
-    <div id="main" class="container-fluid">
-        <?php if ($title || $heading_actions) { ?>
-        <div class="page-heading row">
+    <div class="page-wrapper">
+        <?php if ($title || $header_actions) { ?>
+        <div class="header row">
             <div class="col-sm-4">
                 <h1><?=$title;?></h1>
             </div>
             <div class="col-sm-8 text-right">
-                <?php foreach ($heading_actions as $action) {
+                <?php foreach ($header_actions as $action) {
                     echo H::link($action['href'], $action['title'], ['class' => 'btn btn-'.$action['style']]), ' ';
                 } ?>
             </div>
@@ -35,9 +35,9 @@
         <div id="alerts"></div>
 
         <?php if ($form_url) { ?>
-            <form id="workarea" class="row" name="main-form" method="post" enctype="multipart/form-data" action="<?=$form_url;?>">
+            <form class="main row" name="main" method="post" enctype="multipart/form-data" action="<?=$form_url;?>">
         <?php } else { ?>
-            <div id="workarea" class="row">
+            <div class="main row">
         <?php } ?>
                 <?php if ($sidebar_left) { ?>
                     <div class="col-sm-3 col-lg-2 sidebar-left"><?=$sidebar_left;?></div><?php } ?>
@@ -45,13 +45,13 @@
                     <div class="col-sm-<?=$col_sm;?> col-lg-<?=$col_lg;?> content"><?=$content;?></div><?php } ?>
                 <?php if ($sidebar_right) { ?>
                     <div class="col-sm-3 col-lg-2 sidebar-right"><?=$sidebar_right;?></div><?php } ?>
-        <?php if ($form_url) { ?>
-            </form>
-        <?php } else { ?>
+        <?php if (!$form_url) { ?>
             </div>
+        <?php } else { ?>
+            </form>
         <?php } ?>
 
-        <div id="footer" class="row">
+        <div class="footer">
             <div class="col-sm-3">
                 <?=$footer_left;?>
             </div>
