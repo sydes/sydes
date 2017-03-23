@@ -5,6 +5,8 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
+use Psr\Http\Message\RequestInterface;
+
 class H
 {
     private static $extenders = [];
@@ -21,11 +23,11 @@ class H
     }
 
     /**
-     * Get the extender by its name
+     * Gets the extender by name
      *
      * @param string $name
      * @param array  $arguments
-     * @return mixed
+     * @return string
      * @throws RuntimeException
      */
     public static function __callStatic($name, array $arguments)
@@ -37,27 +39,65 @@ class H
     }
 
     /**
-     * @param string $name   Input name
+     * @param string $label
+     * @param string $url
+     * @param array  $attr
+     * @return string
+     */
+    public static function a($label, $url = '#', array $attr = [])
+    {
+        $attr['href'] = $url;
+
+        return '<a'.self::attr($attr).'>'.$label.'</a>';
+    }
+
+    /**
+     * @param string $label
+     * @param string $type
+     * @param array  $attr
+     * @return string
+     */
+    public static function button($label = 'Submit', $type = 'submit', array $attr = [])
+    {
+        $attr['type'] = $type;
+
+        return '<button'.self::attr($attr).'>'.$label.'</button>';
+    }
+
+    /**
+     * @param string $label
+     * @param string $input
+     * @param string $help
+     * @return string
+     */
+    public static function formGroup($label, $input, $help = '')
+    {
+        $help = $help ? '<small class="form-text text-muted">'.$help.'</small>' : '';
+
+        return '<div class="form-group"><label>'.$label.'</label>'.$input.$help.'</div>';
+    }
+
+    /**
+     * @param string $name  
      * @param string $value
-     * @param array  $source List of items 'value' => 'title' or 0 => 'value'
-     * @param array  $attr   Input attributes, like class
+     * @param array  $source List of items 'value' => 'title'
+     * @param array  $attr  
      * @return string
      */
     public static function select($name, $value, array $source, array $attr = [])
     {
         if (empty($source)) {
-            $source[] = ' - ';
+            $source[''] = ' - ';
         }
-        if (array_values($source) === $source) {
-            $source = array_combine($source, $source);
-        }
-        $name .= (isset($attr['multiple'])) ? '[]' : '';
 
-        $html = '<select name="'.$name.'"'.self::attr($attr).'>'.PHP_EOL;
+        $attr['name'] = $name.(isset($attr['multiple']) ? '[]' : '');
+
+        $html = '<select'.self::attr($attr).'>';
         foreach ($source as $val => $title) {
             $selected = $val == $value ? ' selected' : '';
-            $html .= '<option value="'.$val.'"'.$selected.'>'.$title.'</option>'.PHP_EOL;
+            $html .= '<option value="'.$val.'"'.$selected.'>'.$title.'</option>';
         }
+
         return $html.'</select>';
     }
 
@@ -65,9 +105,6 @@ class H
     {
         if (!$data) {
             return '<div>'.t('empty').'</div>';
-        }
-        if (array_values($data) === $data) {
-            $data = array_combine($data, $data);
         }
 
         $inline = false;
@@ -84,32 +121,35 @@ class H
             $pre = '<div class="'.$type.'"><label>';
             $post = '</label></div>';
         }
-        $name .= ($type == 'checkbox' && count($data) > 1) ? '[]' : '';
+
         $html = '<div'.self::attr($attr).'>';
         foreach ($data as $value => $title) {
             $checked = in_array($value, (array)$selected, true) ? ' checked' : '';
-            $html .= $pre.'<input type="'.$type.'" name="'.$name.'" value="'.$value.'"'.$checked.'> '.$title.$post.PHP_EOL;
+            $html .= $pre.'<input type="'.$type.'" name="'.$name.'" value="'.$value.'"'.$checked.'> '.$title.$post;
         }
+
         return $html.'</div>';
     }
 
     /**
-     * @param string $name   Input name
+     * @param string $name  
      * @param string $value
-     * @param array  $source List of items 'value' => 'title' or 0 => 'value'
-     * @param array  $attr   Input attributes, like class
+     * @param array  $source List of items 'value' => 'title'
+     * @param array  $attr  
      * @return string
      */
     public static function checkbox($name, $value, array $source, array $attr = [])
     {
+        $name .= count($source) > 1 ? '[]' : '';
+
         return self::optionElement('checkbox', $name, $source, $value, $attr);
     }
 
     /**
-     * @param string $name   Input name
+     * @param string $name  
      * @param string $value
-     * @param array  $source List of items 'value' => 'title' or 0 => 'value'
-     * @param array  $attr   Input attributes, like class
+     * @param array  $source List of items 'value' => 'title'
+     * @param array  $attr  
      * @return string
      */
     public static function radio($name, $value, array $source, array $attr = [])
@@ -118,8 +158,8 @@ class H
     }
 
     /**
-     * @param string      $name Input name
-     * @param int|boolean $status
+     * @param string   $name
+     * @param int|bool $status
      * @return string
      */
     public static function yesNo($name, $status)
@@ -128,100 +168,169 @@ class H
     }
 
     /**
-     * Returns text input or textarea
-     *
-     * @param string $name Input name
+     * @param string $name
      * @param string $value
-     * @param array  $attr Input attributes, like class
+     * @param array  $attr
      * @return string
      */
-    public static function text($name, $value, array $attr = [])
+    public static function textarea($name, $value, array $attr = [])
     {
-        if (isset($attr['rows']) && $attr['rows'] > 1) {
-            return '<textarea name="'.$name.'"'.self::attr($attr).'>'.$value.'</textarea>';
-        } else {
-            return '<input type="text" value="'.$value.'" name="'.$name.'"'.self::attr($attr).'>';
-        }
+        $attr['name'] = $name;
+
+        return '<textarea'.self::attr($attr).'>'.$value.'</textarea>';
     }
 
     /**
-     * @param string $name Input name
-     * @param string $value
-     * @param array  $attr Input attributes, like class
-     * @return string
-     */
-    public static function input($name, $value, array $attr = [])
-    {
-        return '<input value="'.$value.'" name="'.$name.'"'.self::attr($attr).'>';
-    }
-
-    /**
-     * @param string $name Input name
-     * @param string $value
-     * @param array  $attr Input attributes, like class
-     * @return string
-     */
-    public static function hidden($name, $value, array $attr = [])
-    {
-        return '<input type="hidden" value="'.$value.'" name="'.$name.'"'.self::attr($attr).'>';
-    }
-
-    /**
-     * @param string $label
      * @param string $type
-     * @param array  $attr Input attributes, like class
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
      * @return string
      */
-    public static function button($label = 'Submit', $type = 'submit', array $attr = [])
+    public static function input($type, $name, $value = '', array $attr = [])
     {
-        return '<button type="'.$type.'"'.self::attr($attr).'>'.$label.'</button>';
+        $attr['type'] = $type;
+        $attr['name'] = $name;
+        if ($value) {
+            $attr['value'] = $value;
+        }
+
+        return '<input'.self::attr($attr).'>';
     }
 
     /**
      * @param string $name
-     * @param array  $attr Input attributes, like class
+     * @param string $value
+     * @param array  $attr
+     * @return string
+     */
+    public static function text($name, $value, array $attr = [])
+    {
+        return self::input('text', $name, $value, $attr);
+    }
+
+    /**
+     * @param string $name
+     * @param array  $attr
      * @return string
      */
     public static function password($name, array $attr = [])
     {
-        return '<input type="password" name="'.$name.'"'.self::attr($attr).'>';
+        return self::input('password', $name, '', $attr);
     }
 
     /**
-     * @param string $title
-     * @param string $href
-     * @param array  $attr Input attributes, like class
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
      * @return string
      */
-    public static function link($href, $title, array $attr = [])
+    public static function hidden($name, $value, array $attr = [])
     {
-        return '<a href="'.$href.'"'.self::attr($attr).'>'.$title.'</a>';
+        return self::input('hidden', $name, $value, $attr);
     }
 
     /**
-     * @param string $file
-     * @param string $button
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
      * @return string
      */
-    public static function saveButton($file = '', $button = '')
+    public static function color($name, $value, array $attr = [])
     {
-        if (!$file || (is_writable($file) && is_writable(dirname($file)))) {
-            $btn = $button ? $button : '<button type="submit" class="btn btn-primary btn-block">'.t('save').'</button>';
-        } else {
-            $btn = '<button type="button" class="btn btn-primary btn-block disabled">'.t('not_writeable').'</button>';
-        }
-        return '<div class="form-group">'.$btn.'</div>';
-    }
-
-    public static function mastercodeInput()
-    {
-        return isset($_SESSION['admin']) ? '' : '<div class="form-group">
-    <input type="text" name="mastercode" class="form-control" placeholder="'.t('mastercode').'" required>
-</div>';
+        return self::input('color', $name, $value, $attr);
     }
 
     /**
-     * @param array $crumbs 'title' => ''[, 'url' => '']
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
+     * @return string
+     */
+    public static function date($name, $value, array $attr = [])
+    {
+        return self::input('date', $name, $value, $attr);
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
+     * @return string
+     */
+    public static function email($name, $value, array $attr = [])
+    {
+        return self::input('email', $name, $value, $attr);
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
+     * @return string
+     */
+    public static function number($name, $value, array $attr = [])
+    {
+        return self::input('number', $name, $value, $attr);
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
+     * @return string
+     */
+    public static function range($name, $value, array $attr = [])
+    {
+        return self::input('range', $name, $value, $attr);
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
+     * @return string
+     */
+    public static function search($name, $value, array $attr = [])
+    {
+        return self::input('search', $name, $value, $attr);
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
+     * @return string
+     */
+    public static function tel($name, $value, array $attr = [])
+    {
+        return self::input('tel', $name, $value, $attr);
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
+     * @return string
+     */
+    public static function time($name, $value, array $attr = [])
+    {
+        return self::input('time', $name, $value, $attr);
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
+     * @return string
+     */
+    public static function url($name, $value, array $attr = [])
+    {
+        return self::input('url', $name, $value, $attr);
+    }
+
+    /**
+     * @param array $crumbs with ['title' => '', 'url' => '']
      * @return string
      */
     public static function breadcrumb($crumbs)
@@ -239,61 +348,101 @@ class H
     }
 
     /**
-     * @param string $url     Base url
-     * @param int    $total   Items count
-     * @param int    $current From 'skip'
-     * @param int    $limit   Per page
-     * @param string $class   Class to div-wrapper
-     * @param int    $links   The number of links on the left and right of the current
+     * @param RequestInterface $request
+     * @param int              $total    Total pages
+     * @param int              $maxLinks Max width of pagination, odd number is better
+     * @param bool             $prevNext To show links for next page?
+     * @param array            $text     Texts for additional links
+     * @param string           $class    Html class for container
      * @return string
      */
-    public static function pagination($url, $total, $current, $limit = 10, $class = 'pagination', $links = 3)
+    public static function pagination(RequestInterface $request, $total, $maxLinks = 7,
+        $prevNext = false, array $text = [], $class = 'pagination')
     {
-        $pages = ceil($total / $limit);
-        if ($pages < 2) {
+        if ($total < 2) {
             return '';
         }
 
-        // TODO переписать под psr-7 и заменить скип на пейдж
-        $get = app('request')->getUri();
-        unset($get['skip']);
-        if (count($get)) {
-            $url .= '?'.str_replace('%2F', '/', http_build_query($get)).'&';
-        } else {
-            $url .= '?';
+        $text = array_merge([
+            'first' => '&laquo;',
+            'prev' => '&lsaquo;',
+            'next' => '&rsaquo;',
+            'last' => '&raquo;',
+        ], $text);
+
+        $page = 1;
+        $uri = $request->getUri();
+        $path = $uri->getPath();
+        parse_str($uri->getQuery(), $query);
+
+        if (isset($query['page']) && (int)$query['page'] > 0) {
+            $page = (int)$query['page'];
         }
+        unset($query['page']);
 
-        $thisPage = floor($current / $limit);
-
-        if ($pages < ($links * 2) + 2) {
+        if ($total <= $maxLinks) {
             $from = 1;
-            $to = $pages;
+            $to = $total;
         } else {
-            if ($thisPage < $links + 1) {
+            if ($page < floor($maxLinks / 2) + 1) {
                 $from = 1;
-                $to = ($links * 2) + 1;
-            } elseif ($thisPage < $pages - $links - 1) {
-                $from = $thisPage - ($links - 1);
-                $to = $thisPage + ($links + 1);
+                $to = $maxLinks;
+            } elseif ($page <= $total - floor($maxLinks / 2)) {
+                $from = $page - floor($maxLinks / 2);
+                $to = $page + floor($maxLinks / 2);
             } else {
-                $from = $pages - ($links * 2);
-                $to = $pages;
+                $from = $total - $maxLinks + 1;
+                $to = $total;
             }
-        }
-        $html = '';
-        for ($i = $from; $i <= $to; $i++) {
-            $skip = ($i - 1) * $limit;
-            if ($current == $skip) {
-                $html .= '<li class="active"><span>'.$i.'</span></li>';
-            } else {
-                $html .= '<li><a href="'.$url.'skip='.$skip.'">'.$i.'</a></li>';
-            }
-        }
-        if ($pages > ($links * 2) + 1) {
-            $html = '<li><a href="'.$url.'skip=0">&laquo;</a></li>'.$html.'<li><a href="'.$url.'skip='.($pages - 1) * $limit.'">&raquo;</a></li>';
         }
 
-        return '<ul class="'.$class.'">'.$html.'</ul>';
+        $prev = $next = $first = $last = $all = '';
+
+        for ($i = $from; $i <= $to; $i++) {
+            if ($i != $page) {
+                $newQuery = $query + ['page' => $i];
+                $all .= self::paginationLink($i, $path, $newQuery);
+            } else {
+                $all .= self::paginationLink($i);
+            }
+        }
+
+        if ($total > $maxLinks) {
+            if ($page > 1) {
+                $first = self::paginationLink($text['first'], $path, $query);
+            }
+            if ($page < $total) {
+                $last = self::paginationLink($text['last'], $path, $query + ['page' => $total]);
+            }
+        }
+
+        if ($prevNext && $page > 1) {
+            $prev = self::paginationLink($text['prev'], $path, $query + ['page' => $page - 1]);
+        }
+        if ($prevNext && $page < $total) {
+            $next = self::paginationLink($text['next'], $path, $query + ['page' => $page + 1]);
+        }
+
+        return '<ul class="'.$class.'">'.$first.$prev.$all.$next.$last.'</ul>';
+    }
+
+    private static function paginationLink($title, $path = false, $query = [])
+    {
+        if ($path) {
+            if (isset($query['page']) && $query['page'] == 1) {
+                unset($query['page']);
+            }
+
+            $query = empty($query) ? '' : '?'.http_build_query($query);
+
+            $act = '';
+            $link = '<a class="page-link" href="'.$path.$query.'">'.$title.'</a>';
+        } else {
+            $act =  ' active';
+            $link = '<span class="page-link">'.$title.'</span>';
+        }
+
+        return '<li class="page-item'.$act.'">'.$link.'</li>';
     }
 
     /**
@@ -318,6 +467,7 @@ class H
             if (isset($item['skip'])) {
                 continue;
             }
+
             if ($prev_level != $item['level']) {
                 if ($max_level < $item['level']) {
                     continue;
@@ -330,32 +480,41 @@ class H
                     $html .= str_pad('', $delta, '</ul></li>');
                 }
             }
+
             $attr = isset($item['attr']) ? ' '.self::attr($item['attr']) : '';
             $html .= '<li'.$attr.'>'.$callback($item).'</li>';
             $prev_level = $item['level'];
         }
 
         $delta = ($prev_level - 1) * 10;
+
         return $html.str_pad('', $delta, '</ul></li>').'</ul>';
     }
 
     /**
-     * @param        $data
+     * @param array  $data
      * @param string $current
      * @param array  $attr
      * @return string
      */
-    public static function listLinks($data, $current = '', array $attr = [])
+    public static function flatList(array $data, $current = '', array $attr = [])
     {
         $html = '<ul'.self::attr($attr).'>';
         foreach ($data as $link => $title) {
             $active = $current == $link ? ' class="active"' : '';
             $html .= '<li'.$active.'><a href="'.$link.'">'.$title.'</a></li>';
         }
+
         return $html.'</ul>';
     }
 
-    public static function table($rows, $header = [], $attr = '')
+    /**
+     * @param array $rows
+     * @param array $header
+     * @param array $attr
+     * @return string
+     */
+    public static function table(array $rows, array $header = [], array $attr = [])
     {
         $html = '<table'.self::attr($attr).'>';
         if (!empty($header)) {
@@ -365,6 +524,7 @@ class H
             }
             $html .= '</tr></thead>';
         }
+
         $html .= '<tbody>';
         foreach ($rows as $row) {
             $html .= '<tr>';
@@ -373,10 +533,18 @@ class H
             }
             $html .= '</tr>';
         }
+
         return $html.'</tbody></table>';
     }
 
-    public static function tab($data, $current = '', $position = 'top', $attr = '')
+    /**
+     * @param array  $data
+     * @param string $current
+     * @param string $position
+     * @param array  $attr
+     * @return string
+     */
+    public static function tab(array $data, $current = '', $position = 'top', array $attr = [])
     {
         $titles = $contents = '';
         foreach ($data as $key => $d) {
@@ -476,15 +644,15 @@ class H
 
     /**
      * Parse string with attributes to array
-     * @param string $attr_string
+     * @param string $string
      * @return array
      */
-    public static function parseAttr($attr_string)
+    public static function parseAttr($string)
     {
         $attr = [];
 
         $pattern = '/([\w-]+)\s*(=\s*"([^"]*)")?/';
-        preg_match_all($pattern, $attr_string, $matches, PREG_SET_ORDER);
+        preg_match_all($pattern, $string, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
             $name = strtolower($match[1]);
@@ -515,16 +683,18 @@ class H
         if (is_string($attr)) {
             return ' '.$attr;
         }
-        $str = ' ';
-        foreach ($attr as $key => $values) {
-            if ($values === true) {
-                $str .= $key.' ';
-            } elseif (is_array($values)) {
-                $str .= $key.'="'.implode(' ', $values).'" ';
+
+        $str = '';
+        foreach ($attr as $key => $value) {
+            $str .= ' '.$key;
+            if ($value === true) {
+            } elseif (is_array($value)) {
+                $str .= '="'.implode(' ', $value).'"';
             } else {
-                $str .= $key.'="'.$values.'" ';
+                $str .= '="'.$value.'"';
             }
         }
+
         return $str;
     }
 }

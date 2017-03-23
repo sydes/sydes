@@ -801,3 +801,18 @@ function lower($string)
 {
     return mb_strtolower($string, 'UTF-8');
 }
+
+/**
+ * Returns submit button only if can edit source
+ * @param string $file
+ * @param string $button
+ * @return string
+ */
+function saveButton($file = '', $button = '')
+{
+    if (!$file || (is_writable($file) && is_writable(dirname($file)))) {
+        return $button ? $button : H::button(t('save'), 'submit', ['class' => 'btn btn-primary']);
+    } else {
+        return H::button(t('not_writable'), 'button', ['class' => 'btn btn-primary disabled']);
+    }
+}

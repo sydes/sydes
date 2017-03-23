@@ -7,7 +7,7 @@
                 echo 'Unknown';
             } else {
                 foreach ($current['authors'] as $author) {
-                    echo H::link($author['homepage'], $author['name'], ['target' => '_blank']);
+                    echo H::a($author['name'], $author['homepage'], ['target' => '_blank']);
                 }
             }?>
         </div>
@@ -30,7 +30,7 @@
                             echo 'Unknown';
                         } else {
                             foreach ($item['authors'] as $author) {
-                                echo H::link($author['homepage'], $author['name'], ['target' => '_blank']);
+                                echo H::a($author['name'], $author['homepage'], ['target' => '_blank']);
                             }
                         }?>
                     </div>
