@@ -238,7 +238,7 @@ class App
         } elseif ($content instanceof Document) {
             return html($this->container['renderer']->render($content));
         } elseif ($content instanceof View) {
-            return html((string)$content);
+            return html($content->render());
         } elseif (is_array($content)) {
             if (isset($content['alerts'])) {
                 $_SESSION['alerts'] = [];

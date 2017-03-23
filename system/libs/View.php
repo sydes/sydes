@@ -34,7 +34,7 @@ class View
     /**
      * @return string
      */
-    public function __toString()
+    public function render()
     {
         $context = $this->module.'/'.$this->view;
         app('event')->trigger('view.render.started', [&$this->module, &$this->view, &$this->data], $context);

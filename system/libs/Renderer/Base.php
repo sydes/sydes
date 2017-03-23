@@ -7,6 +7,7 @@
 namespace App\Renderer;
 
 use App\Document;
+use App\View;
 
 class Base
 {
@@ -17,6 +18,12 @@ class Base
 
     public function prepare(Document $doc)
     {
+        foreach ($doc->data as &$item) {
+            if ($item instanceof View) {
+                $item = $item->render();
+            }
+        }
+
         $this->document = $doc;
         $this->addAlerts();
         $this->addNotify();
