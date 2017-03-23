@@ -100,9 +100,17 @@ function assetsDir($module)
 function render($file, $data = [])
 {
     extract($data, EXTR_SKIP);
-    ob_start();
-    include $file;
-    return ob_get_clean();
+
+    try {
+        ob_start();
+        include $file;
+        $output = ob_get_clean();
+    } catch(Exception $e) {
+        ob_end_clean();
+        throw $e;
+    }
+
+    return $output;
 }
 
 /**
