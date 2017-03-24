@@ -98,7 +98,7 @@ class Controller
         $d = document([
             'title' => 'Index page of module',
             'content' => '{links} {view_sample}',
-            'links' => \H::listLinks($links, false, ['id' => 'sample']),
+            'links' => \H::flatList($links, false, ['id' => 'sample']),
         ]);
 
         $d->data['view_sample'] = view('sample-name/main', [
