@@ -42,7 +42,10 @@
     "logo": "/themes/default/assets/images/logo.png"
   },
   "js": {
-    "bootstrap": "//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js",
+    "bootstrap": [
+      "//cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js",
+      "//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+    ],
     "lightbox": "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js",
     "theme": [
       "assets/js/main.js",
@@ -50,7 +53,7 @@
     ]
   },
   "css": {
-    "bootstrap": "//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
+    "bootstrap": "//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css",
     "lightbox": "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css",
     "theme": [
       "assets/css/main.css",
