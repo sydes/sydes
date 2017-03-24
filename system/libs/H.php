@@ -94,8 +94,8 @@ class H
 
         $html = '<select'.self::attr($attr).'>';
         foreach ($source as $val => $title) {
-            $selected = $val == $value ? ' selected' : '';
-            $html .= '<option value="'.$val.'"'.$selected.'>'.$title.'</option>';
+            $selected = $val == $value ? 'selected' : '';
+            $html .= '<option value="'.$val.'" '.$selected.'>'.$title.'</option>';
         }
 
         return $html.'</select>';
@@ -448,7 +448,7 @@ class H
     /**
      * Gets tree from flat array
      *
-     * @param array    $data      Flat array with elements.
+     * @param array    $items     Flat array with elements.
      *                            Each element must have at least 'level'.
      *                            Each element can have 'attr' for LI and other data
      * @param int      $max_level Maximum tree depth
@@ -456,14 +456,14 @@ class H
      * @param callable $callback  Function name, that can return a string with html
      * @return string
      */
-    public static function treeList(array $data, callable $callback, array $attr = [], $max_level = 20)
+    public static function treeList(array $items, callable $callback, array $attr = [], $max_level = 20)
     {
-        reset($data);
-        $cur = current($data);
+        reset($items);
+        $cur = current($items);
         $prev_level = $cur['level'];
         $html = '<ul'.self::attr($attr).'>';
 
-        foreach ($data as $item) {
+        foreach ($items as $item) {
             if (isset($item['skip'])) {
                 continue;
             }
@@ -492,15 +492,15 @@ class H
     }
 
     /**
-     * @param array  $data
+     * @param array  $items
      * @param string $current
      * @param array  $attr
      * @return string
      */
-    public static function flatList(array $data, $current = '', array $attr = [])
+    public static function flatList(array $items, $current = '', array $attr = [])
     {
         $html = '<ul'.self::attr($attr).'>';
-        foreach ($data as $link => $title) {
+        foreach ($items as $link => $title) {
             $active = $current == $link ? ' class="active"' : '';
             $html .= '<li'.$active.'><a href="'.$link.'">'.$title.'</a></li>';
         }
@@ -538,26 +538,53 @@ class H
     }
 
     /**
-     * @param array  $data
+     * @param array  $items
      * @param string $current
-     * @param string $position
      * @param array  $attr
      * @return string
      */
-    public static function tab(array $data, $current = '', $position = 'top', array $attr = [])
+    public static function tabs(array $items, $current = '', array $attr = [])
     {
-        $titles = $contents = '';
-        foreach ($data as $key => $d) {
+        $titles = [];
+        $contents = '';
+
+        foreach ($items as $key => $d) {
             $active = $current == $key ? ' active' : '';
-            $titles .= '<li class="'.$active.'"><a href="#'.$key.'" data-toggle="tab">'.$d['title'].'</a></li>';
+
+            $titles[] = [
+                'active' => $active,
+                'url' => '#'.$key,
+                'title' => $d['title'],
+                'attr' => [
+                    'data-toggle' => 'tab',
+                ]
+            ];
+
             $contents .= '<div class="tab-pane'.$active.'" id="'.$key.'">'.$d['content'].'</div>';
         }
-        if ($position == 'left') {
-            return '<div class="row tab-container"><div class="col-xs-2"><ul class="nav nav-tabs-left">'.$titles.'</ul></div><div class="col-xs-10"><div class="tab-content">'.$contents.'</div></div></div>';
-        } elseif ($position == 'right') {
-            return '<div class="row tab-container"><div class="col-xs-10"><div class="tab-content">'.$contents.'</div></div><div class="col-xs-2"><ul class="nav nav-tabs-right">'.$titles.'</ul></div></div>';
+
+        return '<div '.self::attr($attr).'>'.self::nav($titles, 'nav-tabs').
+            '<div class="tab-content">'.$contents.'</div></div>';
+    }
+
+    /**
+     * @param array  $items
+     * @param string $style
+     * @return string
+     */
+    public static function nav(array $items, $style = '')
+    {
+        $html = '';
+        foreach ($items as $item) {
+            $item['attr']['class'][] = 'nav-link';
+            if (!empty($item['active'])) {
+                $item['attr']['class'][] = 'active';
+            }
+
+            $html .= '<li class="nav-item">'.self::a($item['title'], $item['url'], $item['attr']).'</li>';
         }
-        return '<div '.$attr.'><ul class="nav nav-tabs">'.$titles.'</ul><div class="tab-content">'.$contents.'</div></div>';
+
+        return '<ul class="nav '.$style.'">'.$html.'</ul>';
     }
 
     public static function accordion($data, $current = '')
