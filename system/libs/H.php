@@ -587,86 +587,132 @@ class H
         return '<ul class="nav '.$style.'">'.$html.'</ul>';
     }
 
-    public static function accordion($data, $current = '')
+    /**
+     * @param array  $items
+     * @param string $current
+     * @param bool   $independent Close all other cards on open?
+     * @return string
+     */
+    public static function accordion(array $items, $current = '', $independent = false)
     {
-        $id = rand(0, 10000);
-        $html = '<div class="panel-group" id="accordion'.$id.'">';
-        foreach ($data as $key => $d) {
-            $active = $current == $key ? ' in' : '';
+        $html = '';
+        $parent = $independent ? '' : 'data-parent=".accordion"';
+        foreach ($items as $key => $d) {
+            $active = $current == $key ? ' show' : '';
             $html .= '
-    <div class="panel panel-default">
-        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion'.$id.'" data-target="#'.$key.'">
-            <span class="panel-title">'.$d['title'].'</span>
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" '.$parent.' data-target="#acc-'.$key.'">
+            '.$d['title'].'
         </div>
-        <div id="'.$key.'" class="panel-collapse collapse'.$active.'">
-            <div class="panel-body">'.$d['content'].'</div>
+        <div id="acc-'.$key.'" class="collapse'.$active.'">
+            <div class="card-block">'.$d['content'].'</div>
         </div>
     </div>';
         }
-        return $html.'</div>';
+
+        return '<div class="accordion">'.$html.'</div>';
     }
 
+    /**
+     * @param string $title
+     * @param string $body
+     * @param string $footer
+     * @param string $form_url
+     * @return string
+     */
     public static function modal($title, $body = '', $footer = '', $form_url = '')
     {
         $html = '
         <div class="modal-header">
+            <h5 class="modal-title">'.$title.'</h5>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">'.$title.'</h4>
         </div>
         <div class="modal-body">'.$body.'</div>
         <div class="modal-footer">'.$footer.'</div>
         ';
+
         if ($form_url) {
             $html = '<form name="modal-form" method="post" enctype="multipart/form-data" action="'.$form_url.'">'.$html.'</form>';
         }
+
         return $html;
     }
 
     /**
-     * @param array $data
+     * @param array       $items
+     * @param array|bool $label
+     * @param array       $align
      * @return string
      */
-    public static function form($data)
+    public static function dropdown(array $items, $label = false, $align = ['right', 'down'])
     {
-        $form = '';
-        foreach ($data as $name => $input) {
-            $piece = (isset($input['label']) && $input['type'] != 'hidden') ? '<label>'.$input['label'].'</label>' : '';
+        if (!$label) {
+            $first = array_shift($items);
 
-            $type = $input['type'];
-            $attr = ifsetor($input['attr'], '');
-            $list = ifsetor($input['list'], []);
+            $first = self::dropdownPrepareButton($first);
 
-            switch ($input['type']) {
-                case 'select':
-                case 'checkbox':
-                case 'radio':
-                    $piece .= self::$type($name, $input['value'], $list, $attr);
-                    break;
-                case 'password':
-                    $piece .= self::$type($name, $attr);
-                    break;
-                default:
-                    $piece .= self::$type($name, $input['value'], $attr);
+            if (isset($first['url'])) {
+                $action = self::a($first['label'], $first['url'], $first['attr']);
+            } else {
+                $action = self::button($first['label'], ifsetor($first['type'], 'button'), $first['attr']);
             }
 
-            $form .= $input['type'] != 'hidden' ? '<div class="form-group">'.$piece.'</div>' : $piece;
+            $drop = self::button('', 'button', [
+                    'class' => ['btn', 'btn-'.$first['style'], $first['size'], 'dropdown-toggle', 'dropdown-toggle-split'],
+                    'data-toggle' => 'dropdown',
+                ]);
+
+            $toggle = $action.$drop;
+        } else {
+            $label = self::dropdownPrepareButton($label);
+            $label['attr']['class'][] = 'dropdown-toggle';
+            $label['attr']['data-toggle'] = 'dropdown';
+
+            $toggle = self::button($label['label'], 'button', $label['attr']);
         }
-        return $form;
+
+        $menu = '';
+        foreach ($items as $item) {
+            $item['attr']['class'][] = 'dropdown-item';
+
+            if (isset($item['url'])) {
+                $menu .= self::a($item['label'], $item['url'], $item['attr']);
+            } elseif (isset($item['type'])) {
+                $menu .= self::button($item['label'], $item['type'], $item['attr']);
+            } elseif (isset($item['divider'])) {
+                $menu .= '<div class="dropdown-divider"></div>';
+            } elseif (isset($item['header'])) {
+                $menu .= '<h6 class="dropdown-header">'.$item['label'].'</h6>';
+            } else {
+                $menu .= $item['html'];
+            }
+        }
+
+        $up = in_array('up', $align) ? 'dropup' : '';
+        $right = in_array('right', $align) ? 'dropdown-menu-right' : '';
+
+        return '<div class="btn-group '.$up.'">'.$toggle.'<div class="dropdown-menu '.$right.'">'.$menu.'</div></div>';
     }
 
-    public static function dropdown($title, array $items, $pos = 'left')
+    private static function dropdownPrepareButton($button)
     {
-        $pos = $pos == 'right' ? 'dropdown-menu-right' : '';
-        $html = '<button type="button" class="dropdown-toggle" data-toggle="dropdown">'.
-            $title.'<span class="caret"></span></button><ul class="dropdown-menu '.$pos.'">';
-
-        foreach ($items as $item) {
-            $html .= isset($item['link']) ?
-                '<li><a href="'.$item['link'].'">'.$item['title'].'</a></li>' :
-                '<li>'.$item['html'].'</li>';
+        if (!isset($button['style'])) {
+            $button['style'] = 'secondary';
         }
 
-        return '<div class="dropdown">'.$html.'</ul></div>';
+        if (isset($button['size'])) {
+            $button['size'] = 'btn-'.$button['size'];
+        } else {
+            $button['size'] = '';
+        }
+
+        if (!isset($button['attr'])) {
+            $button['attr'] = [
+                'class' => ['btn', 'btn-'.$button['style'], $button['size']],
+            ];
+        }
+
+        return $button;
     }
 
     /**
