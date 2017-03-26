@@ -21,4 +21,5 @@ return array(
     'activate' => 'Activate',
     'install' => 'Install',
     'uninstall' => 'Uninstall',
+    'settings' => 'Settings',
 );

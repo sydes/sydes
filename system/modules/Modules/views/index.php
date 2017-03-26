@@ -21,22 +21,21 @@ $all = [
                 <td class="text-right">
 
                     <?php if ($groupName == 'not_installed') { ?>
-                        <button type="button" class="btn btn-secondary btn-sm"><?=t('install_module');?></button>
+                        <button type="button" class="btn btn-secondary btn-sm"><?=t('install');?></button>
                     <?php } elseif ($groupName == 'default') {
-                        if ( $module->has('settings')) { ?>
-                            <a href="/admin/<?=$name;?>/settings" class="btn btn-secondary btn-sm"><?=t('configure_module');?></a>
-                        <?php }
-                    } else { ?>
-                    <div class="btn-group">
-                        <a href="/admin/<?=$name;?>/settings" class="btn btn-secondary btn-sm"><?=t('configure_module');?></a>
-                        <button type="button" class="btn btn-secondary btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#"><?=t('uninstall_module');?></a>
-                        </div>
-                    </div>
-                    <?php } ?>
+                        if ( $module->has('settings')) {
+                            echo H::a(t('settings'), '/admin/'.$name.'/settings', ['class' => 'btn btn-secondary btn-sm']);
+                        }
+                    } else {
+                        echo H::dropdown([[
+                                'label' => t('settings'),
+                                'url' => '/admin/'.$name.'/settings',
+                                'size' => 'sm',
+                            ], [
+                                'label' => t('uninstall'),
+                                'url' => 'admin/modules/'.$name.'uninstall',
+                            ]]);
+                         } ?>
 
                 </td>
             </tr>

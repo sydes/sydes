@@ -13,10 +13,7 @@ return array(
     'modules_not_installed' => 'Неустановленные',
     'modules_default' => 'Дефолтные',
     'check_updates' => 'Проверить обновления',
-    'upload_module' => 'Загрузить новый',
-    'configure_module' => 'Настроить',
-    'install_module' => 'Установить',
-    'uninstall_module' => 'Удалить',
+    'add_module' => 'Добавить модуль',
 
 
     'modules_for_update' => [

@@ -64,7 +64,7 @@ class Controller
             'title' => t('module_modules'),
             'header_actions' =>
                 \H::a(t('check_updates'), '/admin/modules/updates', ['class' => 'btn btn-primary']).' '.
-                \H::a(t('upload_module'), '/admin/modules/add', ['class' => 'btn btn-primary']),
+                \H::a(t('add_module'), '/admin/modules/add', ['class' => 'btn btn-primary']),
             'content' => view('modules/index', [
                 'installed' => $m->getList('installed'),
                 'uploaded' => $m->getList('uninstalled'),

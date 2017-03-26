@@ -21,4 +21,5 @@ return array(
     'activate' => 'Активировать',
     'install' => 'Установить',
     'uninstall' => 'Удалить',
+    'settings' => 'Настройки',
 );

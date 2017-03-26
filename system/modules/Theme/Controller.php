@@ -46,6 +46,7 @@ class Controller
 
         $d = document([
             'title' => t('module_theme'),
+            'header_actions' => \H::a(t('add_theme'), '/admin/theme/add', ['class' => 'btn btn-primary']),
             'content' => $content,
         ]);
         $d->addCss('module-theme', assetsDir('theme').'/css/style.css');

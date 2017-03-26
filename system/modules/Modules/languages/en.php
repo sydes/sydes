@@ -13,10 +13,7 @@ return array(
     'modules_not_installed' => 'Not installed',
     'modules_default' => 'Default',
     'check_updates' => 'Check updates',
-    'upload_module' => 'Upload',
-    'configure_module' => 'Configure',
-    'install_module' => 'Install',
-    'uninstall_module' => 'Uninstall',
+    'add_module' => 'Add module',
 
 
     'modules_for_update' => [
