@@ -21,7 +21,7 @@ class Handlers
          */
         $events->on('render.started', '*', function (Document $doc) {
             $root = '/system/assets/';
-            $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js', 0);
+            $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js', 0);
             $doc->addJs('sydes', $root.'js/sydes.js', 1);
             $doc->addJs('ajax-router', $root.'js/ajaxRouter.js', 2);
 
