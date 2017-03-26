@@ -346,7 +346,7 @@ function toSlug($str, $strict = true)
 /**
  * Check server for system requirements.
  *
- * @return array
+ * @return string
  */
 function checkServer()
 {
@@ -752,7 +752,8 @@ function removeDir($dir)
 
 function csrf_field()
 {
-    return app('csrf')->getField();
+    return '<input type="hidden" name="csrf_name" value="'.app('csrf')->getTokenName().'">
+        <input type="hidden" name="csrf_value" value="'.app('csrf')->getTokenValue().'">';
 }
 
 /**

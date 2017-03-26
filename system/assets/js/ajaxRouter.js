@@ -1,7 +1,3 @@
-function csrfMethod(method) {
-    return (/^(POST|PUT|DELETE|PATCH)$/i.test(method));
-}
-
 $.ajaxPrefilter(function(s) {
     if (!s.crossDomain && csrfMethod(s.type)) {
         s.data = s.data ? s.data+'&' : '';

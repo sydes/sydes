@@ -5,6 +5,5 @@
         <a href="<?=$return_url;?>" class="btn btn-success pull-right"><?=t('no');?></a>
     </div>
     <input type="hidden" name="confirmed" value="1">
-    <?=csrf_field();?>
     <?=method_field('delete');?>
 </form>

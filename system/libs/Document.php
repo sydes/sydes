@@ -193,6 +193,15 @@ class Document
         return $this;
     }
 
+    public function addCsrfToken($name, $value)
+    {
+        $this->js_syd['csrf'] = [
+            'name' => $name,
+            'value' => $value,
+        ];
+        return $this;
+    }
+
     /**
      * @param string $position
      * @param string $name

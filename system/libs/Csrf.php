@@ -73,8 +73,6 @@ class Csrf
 
     /**
      * Generates a new CSRF token
-     *
-     * @return array
      */
     public function generateToken()
     {
@@ -124,12 +122,6 @@ class Csrf
     public function getTokenValue()
     {
         return $this->keyPair['csrf_value'];
-    }
-
-    public function getField()
-    {
-        return '<input type="hidden" name="csrf_name" value="'.$this->getTokenName().'">
-        <input type="hidden" name="csrf_value" value="'.$this->getTokenValue().'">';
     }
 
     protected function createToken()

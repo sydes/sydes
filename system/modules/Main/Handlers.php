@@ -28,8 +28,8 @@ class Handlers
             $doc->addCss('main', $root.'css/main.css', 0);
 
             $doc->addJsSettings(['locale' => app('locale')]);
-            $doc->addScript('token', "syd.csrf.name = '".app('csrf')->getTokenName().
-                "', syd.csrf.value = '".app('csrf')->getTokenValue()."';");
+            $doc->addCsrfToken(app('csrf')->getTokenName(), app('csrf')->getTokenValue());
+
             $doc->addScript('extend', '$.extend(syd, '.json_encode($doc->js_syd, JSON_UNESCAPED_UNICODE).');');
         });
 

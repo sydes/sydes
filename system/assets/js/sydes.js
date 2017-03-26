@@ -116,4 +116,11 @@ $(document).on('click', '[data-load=modal]', function () {
     return false;
 });
 
+$(document).on('submit', 'form', function () {
+    if (!crossDomain($(this).attr('action')) && csrfMethod($(this).prop('method'))) {
+        $(this).append('<input type="hidden" name="csrf_name" value="'+syd.csrf.name+'">')
+            .append('<input type="hidden" name="csrf_value" value="'+syd.csrf.value+'">');
+    }
+})
+
 })(jQuery);

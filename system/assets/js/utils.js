@@ -125,3 +125,11 @@ function stickMenu(menu) {
         prev = $(this).scrollTop();
     });
 }
+
+function crossDomain(url) {
+    return (/^(^http)/i.test(url));
+}
+
+function csrfMethod(method) {
+    return (/^(POST|PUT|DELETE|PATCH)$/i.test(method));
+}
