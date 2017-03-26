@@ -24,6 +24,7 @@ class Handlers
             $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js', 0);
             $doc->addJs('sydes', $root.'js/sydes.js', 1);
             $doc->addJs('ajax-router', $root.'js/ajaxRouter.js', 2);
+            $doc->addJs('utils', $root.'js/utils.js', 3);
 
             $doc->addCss('main', $root.'css/main.css', 0);
 
@@ -83,7 +84,6 @@ class Handlers
             $doc->addCss('admin', $root.'css/admin.css', 14);
             $doc->addCss('skin', $root.'css/skin.black.css', 15);
 
-            $doc->addJs('utils', $root.'js/utils.js', 12);
             $doc->addJs('admin', $root.'js/admin.js', 14);
         });
 
