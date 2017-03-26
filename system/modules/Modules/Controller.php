@@ -62,14 +62,9 @@ class Controller
 
         $d = document([
             'title' => t('module_modules'),
-            'header_actions' => [
-                ['href' => '/admin/modules/updates',
-                'title' => t('check_updates'),
-                'style' => 'primary'],
-                ['href' => '/admin/modules/add',
-                'title' => t('upload_module'),
-                'style' => 'primary'],
-            ],
+            'header_actions' =>
+                \H::a(t('check_updates'), '/admin/modules/updates', ['class' => 'btn btn-primary']).' '.
+                \H::a(t('upload_module'), '/admin/modules/add', ['class' => 'btn btn-primary']),
             'content' => view('modules/index', [
                 'installed' => $m->getList('installed'),
                 'uploaded' => $m->getList('uninstalled'),

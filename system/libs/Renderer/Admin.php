@@ -34,7 +34,7 @@ class Admin extends Base
             'col_sm' => 12,
             'col_lg' => 12,
             'title' => '',
-            'header_actions' => [],
+            'header_actions' => '',
         ];
         if (!empty($doc->data['sidebar_left'])){
             $dummy['col_sm'] = $dummy['col_sm']-3;

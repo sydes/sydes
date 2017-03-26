@@ -25,9 +25,7 @@
                 <h1><?=$title;?></h1>
             </div>
             <div class="col-sm-8 text-right">
-                <?php foreach ($header_actions as $action) {
-                    echo H::a($action['title'], $action['href'], ['class' => 'btn btn-'.$action['style']]), ' ';
-                } ?>
+                <?=$header_actions?>
             </div>
         </div>
         <?php } ?>
