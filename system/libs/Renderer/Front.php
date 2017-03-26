@@ -136,10 +136,14 @@ class Front extends Base
             return '';
         }
 
+        app('event')->trigger('iblock.init', [&$name, &$args]);
+
         $page = $this->document->data;
         ob_start();
         $out = include $iblockDir.'/iblock.php';
         if (!is_null($out)) {
+            app('event')->trigger('iblock.render', [&$name, &$args]);
+
             $tplOverride = DIR_THEME.'/'.$this->theme.'/iblock/'.$name.'/views/'.$args['template'].'.php';
             $tplOriginal = $iblockDir.'/views/'.$args['template'].'.php';
 
