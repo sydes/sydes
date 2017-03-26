@@ -19,7 +19,7 @@ class Theme
         $this->theme = $theme;
         $this->themeDir = DIR_THEME.'/'.$theme.'/';
         $this->layoutDir = $this->themeDir.'layouts/';
-        $this->configFile = $this->themeDir.'config.json';
+        $this->configFile = $this->themeDir.'theme.json';
     }
 
     public function makeLayout($id, $source)
