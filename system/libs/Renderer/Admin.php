@@ -65,7 +65,7 @@ class Admin extends Base
                 'level' => 1,
                 'title' => $group['title'],
                 'icon' => $group['icon'],
-                'attr' => 'id="menu_'.$groupName.'"',
+                'attr' => ['id' => 'menu_'.$groupName],
             ];
             uasort($group['items'], 'sortByWeight');
             $path = app('request')->getUri()->getPath();
@@ -101,7 +101,7 @@ class Admin extends Base
             app('translator')->loadFrom('module', $module);
         }
 
-        return \H::treeList($menuFlat, function ($item) {
+        return \H::treeNav($menuFlat, function ($item) {
             $icon = '';
             if (isset($item['icon'])) {
                 if (strpos($item['icon'], '.')) {

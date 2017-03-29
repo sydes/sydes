@@ -34,8 +34,7 @@
     },
     "files": [
       "system/config.php",
-      "system/functions.php",
-      "system/libs/H.php"
+      "system/functions.php"
     ]
   }
 }

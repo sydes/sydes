@@ -25,6 +25,8 @@ class App
         Container::setContainer($this->container);
 
         $this->handleErrors();
+
+        class_alias('App\\Html\\BS4','H');
     }
 
     public function run($silent = false)

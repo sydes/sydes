@@ -7,6 +7,7 @@
 
 use App\Container;
 use App\Exception\AppException;
+use App\Html\Base;
 use App\Http\Redirect;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
@@ -96,6 +97,7 @@ function assetsDir($module)
  * @param string $file
  * @param array  $data
  * @return string
+ * @throws Exception
  */
 function render($file, $data = [])
 {
@@ -640,7 +642,7 @@ if (!function_exists('ifsetor')) {
  */
 function e($str)
 {
-    return htmlentities($str, ENT_QUOTES, 'UTF-8', false);
+    return Base::encode($str);
 }
 
 function restricted()
@@ -812,8 +814,8 @@ function lower($string)
 function saveButton($file = '', $button = '')
 {
     if (!$file || (is_writable($file) && is_writable(dirname($file)))) {
-        return $button ? $button : H::button(t('save'), 'submit', ['class' => 'btn btn-primary']);
+        return $button ? $button : H::submitButton(t('save'), ['class' => 'btn btn-primary']);
     } else {
-        return H::button(t('not_writable'), 'button', ['class' => 'btn btn-primary disabled']);
+        return H::button(t('not_writable'), ['class' => 'btn btn-primary disabled']);
     }
 }
