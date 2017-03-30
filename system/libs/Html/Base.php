@@ -640,4 +640,58 @@ class Base
 
         return static::ul($items, $attr);
     }
+
+    /**
+     * Gets tree from flat array
+     *
+     * @param array    $items     Flat array with elements.
+     *                            Each element must have at least 'level'.
+     *                            Each element can have 'attr' for LI and other data
+     * @param int      $max_level Maximum tree depth
+     * @param array    $attr      Attributes for UL
+     * @param callable $formatter A callback that can return a string with html
+     * @return string
+     */
+    public static function treeList(array $items, callable $formatter, array $attr = [], $max_level = 20)
+    {
+        $cur = current($items);
+        $prev_level = $cur['level'];
+        $html = '<ul'.static::attr($attr).'>';
+
+        foreach ($items as $item) {
+            if (isset($item['skip']) || $max_level < $item['level']) {
+                continue;
+            }
+
+            if ($prev_level < $item['level']) {
+                $html .= '<ul>';
+            } else {
+                $html .= str_repeat('</li></ul>', $prev_level - $item['level']);
+                $html .= '</li>';
+            }
+
+            $attr = isset($item['attr']) ? static::attr($item['attr']) : '';
+            $html .= '<li'.$attr.'>'.$formatter($item);
+            $prev_level = $item['level'];
+        }
+
+        return $html.str_repeat('</li></ul>', $prev_level);
+    }
+
+    /**
+     * @param array  $items
+     * @param string $current
+     * @param array  $attr
+     * @return string
+     */
+    public static function flatNav(array $items, $current = '', array $attr = [])
+    {
+        $html = '';
+        foreach ($items as $link => $title) {
+            $active = $current == $link ? ' class="active"' : '';
+            $html .= '<li'.$active.'><a href="'.$link.'">'.$title.'</a></li>';
+        }
+
+        return '<ul'.static::attr($attr).'>'.$html.'</ul>';
+    }
 }

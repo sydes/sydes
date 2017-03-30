@@ -119,7 +119,7 @@ class Base
                 }
             }
 
-            return \H::treeNav($menuFlat, function ($item) {
+            return \H::treeList($menuFlat, function ($item) {
                 if (count($item) < 3 && isset($item['attr'])) {
                     return ''; // first level
                 }

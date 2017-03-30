@@ -101,7 +101,7 @@ class Admin extends Base
             app('translator')->loadFrom('module', $module);
         }
 
-        return \H::treeNav($menuFlat, function ($item) {
+        return \H::treeList($menuFlat, function ($item) {
             $icon = '';
             if (isset($item['icon'])) {
                 if (strpos($item['icon'], '.')) {
