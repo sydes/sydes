@@ -819,3 +819,22 @@ function saveButton($file = '', $button = '')
         return H::button(t('not_writable'), ['class' => 'btn btn-primary disabled']);
     }
 }
+
+/**
+ * Removes an item from the array and returns its value.
+ * @param array  $arr
+ * @param string $key
+ * @param mixed $default
+ * @return mixed value
+ */
+function arrayRemove(array &$arr, $key, $default = null)
+{
+    if (!array_key_exists($key, $arr)) {
+        return $default;
+    }
+
+    $val = $arr[$key];
+    unset($arr[$key]);
+
+    return $val;
+}
