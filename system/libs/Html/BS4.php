@@ -12,6 +12,25 @@ use Psr\Http\Message\RequestInterface;
 class BS4 extends Base
 {
     /**
+     * @param string $type
+     * @param string $name
+     * @param string $value
+     * @param array  $attr
+     * @return string
+     */
+    public static function input($type, $name, $value = '', array $attr = [])
+    {
+        $attr['class'][] = 'form-control';
+
+        if (isset($attr['size'])) {
+            $attr['class'][] = 'form-control-'.$attr['size'];
+            unset($attr['size']);
+        }
+
+        return parent::input($type, $name, $value, $attr);
+    }
+
+    /**
      * @param string $label
      * @param string $input
      * @param string $help
