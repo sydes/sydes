@@ -22,12 +22,48 @@ class BS4 extends Base
     {
         $attr['class'][] = 'form-control';
 
-        if (isset($attr['size'])) {
-            $attr['class'][] = 'form-control-'.$attr['size'];
-            unset($attr['size']);
+        $prefix = '';
+        if (isset($attr['prefix'])) {
+            $texts = (array)arrayRemove($attr, 'prefix');
+            $prefix .= static::inputAddons($texts);
         }
 
-        return parent::input($type, $name, $value, $attr);
+        $suffix = '';
+        if (isset($attr['suffix'])) {
+            $texts = (array)arrayRemove($attr, 'suffix');
+            $suffix .= static::inputAddons($texts);
+        }
+
+        $groupClass = ['input-group'];
+
+        if (isset($attr['size'])) {
+            $size = arrayRemove($attr, 'size');
+            if ($prefix || $suffix) {
+                $groupClass[] = 'input-group-'.$size;
+            } else {
+                $attr['class'][] = 'form-control-'.$size;
+            }
+        }
+
+        if ($prefix || $suffix) {
+            $prefix = static::beginTag('div', ['class' => $groupClass]).$prefix;
+            $suffix .= '</div>';
+        }
+
+        $input = parent::input($type, $name, $value, $attr);
+
+        return $prefix.$input.$suffix;
+    }
+
+    protected static function inputAddons($texts)
+    {
+        $html = '';
+        foreach ($texts as $text) {
+            $btn = strpos($text, 'btn') !== false ? 'btn' : 'addon';
+            $html .= static::tag('span', $text, ['class' => 'input-group-'.$btn]);
+        }
+
+        return $html;
     }
 
     /**
@@ -84,15 +120,14 @@ class BS4 extends Base
             'last' => '&raquo;',
         ], $text);
 
-        $page = 1;
         $uri = $request->getUri();
         $path = $uri->getPath();
         parse_str($uri->getQuery(), $query);
 
-        if (isset($query['page']) && (int)$query['page'] > 0) {
-            $page = (int)$query['page'];
+        $page = (int)arrayRemove($query, 'page', 0);
+        if ($page < 1) {
+            $page = 1;
         }
-        unset($query['page']);
 
         if ($total <= $maxLinks) {
             $from = 1;
@@ -353,11 +388,7 @@ class BS4 extends Base
             return '<div>'.t('empty').'</div>';
         }
 
-        $inline = false;
-        if (isset($attr['inline'])) {
-            $inline = $attr['inline'];
-            unset($attr['inline']);
-        }
+        $inline = arrayRemove($attr, 'inline', false);
 
         if ($inline) {
             $attr['class'][] = $type;
