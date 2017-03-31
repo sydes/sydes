@@ -30,7 +30,7 @@ $all = [
                         echo H::dropdown([[
                                 'label' => t('settings'),
                                 'url' => '/admin/'.$name.'/settings',
-                                'size' => 'sm',
+                                'attr' => ['size' => 'sm'],
                             ], [
                                 'label' => t('uninstall'),
                                 'url' => 'admin/modules/'.$name.'uninstall',

@@ -158,7 +158,7 @@ class Base
 
         if (isset($attr['class'])) {
             foreach ($classes as $class) {
-                if (!in_array($class, $attr['class'])) {
+                if (!empty($class) && !in_array($class, $attr['class'])) {
                     $attr['class'][] = $class;
                 }
             }

@@ -12,11 +12,19 @@ use Psr\Http\Message\RequestInterface;
 class BS4 extends Base
 {
     /**
-     * @param string $type
-     * @param string $name
-     * @param string $value
-     * @param array  $attr
-     * @return string
+    * {@inheritdoc}
+    */
+    public static function a($text, $url = false, array $attr = [])
+    {
+        if (isset($attr['button'])) {
+            $attr = static::makeButton($attr);
+        }
+
+        return parent::a($text, $url, $attr);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public static function input($type, $name, $value = '', array $attr = [])
     {
@@ -306,23 +314,23 @@ class BS4 extends Base
         if (!$label) {
             $first = array_shift($items);
 
-            $first = static::dropdownPrepareButton($first);
+            $attr = static::makeButton(ifsetor($first['attr'], []), $used);
 
             if (isset($first['url'])) {
-                $action = static::a($first['label'], $first['url'], $first['attr']);
+                $action = static::a($first['label'], $first['url'], $attr);
             } else {
-                $first['attr']['type'] = ifsetor($first['type'], 'button');
-                $action = static::button($first['label'], $first['attr']);
+                $attr['type'] = ifsetor($first['type'], 'button');
+                $action = static::button($first['label'], $attr);
             }
 
             $drop = static::button('', [
-                'class' => ['btn', 'btn-'.$first['style'], $first['size'], 'dropdown-toggle', 'dropdown-toggle-split'],
+                'class' => ['btn', $used['button'], $used['size'], 'dropdown-toggle', 'dropdown-toggle-split'],
                 'data-toggle' => 'dropdown',
             ]);
 
             $toggle = $action.$drop;
         } else {
-            $label = static::dropdownPrepareButton($label);
+            $label['attr'] = static::makeButton($label['attr']);
             $label['attr']['class'][] = 'dropdown-toggle';
             $label['attr']['data-toggle'] = 'dropdown';
 
@@ -353,25 +361,26 @@ class BS4 extends Base
         return '<div class="btn-group '.$up.'">'.$toggle.'<div class="dropdown-menu '.$right.'">'.$menu.'</div></div>';
     }
 
-    protected static function dropdownPrepareButton($button)
+    protected static function makeButton($attr, &$used = [])
     {
-        if (!isset($button['style'])) {
-            $button['style'] = 'secondary';
+        $class = ['btn'];
+
+        $used['button'] = 'btn-'.arrayRemove($attr, 'button', 'secondary');
+        $class[] = $used['button'];
+
+        $used['size'] = '';
+        if (isset($attr['size'])) {
+            $used['size'] = 'btn-'.arrayRemove($attr, 'size');
+            $class[] = $used['size'];
         }
 
-        if (isset($button['size'])) {
-            $button['size'] = 'btn-'.$button['size'];
-        } else {
-            $button['size'] = '';
+        $used['display'] = '';
+        if (isset($attr['display'])) {
+            $used['display'] = 'btn-'.arrayRemove($attr, 'display');
+            $class[] = $used['display'];
         }
 
-        if (!isset($button['attr'])) {
-            $button['attr'] = [
-                'class' => ['btn', 'btn-'.$button['style'], $button['size']],
-            ];
-        }
-
-        return $button;
+        return static::attrAddClass($attr, $class);
     }
 
     /**
