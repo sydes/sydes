@@ -20,11 +20,18 @@ $all = [
                 <td><?=$translated[$name]['description'] ?: $module->get('description');?></td>
                 <td class="text-right">
 
-                    <?php if ($groupName == 'not_installed') { ?>
-                        <button type="button" class="btn btn-secondary btn-sm"><?=t('install');?></button>
-                    <?php } elseif ($groupName == 'default') {
-                        if ( $module->has('settings')) {
-                            echo H::a(t('settings'), '/admin/'.$name.'/settings', ['class' => 'btn btn-secondary btn-sm']);
+                    <?php if ($groupName == 'not_installed') {
+                        echo H::a(t('install'), '/admin/module/'.$name.'/install', [
+                            'button' => 'secondary',
+                            'size' => 'sm',
+                            'data-method' => 'post',
+                        ]);
+                    } elseif ($groupName == 'default') {
+                        if ($module->has('settings')) {
+                            echo H::a(t('settings'), '/admin/'.$name.'/settings', [
+                                'button' => 'secondary',
+                                'size' => 'sm',
+                            ]);
                         }
                     } else {
                         echo H::dropdown([[
@@ -33,13 +40,15 @@ $all = [
                                 'attr' => ['size' => 'sm'],
                             ], [
                                 'label' => t('uninstall'),
-                                'url' => 'admin/modules/'.$name.'uninstall',
+                                'url' => '/admin/module/'.$name.'/uninstall',
+                                'attr' => [
+                                    'data-method' => 'post',
+                                ]
                             ]]);
                          } ?>
 
                 </td>
             </tr>
-
     <?php } ?>
         </tbody>
     </table>

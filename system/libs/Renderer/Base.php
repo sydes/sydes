@@ -80,11 +80,11 @@ class Base
 
         $this->footer[] = '<ul id="notify"></ul>';
 
-        $this->footer[] = "<script>\n".implode("\n\n", $this->document->scripts)."\n</script>";
-
         if (app('user')->isLoggedIn()) {
             $this->footer[] = $this->getToolbar();
         }
+
+        $this->footer[] = "<script>\n".implode("\n\n", $this->document->scripts)."\n</script>";
 
         app('event')->trigger('footer.filled', [&$this->footer]);
     }
@@ -97,13 +97,13 @@ class Base
             foreach ($this->document->context_menu as $posName => $position) {
                 $menuFlat[] = [
                     'level' => 1,
-                    'attr'  => 'class="toolbar-'.$posName.'"',
+                    'attr'  => ['class' => 'toolbar-'.$posName],
                 ];
                 usort($position['items'], 'sortByWeight');
                 foreach ($position['items'] as $menu) {
-                    $menuFlat[] = array_merge([
+                    $menuFlat[] = array_merge_recursive([
                         'level' => 2,
-                        'attr'  => 'class="toolbar-menu"',
+                        'attr'  => ['class' => ['toolbar-menu']],
                     ], $menu);
 
                     if (!isset($menu['items'])) {
@@ -111,9 +111,9 @@ class Base
                     }
 
                     foreach ($menu['items'] as $item) {
-                        $menuFlat[] = array_merge([
+                        $menuFlat[] = array_merge_recursive([
                             'level' => 3,
-                            'attr'  => 'class="toolbar-item"',
+                            'attr'  => ['class' => ['toolbar-item']],
                         ], $item);
                     }
                 }

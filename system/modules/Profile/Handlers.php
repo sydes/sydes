@@ -19,18 +19,16 @@ class Handlers
                         'url' => '/admin/profile',
                     ],
                     'div1' => [
-                        'attr' => 'class="divider"',
+                        'attr' => ['class' => 'divider'],
                     ],
                     'logout' => [
                         'title' => 'logout',
                         'url' => '/auth/logout',
-                        'attr' => 'class="toolbar-item" id="logout"',
+                        'attr' => ['id' => 'logout'],
                     ]
                 ]
             ])
-            ->addScript('logout', "$(document).on('click', '#logout a', function (e) {
-                e.preventDefault();$.post($(this).attr('href'));
-            })");
+            ->addScript('logout', "$('#logout a').attr('data-method', 'post');");
 
         });
     }
