@@ -1,4 +1,4 @@
-var syd = syd || {'settings': {}, 'l10n': {}, 'csrf': {}};
+window.syd = {'settings': {}, 'l10n': {}, 'csrf': {}};
 
 (function ($) {
 
@@ -102,6 +102,37 @@ syd.eval = function (code, doc) {
     doc.head.appendChild(script).parentNode.removeChild(script);
 };
 
+syd.handleAction = function (event) {
+    var e = $(this),
+        method = e.data('method'),
+        action = e.attr('href'),
+        params = e.data('params');
+
+    if (!action || !action.match(/(^\/|:\/\/)/)) {
+        action = window.location.href;
+    }
+    form = $('<form/>', {method: method, action: action});
+    var target = e.attr('target');
+    if (target) {
+        form.attr('target', target);
+    }
+    if (!method.match(/(get|post)/i)) {
+        form.append($('<input/>', {name: '_method', value: method, type: 'hidden'}));
+        form.attr('method', 'POST');
+    }
+
+    if (params && $.isPlainObject(params)) {
+        $.each(params, function (key, val) {
+            form.append($('<input/>').attr({name: key, value: val, type: 'hidden'}));
+        });
+    }
+
+    form.hide().appendTo('body').trigger('submit');
+
+    event.stopImmediatePropagation();
+    return false;
+};
+
 $(document).on('click', '[data-load=modal]', function () {
     var size = $(this).data('size') || 'md';
 
@@ -121,6 +152,9 @@ $(document).on('submit', 'form', function () {
         $(this).append('<input type="hidden" name="csrf_name" value="'+syd.csrf.name+'">')
             .append('<input type="hidden" name="csrf_value" value="'+syd.csrf.value+'">');
     }
-})
+});
+
+$(document).on('click', '[data-method]', syd.handleAction)
+    .on('change', '[data-method]', syd.handleAction);
 
 })(jQuery);
