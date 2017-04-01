@@ -10,6 +10,7 @@ $all = [
     if (empty($group)) continue;
 ?>
 <div class="card box">
+    <div class="card-block">
     <h5><?=t('modules_'.$groupName);?></h5>
     <table class="table table-hover table-sm">
         <tbody>
@@ -52,5 +53,6 @@ $all = [
     <?php } ?>
         </tbody>
     </table>
+    </div>
 </div>
 <?php } ?>
