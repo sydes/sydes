@@ -176,6 +176,8 @@ class Request extends ServerRequest
         if (is_null($value) || ($value === '')) {
             throw new \RuntimeException(t('error_parameter_required', ['key' => $key]));
         }
+
+        return $value;
     }
 
     /**
@@ -223,5 +225,12 @@ class Request extends ServerRequest
         $coolies = $this->getCookieParams();
 
         return isset($coolies[$name]) ? $coolies[$name] : $default;
+    }
+
+    public function file($name, $default = null)
+    {
+        $files = $this->getUploadedFiles();
+
+        return isset($files[$name]) ? $files[$name] : $default;
     }
 }
