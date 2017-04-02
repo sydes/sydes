@@ -216,9 +216,17 @@ class App
         } else {
             $class = 'Module\\'.$route['path'][0].'\Controller';
         }
-        $instance = new $class;
 
         $result = null;
+        if (!class_exists($class)) {
+            if ($soft) {
+                return $result;
+            } else {
+                throw new \Exception(t('error_class_not_found', ['class' => $class]));
+            }
+        }
+
+        $instance = new $class;
         if (method_exists($instance, $route['method'])) {
             $result = call_user_func_array([$instance, $route['method']], ifsetor($params[1], []));
         } elseif (!$soft) {
