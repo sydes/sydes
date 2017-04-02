@@ -14,9 +14,11 @@ class Controller
     public static function routes(Route $r)
     {
         $r->get('/admin/modules', 'Modules@index');
-        $r->post('/admin/module/{name:[a-z-]+}/install', 'Modules@installModule');
-        $r->post('/admin/module/{name:[a-z-]+}/uninstall', 'Modules@uninstallModule');
+        $r->post('/admin/module/{name:[a-z-]+}', 'Modules@installModule');
+        $r->delete('/admin/module/{name:[a-z-]+}', 'Modules@uninstallModule');
+        $r->delete('/admin/module/{name:[a-z-]+}/delete', 'Modules@deleteModule');
         $r->get('/admin/modules/add', 'Modules@add');
+        $r->put('/admin/modules/add', 'Modules@upload');
         $r->get('/admin/modules/updates', 'Modules@updates');
     }
 
@@ -62,9 +64,7 @@ class Controller
 
         $d = document([
             'title' => t('module_modules'),
-            'header_actions' =>
-                \H::a(t('check_updates'), '/admin/modules/updates', ['button' => 'primary']).' '.
-                \H::a(t('add_module'), '/admin/modules/add', ['button' => 'primary']),
+            'header_actions' => \H::a(t('add_module'), '/admin/modules/add', ['button' => 'primary']),
             'content' => view('modules/index', [
                 'installed' => $m->getList('installed'),
                 'uploaded' => $m->getList('uninstalled'),
@@ -89,17 +89,50 @@ class Controller
         model('modules')->uninstall($name);
         notify(t('uninstalled'));
 
-        return back();
+        return redirect('/admin/modules');
+    }
+
+    public function deleteModule($name)
+    {
+        removeDir(DIR_MODULE.'/'.studly_case($name));
+        notify(t('deleted'));
+
+        return redirect('/admin/modules');
     }
 
     public function add()
     {
         $d = document([
-            'title' => 'Загрузка модуля',
-            'content' => 'форма загрузки, поле для ссылки на архив, браузер расширений',
+            'title' => t('module_upload'),
+            'content' => view('modules/add'),
+            'form_url' => '/admin/modules/add',
+            'form_method' => 'PUT',
         ]);
 
         return $d;
+    }
+
+    public function upload()
+    {
+        $url = app('request')->input('url');
+        $file = app('request')->file('file');
+
+        if (!empty($url)) {
+            $name = model('modules')->uploadByUrl($url);
+        } elseif ($file->getSize() > 0) {
+            $name = model('modules')->uploadByFile($file);
+        } else {
+            return back();
+        }
+
+        notify(t('uploaded'));
+
+        if (app('request')->has('install')) {
+            model('modules')->install($name);
+            notify(t('installed'));
+        }
+
+        return back();
     }
 
     public function updates()

@@ -1,7 +1,7 @@
 <?php
 return array(
     'module_modules' => 'Modules',
-    'module_modules_description' => 'Modules manager, access to extension catalog',
+    'module_modules_description' => 'Modules manager',
 
     'menu_modules' => 'Modules',
     'menu_constructors' => 'Constructors',
@@ -15,6 +15,15 @@ return array(
     'check_updates' => 'Check updates',
     'add_module' => 'Add module',
 
+    'module_upload' => 'Module upload',
+    'module_upload_file' => 'From computer',
+    'module_upload_url' => 'Via url to archive',
+    'only_zip_supported' => 'Only ZIP archives supported',
+    'not_found_module_in_archive' => 'Can\'t find module in archive',
+
+    'and_install' => 'and install',
+
+    'delete_module' => 'Delete module',
 
     'modules_for_update' => [
         'One module wants to update',

@@ -22,11 +22,16 @@ $all = [
                 <td class="text-right">
 
                     <?php if ($groupName == 'not_installed') {
-                        echo H::a(t('install'), '/admin/module/'.$name.'/install', [
-                            'button' => 'secondary',
-                            'size' => 'sm',
-                            'data-method' => 'post',
-                        ]);
+                        echo H::dropdown([[
+                            'label' => t('install'),
+                            'url' => '/admin/module/'.$name,
+                            'attr' => ['size' => 'sm', 'data-method' => 'post'],
+                        ], [
+                            'label' => t('delete_module'),
+                            'url' => '/admin/module/'.$name.'/delete',
+                            'attr' => ['data-method' => 'delete']
+                        ]]);
+
                     } elseif ($groupName == 'default') {
                         if ($module->has('settings')) {
                             echo H::a(t('settings'), '/admin/'.$name.'/settings', [
@@ -35,18 +40,24 @@ $all = [
                             ]);
                         }
                     } else {
-                        echo H::dropdown([[
-                                'label' => t('settings'),
-                                'url' => '/admin/'.$name.'/settings',
-                                'attr' => ['size' => 'sm'],
-                            ], [
-                                'label' => t('uninstall'),
-                                'url' => '/admin/module/'.$name.'/uninstall',
-                                'attr' => [
-                                    'data-method' => 'post',
-                                ]
-                            ]]);
-                         } ?>
+                        if ($module->has('settings')) {
+                            echo H::dropdown([[
+                                    'label' => t('settings'),
+                                    'url' => '/admin/'.$name.'/settings',
+                                    'attr' => ['size' => 'sm'],
+                                ], [
+                                    'label' => t('uninstall'),
+                                    'url' => '/admin/module/'.$name,
+                                    'attr' => ['data-method' => 'delete']
+                                ]]);
+                        } else {
+                            echo H::a(t('uninstall'), '/admin/module/'.$name, [
+                                'button' => 'secondary',
+                                'size' => 'sm',
+                                'data-method' => 'delete',
+                            ]);
+                        }
+                    } ?>
 
                 </td>
             </tr>
