@@ -1,0 +1,6 @@
+{
+  "name": "Fields API",
+  "description": "Provides api for creating/using form fields, like text, images, lists",
+  "version": "1.0",
+  "settings": true
+}
