@@ -742,6 +742,8 @@ function write_ini_file($file, array $array, $process_sections = false)
  */
 function removeDir($dir)
 {
+    if (!is_dir($dir)) return;
+
     $d = opendir($dir);
     while (($entry = readdir($d)) !== false) {
         if ($entry != "." && $entry != "..") {
