@@ -28,7 +28,12 @@ class BS4 extends Base
      */
     public static function input($type, $name, $value = '', array $attr = [])
     {
-        $attr['class'][] = 'form-control';
+        if ($type == 'file') {
+            $attr['class'][] = 'form-control-file';
+        } elseif (in_array($type, ['text', 'password', 'datetime-local', 'date', 'month',
+            'time', 'week', 'number', 'email', 'url', 'search', 'tel', 'color'])) {
+            $attr['class'][] = 'form-control';
+        }
 
         $prefix = '';
         if (isset($attr['prefix'])) {
@@ -72,6 +77,13 @@ class BS4 extends Base
         }
 
         return $html;
+    }
+
+    public static function button($label = 'Button', array $attr = [])
+    {
+        $attr = static::makeButton($attr);
+
+        return parent::button($label, $attr);
     }
 
     /**
@@ -399,20 +411,17 @@ class BS4 extends Base
 
         $inline = arrayRemove($attr, 'inline', false);
 
+        $divClass = ['form-check'];
         if ($inline) {
-            $attr['class'][] = $type;
-            $pre = '<label class="'.$type.'-inline">';
-            $post = '</label>';
-        } else {
-            $pre = '<div class="'.$type.'"><label>';
-            $post = '</label></div>';
+            $divClass[] = 'form-check-inline';
         }
 
         $html = '';
         foreach ($items as $value => $title) {
-            $html .= $pre.static::input($type, $name, $value, [
-                    'checked' => in_array($value, (array)$selected, true)
-                ]).' '.$title.$post;
+            $html .= static::tag('div', static::tag('label', static::input($type, $name, $value, [
+                        'checked' => in_array($value, (array)$selected, true),
+                        'class' => ['form-check-input'],
+                    ]).' '.$title, ['class' => ['form-check-label']]), ['class' => $divClass]);
         }
 
         return '<div'.static::attr($attr).'>'.$html.'</div>';
