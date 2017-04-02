@@ -34,6 +34,7 @@
 
         <?php if ($form_url) { ?>
             <form class="main row" name="main" method="post" enctype="multipart/form-data" action="<?=$form_url;?>">
+            <?php if ($form_method) { echo method_field($form_method); } ?>
         <?php } else { ?>
             <div class="main row">
         <?php } ?>

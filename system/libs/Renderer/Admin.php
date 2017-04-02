@@ -26,6 +26,7 @@ class Admin extends Base
             'footer' => implode("\n    ", $this->footer),
             'menu' => $this->getMenu(),
             'form_url' => '',
+            'form_method' => '',
             'sidebar_left' => '',
             'content' => '',
             'sidebar_right' => '',
