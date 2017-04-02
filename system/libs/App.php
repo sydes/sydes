@@ -42,13 +42,14 @@ class App
         $this->container['section'] = ($path == '/admin' || strpos($path, '/admin/') === 0) ? 'admin' : 'front';
 
         $this->findSite();
+
+        $this->findLocale($path);
+        $this->container['translator']->init($this->container['locale']);
+
         $this->loadFilesAndHandlers();
 
         $events = $this->container['event'];
         $events->trigger('site.found');
-
-        $this->findLocale($path);
-        $this->container['translator']->init($this->container['locale']);
 
         $route = $this->findRoute($path);
 
