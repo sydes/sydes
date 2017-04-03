@@ -739,10 +739,11 @@ function write_ini_file($file, array $array, $process_sections = false)
  * Remove directory with all content
  *
  * @param string $dir Path to target folder
+ * @return bool|null
  */
 function removeDir($dir)
 {
-    if (!is_dir($dir)) return;
+    if (!is_dir($dir)) return null;
 
     $d = opendir($dir);
     while (($entry = readdir($d)) !== false) {
@@ -751,7 +752,8 @@ function removeDir($dir)
         }
     }
     closedir($d);
-    rmdir($dir);
+
+    return rmdir($dir);
 }
 
 function csrf_field()
