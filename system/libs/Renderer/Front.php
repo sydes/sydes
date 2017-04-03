@@ -7,10 +7,12 @@
 namespace App\Renderer;
 
 use App\Document;
+use App\Settings\Container;
 use H;
 
 class Front extends Base
 {
+    /** @var Container */
     private $config;
     private $theme;
     private $themePath;
@@ -25,17 +27,17 @@ class Front extends Base
         $this->config = app('theme')->getConfig();
         $this->themePath = '/themes/'.$this->theme;
 
-        if (isset($this->config['js'])) {
+        if ($this->config->has('js')) {
             $i = 600;
-            foreach ($this->config['js'] as $key => $source) {
+            foreach ($this->config->get('js') as $key => $source) {
                 $source = $this->prependPath($source);
                 $this->document->addJs($key, $source, $i++);
             }
         }
 
-        if (isset($this->config['css'])) {
+        if ($this->config->has('css')) {
             $i = 600;
-            foreach ($this->config['css'] as $key => $source) {
+            foreach ($this->config->get('css') as $key => $source) {
                 $source = $this->prependPath($source);
                 $this->document->addCss($key, $source, $i++);
             }
@@ -87,11 +89,7 @@ class Front extends Base
     {
         $theme = app('theme');
         $data = $theme->getLayout($layout);
-
-        $i = 0;
-        while (isset($data['extends']) && $i++ != 10) {
-            $data = $theme->extendLayout($data);
-        }
+        $data = $theme->extendLayout($data);
 
         return $data['content'];
     }
@@ -173,7 +171,7 @@ class Front extends Base
 
     public function data($key)
     {
-        return ifsetor($this->config['data'][$key], false);
+        return ifsetor($this->config->get('data')[$key], false);
     }
 
     private function prependPath($source)
