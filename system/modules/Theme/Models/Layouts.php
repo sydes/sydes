@@ -8,7 +8,6 @@ namespace Module\Theme\Models;
 
 class Layouts
 {
-    private $theme;
     private $dir;
     private $list = [];
     private $data = [];
@@ -16,7 +15,6 @@ class Layouts
 
     public function __construct($theme)
     {
-        $this->theme = $theme;
         $this->dir = DIR_THEME.'/'.$theme.'/layouts/';
         $this->list = str_replace([$this->dir, '.'.$this->ext], '', glob($this->dir.'*.'.$this->ext));
 
