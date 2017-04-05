@@ -14,7 +14,7 @@ class Front extends Base
 {
     /** @var Container */
     private $config;
-    private $theme;
+    private $themeName;
     private $themePath;
 
     public function render(Document $doc)
@@ -44,7 +44,7 @@ class Front extends Base
             }
         }
 
-        app('translator')->loadFrom('theme', $this->theme);
+        app('translator')->loadFrom('theme', $this->themeName);
 
         $layout = ifsetor($doc->data['layout'], 'page');
         $template = $theme->getLayouts()->getExtended($layout);
@@ -134,7 +134,7 @@ class Front extends Base
         if (!is_null($out)) {
             app('event')->trigger('iblock.render', [&$name, &$args]);
 
-            $tplOverride = DIR_THEME.'/'.$this->theme.'/iblock/'.$name.'/views/'.$args['template'].'.php';
+            $tplOverride = DIR_THEME.'/'.$this->themeName.'/iblock/'.$name.'/views/'.$args['template'].'.php';
             $tplOriginal = $iblockDir.'/views/'.$args['template'].'.php';
 
             if (is_file($tplOverride)) {
