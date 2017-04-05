@@ -45,7 +45,7 @@ class Cli
                     if ($extension == 'module') {
                         app('cmf')->installModule($name);
                     } else {
-                        model('theme')->activate($name);
+                        model('Theme')->activate($name);
                     }
 
                     $you->say('You installed '.$extension.' '.$name);

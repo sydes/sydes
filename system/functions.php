@@ -663,7 +663,7 @@ function restricted()
 function model($module)
 {
     $part = strpos($module, '/') !== false ? explode('/', $module) : [$module, $module];
-    $class = 'Module\\'.studly_case($part[0]).'\\Models\\'.studly_case($part[1]);
+    $class = 'Module\\'.$part[0].'\\Models\\'.$part[1];
 
     return new $class();
 }

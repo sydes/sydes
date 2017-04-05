@@ -47,7 +47,7 @@ class Controller
 
     public function index()
     {
-        $m = model('modules');
+        $m = model('Modules');
 
         $translated = [];
         foreach ($m->all() as $module) {
@@ -78,7 +78,7 @@ class Controller
 
     public function installModule($name)
     {
-        model('modules')->install($name);
+        model('Modules')->install($name);
         notify(t('installed'));
 
         return back();
@@ -86,7 +86,7 @@ class Controller
 
     public function uninstallModule($name)
     {
-        model('modules')->uninstall($name);
+        model('Modules')->uninstall($name);
         notify(t('uninstalled'));
 
         return redirect('/admin/modules');
@@ -118,9 +118,9 @@ class Controller
         $file = app('request')->file('file');
 
         if (!empty($url)) {
-            $name = model('modules')->uploadByUrl($url);
+            $name = model('Modules')->uploadByUrl($url);
         } elseif ($file->getSize() > 0) {
-            $name = model('modules')->uploadByFile($file);
+            $name = model('Modules')->uploadByFile($file);
         } else {
             return back();
         }
@@ -128,7 +128,7 @@ class Controller
         notify(t('uploaded'));
 
         if (app('request')->has('install')) {
-            model('modules')->install($name);
+            model('Modules')->install($name);
             notify(t('installed'));
         }
 

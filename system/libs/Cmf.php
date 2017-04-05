@@ -68,7 +68,7 @@ class Cmf
         app()['siteId'] = '1';
         app('site')->update($site);
 
-        $modules = model('modules');
+        $modules = model('Modules');
 
         $locales = ['en', $params['locale']];
         foreach ($locales as $locale) {

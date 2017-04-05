@@ -109,7 +109,7 @@ class App
             return ['Main@error', ['code' => 404]];
         }
 
-        return model('route')->findOrFail($path);
+        return model('Route')->findOrFail($path);
     }
 
     private function loadConfig()

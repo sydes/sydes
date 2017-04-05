@@ -16,7 +16,7 @@ class Handlers
         $events->on('site.found', '*', function () {
             app('translator')->loadFrom('module', 'Fields');
 
-            model('fields')->register('text', [
+            model('Fields')->register('text', [
                 'name' => t('field_text'),
                 'class' => 'Module\\Fields\\Field\\TextField',
                 'description' => t('field_text_description'),

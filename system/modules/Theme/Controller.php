@@ -36,7 +36,7 @@ class Controller
 
     public function index()
     {
-        $themes = model('theme')->all();
+        $themes = model('Theme')->all();
 
         $name = app('site')->get('theme');
         $current = $themes[$name];
@@ -61,7 +61,7 @@ class Controller
 
     public function activate($name)
     {
-        model('theme')->activate($name);
+        model('Theme')->activate($name);
 
         return back();
     }
