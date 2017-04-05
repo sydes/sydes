@@ -18,7 +18,7 @@ class SiteHandler extends BaseHandler
 
             $doc = document();
             if (app('section') == 'front') {
-                if (app('theme')->hasLayout('error'.$e->getCode())) {
+                if (model('Theme')->getLayouts()->exists('error'.$e->getCode())) {
                     $doc->data['layout'] = 'error'.$e->getCode();
                 } else {
                     $doc->data['content'] = '<h1>'.t('error_'.$e->getCode().'_text').'</h1><p>'.$e->getMessage().'</p>';

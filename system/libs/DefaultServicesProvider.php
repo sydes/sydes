@@ -131,16 +131,6 @@ class DefaultServicesProvider
             };
         };
 
-        if (!isset($c['theme'])) {
-            /**
-             * @param $c
-             * @return Theme
-             */
-            $c['theme'] = function ($c) {
-                return new Theme($c['site']->get('theme'));
-            };
-        };
-
         if (!isset($c['user'])) {
             /**
              * @param $c

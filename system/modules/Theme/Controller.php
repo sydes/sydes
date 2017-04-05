@@ -7,7 +7,6 @@
 namespace Module\Theme;
 
 use App\AdminMenu;
-use App\Theme;
 use App\Route;
 
 class Controller
@@ -36,7 +35,7 @@ class Controller
 
     public function index()
     {
-        $themes = model('Theme')->all();
+        $themes = model('Theme')->getAll();
 
         $name = app('site')->get('theme');
         $current = $themes[$name];
@@ -74,7 +73,7 @@ class Controller
             return back();
         }
 
-        $theme = new Theme($name);
+        $theme = new Models\Theme($name);
         $theme->delete();
 
         notify(t('deleted'));

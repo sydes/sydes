@@ -23,9 +23,10 @@ class Front extends Base
 
         $this->prepare($doc);
 
-        $this->theme = app('site')->get('theme');
-        $this->config = app('theme')->getConfig();
-        $this->themePath = '/themes/'.$this->theme;
+        $theme = model('Theme');
+        $this->themeName = $theme->getName();
+        $this->config = $theme->getConfig();
+        $this->themePath = '/themes/'.$this->themeName;
 
         if ($this->config->has('js')) {
             $i = 600;
@@ -46,7 +47,7 @@ class Front extends Base
         app('translator')->loadFrom('theme', $this->theme);
 
         $layout = ifsetor($doc->data['layout'], 'page');
-        $template = $this->getTemplate($layout);
+        $template = $theme->getLayouts()->getExtended($layout);
         $template = str_replace('{content}', ifsetor($doc->data['content']), $template);
         $template = $this->compile($template);
         unset($doc->data['content']);
@@ -83,15 +84,6 @@ class Front extends Base
 
         app('event')->trigger('render.ended', [&$template]);
         return preg_replace('!{\w+}!', '', $template);
-    }
-
-    private function getTemplate($layout)
-    {
-        $theme = app('theme');
-        $data = $theme->getLayout($layout);
-        $data = $theme->extendLayout($data);
-
-        return $data['content'];
     }
 
     private function compile($html)
