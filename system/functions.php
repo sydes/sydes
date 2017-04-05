@@ -657,7 +657,7 @@ function restricted()
 /**
  * Loads model of the specified module
  *
- * @param string $module Use like module-name or module-name/model-name
+ * @param string $module Use like ModuleName or ModuleName/ModelName
  * @return object
  */
 function model($module)
