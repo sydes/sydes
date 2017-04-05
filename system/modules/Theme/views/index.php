@@ -2,15 +2,7 @@
     <img class="screenshot" src="<?=$current['screenshot'];?>" alt="<?=$current['name'];?>">
     <div class="data">
         <div class="h3"><?=$current['name'];?> <small>v<?=$current['version'];?></small></div>
-        <div>
-            <?php if (empty($current['authors'])) {
-                echo 'Unknown';
-            } else {
-                foreach ($current['authors'] as $author) {
-                    echo H::a($author['name'], $author['homepage'], ['target' => '_blank']);
-                }
-            }?>
-        </div>
+        <div><?=themeRenderAuthors($current['authors']);?></div>
         <p><?=$current['description'];?></p>
     </div>
 </div>
@@ -25,23 +17,15 @@
                 </a>
                 <div class="card-block">
                     <h5 class="card-title"><?=$item['name'];?> <small>v<?=$item['version'];?></small></h5>
-                    <div class="authors"><?=t('by')?>
-                        <?php if (empty($item['authors'])) {
-                            echo 'Unknown';
-                        } else {
-                            foreach ($item['authors'] as $author) {
-                                echo H::a($author['name'], $author['homepage'], ['target' => '_blank']);
-                            }
-                        }?>
-                    </div>
+                    <div class="authors"><?=themeRenderAuthors($item['authors'], 2);?></div>
                     <div>
-                        <form action="/admin/theme/<?=$themeName;?>" method="post" class="pull-right">
-                            <?=method_field('delete');?>
-                            <button type="submit" class="btn btn-outline-danger btn-sm"><?=t('delete');?></button>
-                        </form>
-                        <form action="/admin/theme/<?=$themeName;?>/activate" method="post">
-                            <button type="submit" class="btn btn-success btn-sm"><?=t('activate');?></button>
-                        </form>
+                        <a href="/admin/theme/<?=$themeName;?>" data-method="delete"
+                           class="btn btn-outline-danger btn-sm pull-right">
+                            <?=t('delete');?>
+                        </a>
+                        <a href="/admin/theme/<?=$themeName;?>/activate" data-method="post" class="btn btn-success btn-sm">
+                            <?=t('activate');?>
+                        </a>
                     </div>
                 </div>
             </div>
