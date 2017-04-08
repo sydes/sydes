@@ -33,7 +33,7 @@
       ]
     },
     "files": [
-      "system/config.php",
+      "system/defines.php",
       "system/functions.php"
     ]
   }
