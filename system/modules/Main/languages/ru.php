@@ -5,6 +5,7 @@ return array(
     'error_class_not_found' => 'Класс {class} не найден',
     'error_method_not_found' => 'Метод {method} не найден в {class}',
     'error_module_folder_not_found' => 'Директория модуля {module} не найдена',
+    'error_iblock_not_found' => 'Инфоблок {name} не найден',
 
     'confirm_deletion' => 'Вы действительно хотите удалить это?',
 

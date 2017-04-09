@@ -38,13 +38,13 @@ function pre($array, $return = false)
  */
 function iblockDir($name)
 {
-    $places = [DIR_THEME.'/'.app('site')->get('theme'), DIR_APP];
+    if ($dir = model('Themes')->getActive()->getIblockDir($name)) {
+        return $dir;
+    }
 
-    foreach ($places as $place) {
-        $path = $place.'/iblocks/'.$name;
-        if (file_exists($path.'/iblock.php')) {
-            return $path;
-        }
+    $dir = DIR_APP.'/iblocks/'.$name;
+    if (file_exists($dir.'/iblock.php')) {
+        return $dir;
     }
 
     foreach (app('site')->get('modules') as $modName => $module) {

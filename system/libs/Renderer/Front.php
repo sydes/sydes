@@ -7,14 +7,12 @@
 namespace App\Renderer;
 
 use App\Document;
-use App\Settings\Container;
-use H;
+use Module\Themes\Models\Theme;
 
 class Front extends Base
 {
-    /** @var Container */
-    private $config;
-    private $themeName;
+    /** @var Theme */
+    private $theme;
     private $themePath;
 
     public function render(Document $doc)
@@ -23,31 +21,15 @@ class Front extends Base
 
         $this->prepare($doc);
 
-        $theme = model('Theme');
-        $this->themeName = $theme->getName();
-        $this->config = $theme->getConfig();
-        $this->themePath = '/themes/'.$this->themeName;
+        $this->theme = model('Themes')->getActive();
+        $this->themePath = '/themes/'.$this->theme->getId();
 
-        if ($this->config->has('js')) {
-            $i = 600;
-            foreach ($this->config->get('js') as $key => $source) {
-                $source = $this->prependPath($source);
-                $this->document->addJs($key, $source, $i++);
-            }
-        }
+        $this->addThemeAssets();
 
-        if ($this->config->has('css')) {
-            $i = 600;
-            foreach ($this->config->get('css') as $key => $source) {
-                $source = $this->prependPath($source);
-                $this->document->addCss($key, $source, $i++);
-            }
-        }
-
-        app('translator')->loadFrom('theme', $this->themeName);
+        app('translator')->loadFrom('theme', $this->theme->getId());
 
         $layout = ifsetor($doc->data['layout'], 'page');
-        $template = $theme->getLayouts()->getExtended($layout);
+        $template = $this->theme->getLayouts()->getExtended($layout);
         $template = str_replace('{content}', ifsetor($doc->data['content']), $template);
         $template = $this->compile($template);
         unset($doc->data['content']);
@@ -61,7 +43,7 @@ class Front extends Base
         $this->fillHead();
 
         foreach ($doc->links as $link) {
-            $this->head[] = '<link'.H::attr($link).'>';
+            $this->head[] = '<link'.\H::attr($link).'>';
         }
 
         $this->fillFooter();
@@ -83,12 +65,13 @@ class Front extends Base
         $template = str_replace($find, $replace, $template);
 
         app('event')->trigger('render.ended', [&$template]);
-        return preg_replace('!{\w+}!', '', $template);
+
+        return $template;
     }
 
     private function compile($html)
     {
-        if (!preg_match_all('/{(iblock|t|data):([\w-]+)( .+?)?}/', $html, $matches)) {
+        if (!preg_match_all('/{(iblock|t|data):([\w-]+)( .+?)?}/u', $html, $matches)) {
             return $html;
         }
 
@@ -98,7 +81,7 @@ class Front extends Base
 
             $params = [];
             if (!empty($matches[3][$i])) {
-                $params = H::parseAttr(str_replace(['&amp;', '&quot;'], ['&', '"'], $matches[3][$i]));
+                $params = \H::parseAttr(str_replace(['&amp;', '&quot;'], ['&', '"'], $matches[3][$i]));
             }
 
             $content = $this->$method($matches[2][$i], $params);
@@ -134,13 +117,12 @@ class Front extends Base
         if (!is_null($out)) {
             app('event')->trigger('iblock.render', [&$name, &$args]);
 
-            $tplOverride = DIR_THEME.'/'.$this->themeName.'/iblock/'.$name.'/views/'.$args['template'].'.php';
-            $tplOriginal = $iblockDir.'/views/'.$args['template'].'.php';
+            $template = $iblockDir.'/views/'.$args['template'].'.php';
 
-            if (is_file($tplOverride)) {
-                include $tplOverride;
-            } elseif (is_file($tplOriginal)) {
-                include $tplOriginal;
+            if ($tpl = $this->theme->getIblockTemplate($name, $args['template'])) {
+                include $tpl;
+            } elseif (is_file($template)) {
+                include $template;
             } elseif ($args['template'] != 'default') {
                 ob_end_clean();
                 return t('error_iblock_template_not_found', ['template' => $args['template'], 'name' => $name]);
@@ -161,18 +143,27 @@ class Front extends Base
         return app('translator')->translate($text);
     }
 
-    public function data($key)
+    public function settings($key)
     {
-        return ifsetor($this->config->get('data')[$key], false);
+        return $this->theme->getSettings($key);
     }
 
-    private function prependPath($source)
+    public function data($key)
     {
-        $arr = [];
-        foreach ((array)$source as $path) {
-            $arr[] = ($path[0] != '/' && substr($path, 0, 4) != 'http') ? $this->themePath.'/'.$path : $path;
+        return $this->theme->getData($key);
+    }
+
+    private function addThemeAssets()
+    {
+        $i = 600;
+        foreach ($this->theme->getAssets('js') as $key => $source) {
+            $this->document->addJs($key, $source, $i++);
         }
-        return $arr;
+
+        $i = 600;
+        foreach ($this->theme->getAssets('css') as $key => $source) {
+            $this->document->addCss($key, $source, $i++);
+        }
     }
 
     public function findMetaTags($doc)

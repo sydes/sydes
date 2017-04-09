@@ -23,7 +23,7 @@
                            class="btn btn-outline-danger btn-sm pull-right">
                             <?=t('delete');?>
                         </a>
-                        <a href="/admin/theme/<?=$themeName;?>/activate" data-method="post" class="btn btn-success btn-sm">
+                        <a href="/admin/theme/<?=$themeName;?>" data-method="post" class="btn btn-success btn-sm">
                             <?=t('activate');?>
                         </a>
                     </div>
