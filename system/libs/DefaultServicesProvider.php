@@ -143,10 +143,11 @@ class DefaultServicesProvider
 
         if (!isset($c['logger'])) {
             /**
+             * @param $c
              * @return Logger
              */
-            $c['logger'] = function () {
-                return new Logger(DIR_LOG.'/'.date('Ym').'.log');
+            $c['logger'] = function ($c) {
+                return new Logger(DIR_LOG.'/'.date('Ym').'.log', $c['request']->getIp());
             };
         };
 

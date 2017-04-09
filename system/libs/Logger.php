@@ -10,10 +10,12 @@ namespace App;
 class Logger
 {
     private $file;
+    private $ip;
 
-    public function __construct($file)
+    public function __construct($file, $ip)
     {
         $this->file = $file;
+        $this->ip = $ip;
     }
 
     public function emergency($message, array $context = [])
@@ -58,12 +60,8 @@ class Logger
 
     public function log($level, $message, array $context = [])
     {
-        $message = htmlspecialchars($message);
-        $date = date('r');
-        $ip = app('request')->getIp();
+        $row = $level.' | '.date('r').' | '.$this->ip.' | '.str_replace("\n", " ", interpolate($message, $context))."\n";
 
-        $row = "$date | $ip | $level | ".str_replace("\n", " ", interpolate($message, $context))."\n";
-
-        file_put_contents($this->file, $row, FILE_APPEND | LOCK_EX);
+        return file_put_contents($this->file, e($row), FILE_APPEND | LOCK_EX);
     }
 }
