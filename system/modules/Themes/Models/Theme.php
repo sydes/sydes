@@ -142,6 +142,10 @@ class Theme
             }
         }
 
+        if (is_file($this->dir.'/custom.'.$code)) {
+            $data['custom'] = '/themes/'.$this->id.'/custom.'.$code;
+        }
+
         return $data;
     }
 

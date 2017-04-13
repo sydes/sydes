@@ -48,8 +48,7 @@
     ],
     "lightbox": "//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js",
     "theme": [
-      "assets/js/main.js",
-      "custom.js"
+      "assets/js/main.js"
     ]
   },
   "css": {
@@ -58,7 +57,6 @@
     "theme": [
       "assets/css/main.css",
       "assets/css/color1.css"
-    ],
-    "custom": "custom.css"
+    ]
   }
 }
