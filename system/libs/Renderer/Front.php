@@ -119,7 +119,7 @@ class Front extends Base
 
             $template = $iblockDir.'/views/'.$args['template'].'.php';
 
-            if ($tpl = $this->theme->getIblockTemplate($name, $args['template'])) {
+            if ($tpl = $this->theme->getThemedView('iblock', $name, $args['template'])) {
                 include $tpl;
             } elseif (is_file($template)) {
                 include $template;

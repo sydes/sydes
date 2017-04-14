@@ -172,14 +172,18 @@ class Theme
         return false;
     }
 
-    public function getIblockTemplate($iblock, $template)
+    public function getThemedView($entity, $name, $view)
     {
-        $dir = $this->dir.'/iblocks/'.$iblock.'/views/'.$template.'.php';
+        $places = [
+            'iblock' => $this->dir.'/iblocks/'.$name.'/views/'.$view.'.php',
+            'module' => $this->dir.'/modules/'.$name.'/'.$view.'.php'
+        ];
+        $dir = $places[$entity];
 
         if (file_exists($dir)) {
             return $dir;
         } elseif ($this->parentTheme) {
-            return $this->parentTheme->getIblockTemplate($iblock, $template);
+            return $this->parentTheme->getThemedView($entity, $name, $view);
         }
 
         return false;

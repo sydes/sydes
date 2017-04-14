@@ -39,15 +39,16 @@ class View
         $context = $this->module.'/'.$this->view;
         app('event')->trigger('view.render.started', [&$this->module, &$this->view, &$this->data], $context);
 
-        $file_override = DIR_THEME.'/'.app('site')->get('theme').'/modules/'.$this->view.'.php';
-        $file = moduleDir($this->module).'/views/'.$this->view.'.php';
-        if (file_exists($file_override)) {
-            $html = render($file_override, $this->data);
-        } elseif (file_exists($file)) {
-            $html = render($file, $this->data);
+        $original = moduleDir($this->module).'/views/'.$this->view.'.php';
+
+        if ($override = model('Themes')->getActive()->getThemedView('module', $this->module, $this->view)) {
+            $file = $override;
+        } elseif (is_file($original)) {
+            $file = $original;
         } else {
-            throw new \RuntimeException(t('error_file_not_found', ['file' => $file]));
+            throw new \RuntimeException(t('error_file_not_found', ['file' => $original]));
         }
+        $html = render($file, $this->data);
 
         app('event')->trigger('view.render.ended', [&$html], $context);
 
