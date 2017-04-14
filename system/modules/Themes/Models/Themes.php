@@ -37,7 +37,7 @@ class Themes
      */
     public function activate($id)
     {
-        app('site')->set('theme', $id);
+        app('site')->set('theme', $id)->save();
     }
 
     /**

@@ -11,7 +11,6 @@ class Container
     private $data = [];
     private $entity;
     private $driver;
-    private $changed = false;
 
     public function __construct($entity, DriverInterface $driver)
     {
@@ -20,22 +19,14 @@ class Container
         $this->data = $driver->get($entity);
     }
 
-    public function __destruct()
-    {
-        if ($this->changed) {
-            $this->commit();
-        }
-    }
-
     /**
      * Sends data to database.
      *
      * @return self
      */
-    public function commit()
+    public function save()
     {
         $this->driver->set($this->entity, $this->data);
-        $this->changed = false;
 
         return $this;
     }
@@ -70,7 +61,6 @@ class Container
         } else {
             $this->data[$key] = $value;
         }
-        $this->changed = true;
 
         return $this;
     }
@@ -81,10 +71,9 @@ class Container
      * @param array $data
      * @return $this
      */
-    public function update(array $data)
+    public function merge(array $data)
     {
         $this->data = array_merge($this->data, $data);
-        $this->changed = true;
 
         return $this;
     }
@@ -102,7 +91,6 @@ class Container
         } else {
             unset($this->data[$key]);
         }
-        $this->changed = true;
 
         return $this;
     }

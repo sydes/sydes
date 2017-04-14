@@ -59,7 +59,7 @@ class Modules
 
         $modules[$name] = $data;
 
-        app('site')->set('modules', $modules);
+        app('site')->set('modules', $modules)->save();
 
         \App\App::execute([$name.'@install', [app('adminMenu')]], true);
 
@@ -76,7 +76,7 @@ class Modules
         if (isset($modules[$name])) {
             unset($modules[$name]);
 
-            app('site')->set('modules', $modules);
+            app('site')->set('modules', $modules)->save();
 
             \App\App::execute([$name.'@uninstall', [app('adminMenu')]], true);
 

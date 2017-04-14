@@ -66,7 +66,7 @@ class Cmf
         ];
         mkdir(DIR_SITE.'/1');
         app()['siteId'] = '1';
-        app('site')->update($site);
+        app('site')->merge($site)->save();
 
         $modules = model('Modules');
 

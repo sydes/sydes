@@ -32,7 +32,7 @@ class AdminMenu
                 'items'  => [],
             ];
 
-            app('site')->set('menu', $this->menu);
+            app('site')->set('menu', $this->menu)->save();
         }
 
         return $this;
@@ -47,7 +47,7 @@ class AdminMenu
         if (isset($this->menu[$group])) {
             unset($this->menu[$group]);
 
-            app('site')->set('menu', $this->menu);
+            app('site')->set('menu', $this->menu)->save();
         }
 
         return $this;
@@ -67,7 +67,7 @@ class AdminMenu
         $temp = &$this->selectBy($path);
         $temp['items'][$item] = array_merge(['weight' => $weight], $data);
 
-        app('site')->set('menu', $this->menu);
+        app('site')->set('menu', $this->menu)->save();
 
         return $this;
     }
@@ -84,7 +84,7 @@ class AdminMenu
         $temp = &$this->selectBy($path);
         unset($temp['items'][$item]);
 
-        app('site')->set('menu', $this->menu);
+        app('site')->set('menu', $this->menu)->save();
 
         return $this;
     }
