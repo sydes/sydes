@@ -17,7 +17,7 @@ class Container extends PimpleContainer
      */
     private $defaultSettings = [
         'cacheRouter'   => true,
-        'showErrorInfo' => 0,
+        'debugLevel' => 0,
         'checkUpdates'  => true,
     ];
 

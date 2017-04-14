@@ -9,7 +9,7 @@ require __DIR__.'/vendor/autoload.php';
 
 $app = new App\App([
         'settings' => [
-            'showErrorInfo' => 2,
+            'debugLevel' => 2,
             'checkUpdates' => false,
         ]
     ]);
