@@ -7,10 +7,12 @@
 namespace App;
 
 use App\L10n\Translator;
+use App\Renderer\Base;
 use App\Settings\Container as Settings;
 use App\Settings\FileDriver;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\SapiEmitter;
+use Zend\Diactoros\ServerRequestFactory;
 
 /**
  * Default Service Provider.
@@ -56,7 +58,7 @@ class DefaultServicesProvider
              * @return ServerRequestInterface
              */
             $c['request'] = function () {
-                $r = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
+                $r = ServerRequestFactory::fromGlobals();
                 return new Http\Request(
                     $r->getServerParams(),
                     $r->getUploadedFiles(),
@@ -130,6 +132,7 @@ class DefaultServicesProvider
         if (!isset($c['renderer'])) {
             /**
              * @param $c
+             * @return Base
              */
             $c['renderer'] = function ($c) {
                 $class = 'App\Renderer\\'.ucfirst($c['section']);
