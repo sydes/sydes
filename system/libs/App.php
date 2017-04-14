@@ -29,6 +29,21 @@ class App
         class_alias('App\\Html\\BS4','H');
     }
 
+    private function handleErrors()
+    {
+        error_reporting(-1);
+        set_error_handler(function ($level, $message, $file = '', $line = 0) {
+            if (error_reporting() & $level) {
+                throw new \ErrorException($message, 0, $level, $file, $line);
+            }
+        });
+
+        $c = $this->container;
+        set_exception_handler(function ($e) use ($c) {
+            $c['emitter']->emit($c['exceptionHandler']->render($e, $c['settings']['debugLevel']));
+        });
+    }
+
     public function run($silent = false)
     {
         if (!$this->loadConfig()) {
@@ -72,22 +87,6 @@ class App
         }
 
         return $response;
-    }
-
-    private function handleErrors()
-    {
-        error_reporting(-1);
-        set_error_handler(function ($level, $message, $file = '', $line = 0) {
-            if (error_reporting() & $level) {
-                throw new \ErrorException($message, 0, $level, $file, $line);
-            }
-        });
-
-        $c = $this->container;
-        set_exception_handler(function ($e) use ($c) {
-            $c['event']->trigger('exception.thrown', [$e], get_class($e));
-            $c['emitter']->emit($c['exceptionHandler']->render($e, $c['settings']['showErrorInfo']));
-        });
     }
 
     private function findRoute($path)

@@ -26,13 +26,19 @@ class DefaultServicesProvider
     {
         if (!isset($c['exceptionHandler'])) {
             /**
-             * @param $c
-             * @return Exception\BaseHandler|Exception\SiteHandler
+             * @return Exception\BaseHandler
              */
-            $c['exceptionHandler'] = function ($c) {
-                $place = $c['section'] == 'base' ? 'Base' : 'Site';
-                $class = 'App\Exception\\'.$place.'Handler';
-                return new $class;
+            $c['exceptionHandler'] = function () {
+                return new Exception\BaseHandler();
+            };
+        };
+
+        if (!isset($c['AppExceptionHandler'])) {
+            /**
+             * @return Exception\AppHandler
+             */
+            $c['AppExceptionHandler'] = function () {
+                return new Exception\AppHandler();
             };
         };
 
