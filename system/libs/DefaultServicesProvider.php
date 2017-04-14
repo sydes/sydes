@@ -142,11 +142,12 @@ class DefaultServicesProvider
 
         if (!isset($c['user'])) {
             /**
-             * @param $c
              * @return User
              */
-            $c['user'] = function ($c) {
-                return new User($c['rawAppConfig']['user']);
+            $c['user'] = function () {
+                $data = include DIR_APP.'/user.php';
+
+                return new User($data);
             };
         };
 
@@ -174,8 +175,15 @@ class DefaultServicesProvider
             return new Cmf();
         };
 
+        $c['app'] = function () {
+            $path = DIR_APP.'/config.php';
+
+            return new Settings($path, new FileDriver());
+        };
+
         $c['site'] = function ($c) {
             $path = DIR_SITE.'/'.$c['siteId'].'/config.php';
+
             return new Settings($path, new FileDriver());
         };
 

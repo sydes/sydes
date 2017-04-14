@@ -21,7 +21,7 @@ class Admin extends Base
         $this->fillFooter();
 
         $dummy = [
-            'lang' => app('app')['locale'],
+            'lang' => app('app')->get('locale'),
             'head'   => implode("\n    ", $this->head),
             'footer' => implode("\n    ", $this->footer),
             'menu' => $this->getMenu(),

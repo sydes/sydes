@@ -31,29 +31,26 @@ class Cmf
             $params['locale'] = 'en';
         }
 
-        $app = [
-            'user' => [
-                'username' => $params['username'],
-                'password' => password_hash($params['password'], PASSWORD_DEFAULT),
-                'mastercode' => password_hash($params['mastercode'], PASSWORD_DEFAULT),
-                'email' => $params['email'],
-                'autologin' => 0,
-            ],
-            'app' => [
-                'timeZone' => 'Etc/GMT'.$params['timeZone'],
-                'dateFormat' => 'd.m.Y',
-                'locale' => $params['locale'],
-                'emailFrom' => '',
-            ],
-        ];
+        array2file([
+            'username' => $params['username'],
+            'password' => password_hash($params['password'], PASSWORD_DEFAULT),
+            'mastercode' => password_hash($params['mastercode'], PASSWORD_DEFAULT),
+            'email' => $params['email'],
+            'autologin' => 0,
+        ], DIR_APP.'/user.php');
 
-        app()['rawAppConfig'] = $app;
-
-        array2file($app, DIR_APP.'/config.php');
+        app('app')->set([
+            'timeZone' => 'Etc/GMT'.$params['timeZone'],
+            'dateFormat' => 'd.m.Y',
+            'locale' => $params['locale'],
+            'emailFrom' => '',
+        ])->save();
 
         $themes = str_replace(DIR_THEME.'/', '', glob(DIR_THEME.'/*', GLOB_ONLYDIR));
 
-        $site = [
+        mkdir(DIR_SITE.'/1');
+        app()['siteId'] = '1';
+        app('site')->set([
             'name' => $params['siteName'],
             'theme' => $themes[0],
             'domains' => [$params['domain']],
@@ -63,10 +60,7 @@ class Cmf
             'work' => 1,
             'modules' => [],
             'menu' => [],
-        ];
-        mkdir(DIR_SITE.'/1');
-        app()['siteId'] = '1';
-        app('site')->merge($site)->save();
+        ])->save();
 
         $modules = model('Modules');
 

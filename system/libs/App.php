@@ -62,11 +62,11 @@ class App
 
     private function process()
     {
-        if (!$this->loadConfig()) {
+        if (!file_exists(DIR_APP.'/config.php')) {
             return self::execute(['Main@installer']);
         }
 
-        date_default_timezone_set($this->container['app']['timeZone']);
+        date_default_timezone_set($this->container['app']->get('timeZone'));
 
         $path = '/'.ltrim($this->container['request']->getUri()->getPath(), '/');
         $this->container['section'] = ($path == '/admin' || strpos($path, '/admin/') === 0) ? 'admin' : 'front';
@@ -98,19 +98,6 @@ class App
         $events->trigger('response.prepared', [&$response]);
 
         return $response;
-    }
-
-    private function loadConfig()
-    {
-        if (!file_exists(DIR_APP.'/config.php')) {
-            return false;
-        }
-
-        $config = include DIR_APP.'/config.php';
-        $this->container['rawAppConfig'] = $config;
-        $this->container['app'] = $config['app'];
-
-        return true;
     }
 
     private function findSite()
@@ -151,7 +138,7 @@ class App
     private function findLocale(&$path)
     {
         if ($this->container['section'] == 'admin') {
-            $this->container['locale'] = $this->container['app']['locale'];
+            $this->container['locale'] = $this->container['app']->get('locale');
         } else {
             $locales = $this->container['site']->get('locales');
             $this->container['locale'] = $locales[0];
