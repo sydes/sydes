@@ -516,11 +516,12 @@ function head($status = 204, $headers = [])
  * @param string $array
  * @param int    $status
  * @param array  $headers
+ * @param array  $encodingOptions
  * @return ResponseInterface
  */
-function json($array, $status = 200, $headers = [])
+function json($array, $status = 200, $headers = [], $encodingOptions = 79)
 {
-    return new Response\JsonResponse($array, $status, $headers);
+    return new Response\JsonResponse($array, $status, $headers, $encodingOptions);
 }
 
 /**
