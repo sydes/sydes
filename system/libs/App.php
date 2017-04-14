@@ -46,9 +46,24 @@ class App
 
     public function run($silent = false)
     {
+        try {
+            $response = $this->process();
+        } catch (\Exception $e) {
+            $this->container['event']->trigger('exception.thrown', [$e], get_class($e));
+            $response = $this->container['AppExceptionHandler']->render($e, $this->container['settings']['debugLevel']);
+        }
+
+        if (!$silent) {
+            $this->container['emitter']->emit($response);
+        }
+
+        return $response;
+    }
+
+    private function process()
+    {
         if (!$this->loadConfig()) {
-            $this->container['emitter']->emit(self::execute(['Main@installer']));
-            return null;
+            return self::execute(['Main@installer']);
         }
 
         date_default_timezone_set($this->container['app']['timeZone']);
@@ -61,7 +76,7 @@ class App
         $this->findLocale($path);
         $this->container['translator']->init($this->container['locale']);
 
-        $this->loadFilesAndHandlers();
+        $this->includeModules();
 
         $events = $this->container['event'];
         $events->trigger('site.found');
@@ -82,33 +97,7 @@ class App
         $response = $this->prepare($result);
         $events->trigger('response.prepared', [&$response]);
 
-        if (!$silent) {
-            $this->container['emitter']->emit($response);
-        }
-
         return $response;
-    }
-
-    private function findRoute($path)
-    {
-        $router = $this->container['router'];
-        if ($this->container['settings']['cacheRouter']) {
-            $router->setCacheFile(DIR_CACHE.'/routes.'.$this->container['siteId'].'.cache');
-        }
-
-        $routeInfo = $router->dispatch(
-            array_keys($this->container['site']->get('modules')),
-            $this->container['request']->getMethod(),
-            $path
-        );
-
-        if ($routeInfo[0] == Dispatcher::FOUND) {
-            return [$routeInfo[1], $routeInfo[2]];
-        } elseif (strpos($path, '.')) {
-            return ['Main@error', ['code' => 404]];
-        }
-
-        return model('Route')->findOrFail($path);
     }
 
     private function loadConfig()
@@ -159,7 +148,39 @@ class App
         }
     }
 
-    private function loadFilesAndHandlers()
+    private function findLocale(&$path)
+    {
+        if ($this->container['section'] == 'admin') {
+            $this->container['locale'] = $this->container['app']['locale'];
+        } else {
+            $locales = $this->container['site']->get('locales');
+            $this->container['locale'] = $locales[0];
+
+            if (count($locales) > 1) {
+
+                if ($this->container['site']->get('localeIn') == 'url') {
+                    if ($path == '/') {
+                        throw new RedirectException('/'.$locales[0]);
+                    }
+
+                    $pathParts = explode('/', $path, 3);
+
+                    if (in_array($pathParts[1], $locales)) {
+                        $this->container['locale'] = $pathParts[1];
+                        unset($pathParts[1]);
+                        $path = count($pathParts) > 1 ? implode('/', $pathParts) : '/';
+                    }
+                } else {
+                    $host = $this->container['request']->getUri()->getHost();
+                    if (isset($this->container['site']->get('host2locale')[$host])){
+                        $this->container['locale'] = $this->container['site']->get('host2locale')[$host];
+                    }
+                }
+            }
+        }
+    }
+
+    private function includeModules()
     {
         $events = $this->container['event'];
         foreach ($this->container['site']->get('modules') as $name => $module) {
@@ -176,6 +197,28 @@ class App
                 }
             }
         }
+    }
+
+    private function findRoute($path)
+    {
+        $router = $this->container['router'];
+        if ($this->container['settings']['cacheRouter']) {
+            $router->setCacheFile(DIR_CACHE.'/routes.'.$this->container['siteId'].'.cache');
+        }
+
+        $routeInfo = $router->dispatch(
+            array_keys($this->container['site']->get('modules')),
+            $this->container['request']->getMethod(),
+            $path
+        );
+
+        if ($routeInfo[0] == Dispatcher::FOUND) {
+            return [$routeInfo[1], $routeInfo[2]];
+        } elseif (strpos($path, '.')) {
+            return ['Main@error', ['code' => 404]];
+        }
+
+        return model('Route')->findOrFail($path);
     }
 
     /**
@@ -261,37 +304,5 @@ class App
             return json($content);
         }
         return text((string)$content);
-    }
-
-    private function findLocale(&$path)
-    {
-        if ($this->container['section'] == 'admin') {
-            $this->container['locale'] = $this->container['app']['locale'];
-        } else {
-            $locales = $this->container['site']->get('locales');
-            $this->container['locale'] = $locales[0];
-
-            if (count($locales) > 1) {
-
-                if ($this->container['site']->get('localeIn') == 'url') {
-                    if ($path == '/') {
-                        throw new RedirectException('/'.$locales[0]);
-                    }
-
-                    $pathParts = explode('/', $path, 3);
-
-                    if (in_array($pathParts[1], $locales)) {
-                        $this->container['locale'] = $pathParts[1];
-                        unset($pathParts[1]);
-                        $path = count($pathParts) > 1 ? implode('/', $pathParts) : '/';
-                    }
-                } else {
-                    $host = $this->container['request']->getUri()->getHost();
-                    if (isset($this->container['site']->get('host2locale')[$host])){
-                        $this->container['locale'] = $this->container['site']->get('host2locale')[$host];
-                    }
-                }
-            }
-        }
     }
 }
