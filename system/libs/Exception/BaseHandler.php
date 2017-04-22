@@ -17,7 +17,7 @@ class BaseHandler
         return html($this->defaultTemplate($e->getMessage(), $this->getContent($e, $debugLevel)), 500);
     }
 
-    protected function defaultResponse()
+    public function defaultResponse()
     {
         return html($this->defaultTemplate(
             '500 Internal Server Error',
@@ -26,7 +26,7 @@ class BaseHandler
             500);
     }
 
-    protected function defaultTemplate($title, $content)
+    public function defaultTemplate($title, $content)
     {
         $title = $title ?: 'Exception without message';
 
@@ -37,7 +37,7 @@ class BaseHandler
         "{$content}</body></html>";
     }
 
-    protected function getContent(\Exception $e, $debugLevel)
+    public function getContent(\Exception $e, $debugLevel)
     {
         return $debugLevel == 1 ? '' : nl2br($e->getFile().' on '.$e->getLine()."\n\n".$e->getTraceAsString());
     }

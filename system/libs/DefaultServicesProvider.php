@@ -26,24 +26,6 @@ class DefaultServicesProvider
      */
     public function register($c)
     {
-        if (!isset($c['exceptionHandler'])) {
-            /**
-             * @return Exception\BaseHandler
-             */
-            $c['exceptionHandler'] = function () {
-                return new Exception\BaseHandler();
-            };
-        };
-
-        if (!isset($c['AppExceptionHandler'])) {
-            /**
-             * @return Exception\AppHandler
-             */
-            $c['AppExceptionHandler'] = function () {
-                return new Exception\AppHandler();
-            };
-        };
-
         if (!isset($c['emitter'])) {
             /**
              * @return SapiEmitter

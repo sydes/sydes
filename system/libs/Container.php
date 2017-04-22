@@ -10,11 +10,7 @@ use Pimple\Container as PimpleContainer;
 
 class Container extends PimpleContainer
 {
-    /**
-     * Default settings
-     *
-     * @var array
-     */
+    /** @var array */
     private $defaultSettings = [
         'cacheRouter'   => true,
         'debugLevel' => 0,
@@ -34,7 +30,7 @@ class Container extends PimpleContainer
         parent::__construct($values);
 
         $userSettings = ifsetor($values['settings'], []);
-        $this->registerDefaultServices($userSettings);
+        $this->registerDefaults($userSettings);
     }
 
     /**
@@ -51,20 +47,17 @@ class Container extends PimpleContainer
     }
 
     /**
-     * This function registers the default services that SyDES needs to work.
-     *
-     * All services are shared - that is, they are registered such that the
-     * same instance is returned on subsequent calls.
+     * This function registers the default services and handlers that SyDES needs to work.
      *
      * @param $settings
      * @return void
      */
-    private function registerDefaultServices($settings)
+    private function registerDefaults($settings)
     {
         $this['settings'] = array_merge($this->defaultSettings, $settings);
         $this['section'] = 'base';
 
-        $defaultProvider = new DefaultServicesProvider;
-        $defaultProvider->register($this);
+        (new DefaultServicesProvider)->register($this);
+        (new ExceptionHandlersProvider)->register($this);
     }
 }

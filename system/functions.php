@@ -844,3 +844,10 @@ function arrayRemove(array &$arr, $key, $default = null)
 
     return $val;
 }
+
+function sydesErrorHandler($level, $message, $file = '', $line = 0)
+{
+    if (error_reporting() & $level) {
+        throw new \ErrorException($message, 0, $level, $file, $line);
+    }
+}

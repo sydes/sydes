@@ -6,9 +6,9 @@
  */
 namespace Sydes;
 
+use FastRoute\Dispatcher;
 use Sydes\Exception\RedirectException;
 use Sydes\Http\Redirect;
-use FastRoute\Dispatcher;
 use Zend\Diactoros\Response;
 
 class App
@@ -24,24 +24,10 @@ class App
         $this->container = new Container($values);
         Container::setContainer($this->container);
 
-        $this->handleErrors();
+        error_reporting(-1);
+        set_error_handler('sydesErrorHandler');
 
         class_alias('Sydes\\Html\\BS4','H');
-    }
-
-    private function handleErrors()
-    {
-        error_reporting(-1);
-        set_error_handler(function ($level, $message, $file = '', $line = 0) {
-            if (error_reporting() & $level) {
-                throw new \ErrorException($message, 0, $level, $file, $line);
-            }
-        });
-
-        $c = $this->container;
-        set_exception_handler(function ($e) use ($c) {
-            $c['emitter']->emit($c['exceptionHandler']->render($e, $c['settings']['debugLevel']));
-        });
     }
 
     public function run($silent = false)
@@ -49,8 +35,7 @@ class App
         try {
             $response = $this->process();
         } catch (\Exception $e) {
-            $this->container['event']->trigger('exception.thrown', [$e], get_class($e));
-            $response = $this->container['AppExceptionHandler']->render($e, $this->container['settings']['debugLevel']);
+            $response = $this->processException($e);
         }
 
         if (!$silent) {
@@ -98,6 +83,24 @@ class App
         $events->trigger('response.prepared', [&$response]);
 
         return $response;
+    }
+
+    private function processException(\Exception $e)
+    {
+        $className = get_class($e);
+        if ($pos = strrpos($className, '\\')) {
+            $className = substr($className, $pos + 1);
+        }
+
+        $this->container['event']->trigger('exception.thrown', [$e], $className);
+
+        $handler = $className.'Handler';
+
+        if (!isset($this->container[$handler])) {
+            $handler = 'defaultErrorHandler';
+        }
+
+        return $this->container[$handler]($e);
     }
 
     private function findSite()
