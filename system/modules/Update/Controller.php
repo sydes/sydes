@@ -6,8 +6,8 @@
  */
 namespace Module\Update;
 
-use App\AdminMenu;
-use App\Route;
+use Sydes\AdminMenu;
+use Sydes\Route;
 
 class Controller
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\L10n\Plural;
+namespace Sydes\L10n\Plural;
 
 trait Rule7
 {

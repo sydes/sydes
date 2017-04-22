@@ -4,10 +4,10 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace App\Renderer;
+namespace Sydes\Renderer;
 
-use App\Document;
-use App\View;
+use Sydes\Document;
+use Sydes\View;
 
 class Base
 {

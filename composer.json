@@ -25,7 +25,7 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "system/libs/",
+      "Sydes\\": "system/libs/",
       "Locales\\": "app/l10n/locales",
       "Module\\": [
         "app/modules",

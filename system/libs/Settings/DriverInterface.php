@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Settings;
+namespace Sydes\Settings;
 
 interface DriverInterface
 {

@@ -6,8 +6,8 @@
  */
 namespace Module\Themes\Models;
 
-use App\Settings\Container as Settings;
-use App\Settings\JsonDriver;
+use Sydes\Settings\Container as Settings;
+use Sydes\Settings\JsonDriver;
 
 class Theme
 {

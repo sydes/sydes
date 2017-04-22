@@ -7,7 +7,7 @@
 
 require __DIR__.'/vendor/autoload.php';
 
-$app = new App\App([
+$app = new Sydes\App([
         'settings' => [
             'debugLevel' => 2,
             'checkUpdates' => false,

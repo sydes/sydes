@@ -6,7 +6,7 @@
  */
 namespace Module\Fileman;
 
-use App\AdminMenu;
+use Sydes\AdminMenu;
 
 class Controller
 {

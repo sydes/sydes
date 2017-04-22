@@ -4,9 +4,9 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace App\Console;
+namespace Sydes\Console;
 
-use App\Container;
+use Sydes\Container;
 
 class Kernel
 {

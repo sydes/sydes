@@ -6,8 +6,8 @@
  */
 namespace Module\Fields;
 
-use App\Document;
-use App\Event;
+use Sydes\Document;
+use Sydes\Event;
 
 class Handlers
 {

@@ -4,10 +4,10 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace App;
+namespace Sydes;
 
-use App\Exception\RedirectException;
-use App\Http\Redirect;
+use Sydes\Exception\RedirectException;
+use Sydes\Http\Redirect;
 use FastRoute\Dispatcher;
 use Zend\Diactoros\Response;
 
@@ -26,7 +26,7 @@ class App
 
         $this->handleErrors();
 
-        class_alias('App\\Html\\BS4','H');
+        class_alias('Sydes\\Html\\BS4','H');
     }
 
     private function handleErrors()

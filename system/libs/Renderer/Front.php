@@ -4,9 +4,9 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace App\Renderer;
+namespace Sydes\Renderer;
 
-use App\Document;
+use Sydes\Document;
 use Module\Themes\Models\Theme;
 
 class Front extends Base

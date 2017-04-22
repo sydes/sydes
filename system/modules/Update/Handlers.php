@@ -2,7 +2,7 @@
 
 namespace Module\Update;
 
-use App\Event;
+use Sydes\Event;
 
 class Handlers
 {

@@ -6,7 +6,7 @@
  */
 namespace Module\Main;
 
-use App\Route;
+use Sydes\Route;
 
 class Controller
 {

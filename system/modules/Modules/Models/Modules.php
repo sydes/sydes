@@ -2,8 +2,8 @@
 
 namespace Module\Modules\Models;
 
-use App\Settings\Container;
-use App\Settings\JsonDriver;
+use Sydes\Settings\Container;
+use Sydes\Settings\JsonDriver;
 use Psr\Http\Message\UploadedFileInterface;
 
 class Modules
@@ -61,7 +61,7 @@ class Modules
 
         app('site')->set('modules', $modules)->save();
 
-        \App\App::execute([$name.'@install', [app('adminMenu')]], true);
+        \Sydes\App::execute([$name.'@install', [app('adminMenu')]], true);
 
         app('cache')->flush();
     }
@@ -78,7 +78,7 @@ class Modules
 
             app('site')->set('modules', $modules)->save();
 
-            \App\App::execute([$name.'@uninstall', [app('adminMenu')]], true);
+            \Sydes\App::execute([$name.'@uninstall', [app('adminMenu')]], true);
 
             app('cache')->flush();
         }

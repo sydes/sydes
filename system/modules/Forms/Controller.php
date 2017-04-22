@@ -6,8 +6,8 @@
  */
 namespace Module\Forms;
 
-use App\AdminMenu;
-use App\Route;
+use Sydes\AdminMenu;
+use Sydes\Route;
 
 class Controller
 {

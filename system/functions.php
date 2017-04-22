@@ -5,10 +5,10 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-use App\Container;
-use App\Exception\AppException;
-use App\Html\Base;
-use App\Http\Redirect;
+use Sydes\Container;
+use Sydes\Exception\AppException;
+use Sydes\Html\Base;
+use Sydes\Http\Redirect;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
 
@@ -449,11 +449,11 @@ function abort($code, $message = '')
 /**
  * Get the document instance.
  * @param array $data
- * @return \App\Document
+ * @return Sydes\Document
  */
 function document($data = [])
 {
-    return new App\Document($data);
+    return new Sydes\Document($data);
 }
 
 /**
@@ -555,11 +555,11 @@ function back()
  * @param string $name
  * @param int    $status
  * @param array  $headers
- * @return \App\Http\AttachmentResponse
+ * @return Sydes\Http\AttachmentResponse
  */
 function download($file, $name = null, $status = 200, $headers = [])
 {
-    return new App\Http\AttachmentResponse($file, $name, $status, $headers);
+    return new Sydes\Http\AttachmentResponse($file, $name, $status, $headers);
 }
 
 /**
@@ -621,11 +621,10 @@ function alert($message, $status = 'success')
  * Creates or loads config for extension
  *
  * @param string $extension
- * @return App\Settings\Container
+ * @return Sydes\Settings\Container
  */
 function settings($extension)
 {
-    return new App\Settings\Container($extension, new \App\Settings\SQLDriver(app('db')));
 }
 
 if (!function_exists('ifsetor')) {
@@ -651,7 +650,7 @@ function restricted()
     if (!app('user')->isAdmin()) {
         alert(t('error_mastercode_needed'), 'warning');
         $to = ifsetor(app('request')->headers['REFERER'], '/admin');
-        throw new \App\Exception\RedirectException($to);
+        throw new Sydes\Exception\RedirectException($to);
     }
 }
 
@@ -674,11 +673,11 @@ function model($module)
  *
  * @param string $view module-name/view-name
  * @param array  $data
- * @return \App\View
+ * @return Sydes\View
  */
 function view($view, $data = [])
 {
-    return new App\View($view, $data);
+    return new Sydes\View($view, $data);
 }
 
 /**

@@ -2,7 +2,7 @@
 
 namespace Module\Route\Models;
 
-use App\Model;
+use Sydes\Model;
 
 class Route extends Model
 {

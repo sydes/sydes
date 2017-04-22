@@ -4,9 +4,9 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace App\Settings;
+namespace Sydes\Settings;
 
-use App\Database;
+use Sydes\Database;
 
 class SQLDriver implements DriverInterface
 {

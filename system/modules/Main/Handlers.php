@@ -1,9 +1,9 @@
 <?php
 namespace Module\Main;
 
-use App\Document;
-use App\Event;
-use App\Exception\ConfirmationException;
+use Sydes\Document;
+use Sydes\Event;
+use Sydes\Exception\ConfirmationException;
 
 class Handlers
 {

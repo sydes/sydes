@@ -5,7 +5,7 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace App\Html;
+namespace Sydes\Html;
 
 class Base
 {

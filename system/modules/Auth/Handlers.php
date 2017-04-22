@@ -1,8 +1,8 @@
 <?php
 namespace Module\Auth;
 
-use App\Event;
-use App\Exception\RedirectException;
+use Sydes\Event;
+use Sydes\Exception\RedirectException;
 
 class Handlers
 {

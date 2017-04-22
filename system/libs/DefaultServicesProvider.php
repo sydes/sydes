@@ -4,12 +4,12 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace App;
+namespace Sydes;
 
-use App\L10n\Translator;
-use App\Renderer\Base;
-use App\Settings\Container as Settings;
-use App\Settings\FileDriver;
+use Sydes\L10n\Translator;
+use Sydes\Renderer\Base;
+use Sydes\Settings\Container as Settings;
+use Sydes\Settings\FileDriver;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Diactoros\ServerRequestFactory;
@@ -135,7 +135,7 @@ class DefaultServicesProvider
              * @return Base
              */
             $c['renderer'] = function ($c) {
-                $class = 'App\Renderer\\'.ucfirst($c['section']);
+                $class = 'Sydes\Renderer\\'.ucfirst($c['section']);
                 return new $class;
             };
         };

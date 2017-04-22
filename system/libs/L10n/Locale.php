@@ -4,7 +4,7 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace App\L10n;
+namespace Sydes\L10n;
 
 class Locale
 {

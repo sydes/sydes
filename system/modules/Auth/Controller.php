@@ -6,7 +6,7 @@
  */
 namespace Module\Auth;
 
-use App\Route;
+use Sydes\Route;
 
 class Controller
 {

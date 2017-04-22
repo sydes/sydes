@@ -6,8 +6,8 @@
  */
 namespace Module\Main;
 
-use App\Console\Commands;
-use App\Console\Output;
+use Sydes\Console\Commands;
+use Sydes\Console\Output;
 
 class Cli
 {

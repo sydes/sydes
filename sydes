@@ -11,6 +11,6 @@ if (PHP_SAPI != 'cli') {
 
 require __DIR__.'/vendor/autoload.php';
 
-$app = new App\Console\Kernel();
+$app = new Sydes\Console\Kernel();
 
 $app->run(is_array($argv) ? $argv : [], $argc);

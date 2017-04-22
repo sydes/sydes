@@ -4,7 +4,7 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace App;
+namespace Sydes;
 
 class Router
 {
@@ -54,7 +54,7 @@ class Router
         $this->dispatcher = \FastRoute\cachedDispatcher($callback, [
             'cacheFile'     => $this->cacheFile,
             'cacheDisabled' => is_bool($this->cacheFile),
-            'routeCollector' => 'App\\Route',
+            'routeCollector' => 'Sydes\\Route',
         ]);
 
         return $this->dispatcher;
