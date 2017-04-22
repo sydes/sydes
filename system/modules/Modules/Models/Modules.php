@@ -61,7 +61,7 @@ class Modules
 
         app('site')->set('modules', $modules)->save();
 
-        \Sydes\App::execute([$name.'@install', [app('adminMenu')]], true);
+        $this->run($name, 'install');
 
         app('cache')->flush();
     }
@@ -78,10 +78,25 @@ class Modules
 
             app('site')->set('modules', $modules)->save();
 
-            \Sydes\App::execute([$name.'@uninstall', [app('adminMenu')]], true);
+            $this->run($name, 'uninstall');
 
             app('cache')->flush();
         }
+    }
+
+    private function run($name, $method)
+    {
+        $class = 'Module\\'.$name.'\Controller';
+        if (!class_exists($class)) {
+            return;
+        }
+
+        $instance = new $class;
+        if (!method_exists($instance, $method)) {
+            return;
+        }
+
+        call_user_func_array([$instance, $method], [app('adminMenu')]);
     }
 
     /**

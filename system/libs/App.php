@@ -48,7 +48,7 @@ class App
     private function process()
     {
         if (!file_exists(DIR_APP.'/config.php')) {
-            return self::execute(['Main@installer']);
+            return $this->execute(['Main@installer']);
         }
 
         date_default_timezone_set($this->container['app']->get('timeZone'));
@@ -76,7 +76,7 @@ class App
 
         $events->trigger('route.found', [&$route]);
 
-        $result = self::execute($route);
+        $result = $this->execute($route);
         $events->trigger('module.executed', [&$result]);
 
         $response = $this->prepare($result);
@@ -231,11 +231,10 @@ class App
      * Executes passed handler with variables
      *
      * @param array $params ['class@method', ['name' => 'var', ...]]
-     * @param bool  $soft   Don't throw exception if can't execute
      * @return mixed
      * @throws \Exception
      */
-    public static function execute($params, $soft = false)
+    public function execute($params)
     {
         $route = self::parseRoute($params[0]);
 
@@ -250,26 +249,19 @@ class App
             $class = 'Module\\'.$route['path'][0].'\Controller';
         }
 
-        $result = null;
         if (!class_exists($class)) {
-            if ($soft) {
-                return $result;
-            } else {
-                throw new \Exception(t('error_class_not_found', ['class' => $class]));
-            }
+            throw new \Exception(t('error_class_not_found', ['class' => $class]));
         }
 
         $instance = new $class;
-        if (method_exists($instance, $route['method'])) {
-            $result = call_user_func_array([$instance, $route['method']], ifsetor($params[1], []));
-        } elseif (!$soft) {
+        if (!method_exists($instance, $route['method'])) {
             throw new \Exception(t('error_method_not_found', [
                 'class' => $class,
                 'method' => $route['method']
             ]));
         }
 
-        return $result;
+        return call_user_func_array([$instance, $route['method']], ifsetor($params[1], []));
     }
 
     private function prepare($content)
