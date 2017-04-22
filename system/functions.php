@@ -448,6 +448,7 @@ function abort($code, $message = '')
 
 /**
  * Get the document instance.
+ *
  * @param array $data
  * @return Sydes\Document
  */
@@ -516,7 +517,7 @@ function head($status = 204, $headers = [])
  * @param string $array
  * @param int    $status
  * @param array  $headers
- * @param array  $encodingOptions
+ * @param int    $encodingOptions
  * @return ResponseInterface
  */
 function json($array, $status = 200, $headers = [], $encodingOptions = 79)
@@ -625,6 +626,7 @@ function alert($message, $status = 'success')
  */
 function settings($extension)
 {
+    return new Sydes\Settings\Container($extension, new Sydes\Settings\SQLDriver(app('db')));
 }
 
 if (!function_exists('ifsetor')) {
