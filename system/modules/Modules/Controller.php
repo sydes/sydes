@@ -50,7 +50,7 @@ class Controller
         $m = model('Modules');
 
         $translated = [];
-        foreach ($m->all() as $module) {
+        foreach ($m->getAll() as $module) {
             app('translator')->loadFrom('module', $module);
 
             $mod = snake_case($module, '-');
@@ -65,7 +65,7 @@ class Controller
         $d = document([
             'title' => t('module_modules'),
             'header_actions' => \H::a(t('add_module'), '/admin/modules/add', ['button' => 'primary']),
-            'content' => view('modules/index', [
+            'content' => view('modules/list', [
                 'installed' => $m->getList('installed'),
                 'uploaded' => $m->getList('uninstalled'),
                 'default' => $m->getList('default'),

@@ -116,7 +116,7 @@ class Modules
         return $ret;
     }
 
-    public function all()
+    public function getAll()
     {
         $this->load();
 

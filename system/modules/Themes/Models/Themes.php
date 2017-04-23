@@ -18,18 +18,27 @@ class Themes
     {
         $data = [];
         $themes = str_replace(DIR_THEME.'/', '', glob(DIR_THEME.'/*', GLOB_ONLYDIR));
-        foreach ($themes as $theme) {
-            $data[$theme] = (new Theme($theme))->getInfo();
+        foreach ($themes as $id) {
+            $data[$id] = $this->get($id)->getInfo();
         }
 
         return $data;
     }
 
+    /**
+     * @param string $id
+     * @return Theme
+     */
+    public function get($id)
+    {
+        return new Theme($id);
+    }
+
     public function getActive()
     {
-        $theme = app('site')->get('theme');
+        $id = app('site')->get('theme');
 
-        return new Theme($theme);
+        return $this->get($id);
     }
 
     /**
