@@ -38,8 +38,13 @@ abstract class BaseField implements FieldInterface
     public function fromString($value)
     {
         if ($this->contains == 'array') {
-            $value = json_decode($value, true);
+            if (is_string($value)) {
+                $value = json_decode($value, true);
+            } elseif (empty($value)) {
+                $value = [];
+            }
         }
+
         $this->value = $value;
     }
 
