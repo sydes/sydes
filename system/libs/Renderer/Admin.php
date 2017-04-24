@@ -25,26 +25,13 @@ class Admin extends Base
             'head'   => implode("\n    ", $this->head),
             'footer' => implode("\n    ", $this->footer),
             'menu' => $this->getMenu(),
-            'form_url' => '',
-            'form_method' => '',
-            'sidebar_left' => '',
             'content' => '',
-            'sidebar_right' => '',
             'footer_left' => '',
             'footer_center' => '',
-            'col_sm' => 12,
-            'col_lg' => 12,
             'title' => '',
             'header_actions' => '',
         ];
-        if (!empty($doc->data['sidebar_left'])){
-            $dummy['col_sm'] = $dummy['col_sm']-3;
-            $dummy['col_lg'] = $dummy['col_lg']-2;
-        }
-        if (!empty($doc->data['sidebar_right'])){
-            $dummy['col_sm'] = $dummy['col_sm']-3;
-            $dummy['col_lg'] = $dummy['col_lg']-2;
-        }
+
         $data = array_merge($dummy, $doc->data);
 
         $template = render(DIR_SYSTEM.'/modules/Main/views/admin.php', $data);

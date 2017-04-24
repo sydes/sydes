@@ -104,9 +104,14 @@ class Controller
     {
         $d = document([
             'title' => t('module_upload'),
-            'content' => view('modules/add'),
-            'form_url' => '/admin/modules/add',
-            'form_method' => 'PUT',
+            'content' => view('modules/add', [
+                'options' => [
+                    'method' => 'post',
+                    'url' => '/admin/modules/add',
+                    'form' => 'main',
+                    'files' => true,
+                ],
+            ]),
         ]);
 
         return $d;

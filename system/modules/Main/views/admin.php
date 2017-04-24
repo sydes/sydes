@@ -32,23 +32,9 @@
 
         <div id="alerts"></div>
 
-        <?php if ($form_url) { ?>
-            <form class="main row" name="main" method="post" enctype="multipart/form-data" action="<?=$form_url;?>">
-            <?php if ($form_method) { echo method_field($form_method); } ?>
-        <?php } else { ?>
-            <div class="main row">
-        <?php } ?>
-                <?php if ($sidebar_left) { ?>
-                    <div class="col-sm-3 col-lg-2 sidebar-left"><?=$sidebar_left;?></div><?php } ?>
-                <?php if ($content) { ?>
-                    <div class="col-sm-<?=$col_sm;?> col-lg-<?=$col_lg;?> content"><?=$content;?></div><?php } ?>
-                <?php if ($sidebar_right) { ?>
-                    <div class="col-sm-3 col-lg-2 sidebar-right"><?=$sidebar_right;?></div><?php } ?>
-        <?php if (!$form_url) { ?>
-            </div>
-        <?php } else { ?>
-            </form>
-        <?php } ?>
+        <div class="main">
+            <?=$content;?>
+        </div>
 
         <div class="footer">
             <div class="col-sm-3">

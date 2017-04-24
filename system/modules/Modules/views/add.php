@@ -1,5 +1,6 @@
 <div class="card box">
     <div class="card-block">
+        <?=Form::open($options);?>
         <div class="row">
             <div class="col-sm-5">
                 <?=H::formGroup(t('module_upload_file'), H::fileInput('file'));?>
@@ -15,5 +16,6 @@
             <?=H::submitButton(t('upload'), ['button' => 'primary']);?>
             <label style="margin-left: 15px;"><?=H::checkbox('install'),' ',t('and_install');?></label>
         </div>
+        <?=Form::close();?>
     </div>
 </div>
