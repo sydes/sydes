@@ -4,7 +4,7 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Fields\Field;
+namespace Module\Fields\Plugin\Fields;
 
 interface FieldInterface
 {
@@ -24,7 +24,7 @@ interface FieldInterface
 
     public function getField();
 
-    public function getConfigurator();
+    public function getSettingsForm();
 
     public function render($formatter = null);
 }

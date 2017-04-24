@@ -4,9 +4,9 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Fields\Field;
+namespace Module\Fields\Plugin\Fields;
 
-class ImagesField extends BaseField
+class ImagesField extends FieldBase
 {
     protected $contains = 'array';
 
@@ -14,11 +14,6 @@ class ImagesField extends BaseField
     {
         // создать див с мини картинками и дроп2аплодом
         return \H::fileInput($this->name.'_new').\H::hiddenInput($this->name, $this->value);
-    }
-
-    public function getConfigurator()
-    {
-        // TODO: Implement getConfigurator() method.
     }
 
     public function defaultFormatter()

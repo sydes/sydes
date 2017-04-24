@@ -6,7 +6,7 @@
  */
 namespace Sydes\Html;
 
-use Module\Fields\Field\FieldInterface;
+use Module\Fields\Plugin\Fields\FieldInterface;
 
 class FormBuilder
 {
@@ -82,7 +82,7 @@ class FormBuilder
         $fields = app()['formFields'];
 
         if (!isset($fields[$fieldType])) {
-            throw new \InvalidArgumentException('field_not_exists');
+            throw new \InvalidArgumentException(t('field_not_exists', ['name' => $fieldType]));
         }
 
         if (is_null($value) && isset(self::$data[$name])) {
@@ -90,7 +90,7 @@ class FormBuilder
         }
 
         /** @var FieldInterface $field */
-        $field = new $fields[$fieldType]['class']($name, $value, $settings);
+        $field = new $fields[$fieldType]($name, $value, $settings);
 
         return $field->getField();
     }

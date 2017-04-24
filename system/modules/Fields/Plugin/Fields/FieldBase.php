@@ -4,14 +4,18 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Fields\Field;
+namespace Module\Fields\Plugin\Fields;
 
-abstract class BaseField implements FieldInterface
+abstract class FieldBase implements FieldInterface
 {
     protected $name;
     protected $value;
     protected $settings;
-    protected $defaultSettings;
+    protected $defaultSettings = [
+        'required' => false,
+        'helpText' => '',
+        'multiple' => false,
+    ];
     protected $contains = 'plain';
     protected $formatters = [
         'default' => [
@@ -112,5 +116,10 @@ abstract class BaseField implements FieldInterface
     protected function defaultFormatter()
     {
         return $this->value;
+    }
+
+    public function getSettingsForm()
+    {
+        return '';
     }
 }
