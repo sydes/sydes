@@ -21,7 +21,7 @@ class Controller
         $d = document([
             'content'       => view('profile/form', ['autologin' => app('user')->autologin]),
             'sidebar_left'  => '',
-            'sidebar_right' => \H::saveButton(DIR_APP.'/config.php').\H::mastercodeInput(),
+            'sidebar_right' => saveButton(DIR_APP.'/config.php').\H::mastercodeInput(),
             'form_url'      => '/admin/profile',
             'meta_title'    => t('module_profile'),
             'breadcrumbs'   => [

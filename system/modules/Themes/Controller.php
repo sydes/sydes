@@ -43,8 +43,8 @@ class Controller
         unset($themes[$name]);
 
         $d = document([
-            'title' => t('module_theme'),
-            'header_actions' => \H::a(t('add_theme'), '/admin/themes/add', ['class' => 'btn btn-primary']),
+            'title' => t('module_themes'),
+            'header_actions' => \H::a(t('add_theme'), '/admin/themes/add', ['button' => 'primary']),
             'content' => view('themes/list', ['themes' => $themes, 'current' => $current]),
         ]);
         $d->addCss('module-theme', assetsDir('themes').'/css/style.css');

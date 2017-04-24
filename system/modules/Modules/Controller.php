@@ -18,7 +18,7 @@ class Controller
         $r->delete('/admin/module/{name:[a-z-]+}', 'Modules@uninstallModule');
         $r->delete('/admin/module/{name:[a-z-]+}/delete', 'Modules@deleteModule');
         $r->get('/admin/modules/add', 'Modules@add');
-        $r->put('/admin/modules/add', 'Modules@upload');
+        $r->post('/admin/modules/add', 'Modules@upload');
         $r->get('/admin/modules/updates', 'Modules@updates');
     }
 
