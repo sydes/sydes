@@ -27,7 +27,8 @@ class App
         error_reporting(-1);
         set_error_handler('sydesErrorHandler');
 
-        class_alias('Sydes\\Html\\BS4','H');
+        class_alias('Sydes\Html\BS4','H');
+        class_alias('Sydes\Html\FormBuilder','Form');
     }
 
     public function run($silent = false)
