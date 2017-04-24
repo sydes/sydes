@@ -1,6 +1,7 @@
 <?php
 return array(
     'module_fields' => 'Form fields',
+    'field_not_exists' => 'Field {name} not exists',
 
     'field_text' => 'Text',
     'field_text_description' => 'In one or more rows',
