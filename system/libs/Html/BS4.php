@@ -79,6 +79,16 @@ class BS4 extends Base
         return $html;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function textarea($name, $value, array $attr = [])
+    {
+        $attr['class'][] = 'form-control';
+
+        return parent::tag('textarea', static::encode($value), $attr);
+    }
+
     public static function button($label = 'Button', array $attr = [])
     {
         $attr = static::makeButton($attr);
