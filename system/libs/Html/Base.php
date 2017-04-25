@@ -120,7 +120,7 @@ class Base
     {
         $str = '';
         foreach ($attr as $key => $value) {
-            if (empty($value)) {
+            if ($value === '' || is_null($value) || $value === false) {
                 continue;
             }
 
@@ -377,9 +377,7 @@ class Base
     {
         $attr['type'] = $type;
         $attr['name'] = $name;
-        if ($value) {
-            $attr['value'] = (string)$value;
-        }
+        $attr['value'] = (string)$value;
 
         return static::tag('input', '', $attr);
     }
