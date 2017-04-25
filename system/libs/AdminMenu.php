@@ -8,11 +8,13 @@ namespace Sydes;
 
 class AdminMenu
 {
+    private $site;
     private $menu;
 
-    public function __construct($menu)
+    public function __construct(Settings\Container $site)
     {
-        $this->menu = $menu;
+        $this->site = $site;
+        $this->menu = $site->get('menu');
     }
 
     /**
@@ -32,7 +34,7 @@ class AdminMenu
                 'items'  => [],
             ];
 
-            app('site')->set('menu', $this->menu)->save();
+            $this->site->set('menu', $this->menu)->save();
         }
 
         return $this;
@@ -47,7 +49,7 @@ class AdminMenu
         if (isset($this->menu[$group])) {
             unset($this->menu[$group]);
 
-            app('site')->set('menu', $this->menu)->save();
+            $this->site->set('menu', $this->menu)->save();
         }
 
         return $this;
@@ -67,7 +69,7 @@ class AdminMenu
         $temp = &$this->selectBy($path);
         $temp['items'][$item] = array_merge(['weight' => $weight], $data);
 
-        app('site')->set('menu', $this->menu)->save();
+        $this->site->set('menu', $this->menu)->save();
 
         return $this;
     }
@@ -84,7 +86,7 @@ class AdminMenu
         $temp = &$this->selectBy($path);
         unset($temp['items'][$item]);
 
-        app('site')->set('menu', $this->menu)->save();
+        $this->site->set('menu', $this->menu)->save();
 
         return $this;
     }

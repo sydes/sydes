@@ -170,7 +170,7 @@ class DefaultServicesProvider
         };
 
         $c['adminMenu'] = function ($c) {
-            return new AdminMenu($c['site']->get('menu'));
+            return new AdminMenu($c['site']);
         };
     }
 }
