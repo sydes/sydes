@@ -21,7 +21,7 @@ class Controller
         $menu->addItem('system/iblocks', [
             'title' => 'module_iblocks',
             'url' => '/admin/iblocks',
-        ], 30);
+        ], 0);
     }
 
     public function index()

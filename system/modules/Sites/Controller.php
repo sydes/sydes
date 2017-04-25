@@ -20,10 +20,10 @@ class Controller
 
     public function install(AdminMenu $menu)
     {
-        $menu->addItem('system/sites', [
+        $menu->addItem('system/settings/sites', [
             'title' => 'module_sites',
             'url' => '/admin/sites',
-        ], 40);
+        ], 10);
     }
 
     public function index()

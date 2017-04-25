@@ -21,7 +21,7 @@ class Controller
         $menu->addItem('system/settings', [
             'title' => 'module_settings',
             'url' => '/admin/settings',
-        ], 0);
+        ], 40);
     }
 
     public function index()
