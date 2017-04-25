@@ -34,4 +34,5 @@ return array(
     'uninstall' => 'Удалить',
     'settings' => 'Настройки',
     'upload' => 'Загрузить',
+    'save' => 'Сохранить',
 );

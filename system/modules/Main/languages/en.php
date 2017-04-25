@@ -34,4 +34,5 @@ return array(
     'uninstall' => 'Uninstall',
     'settings' => 'Settings',
     'upload' => 'Upload',
+    'save' => 'Save',
 );
