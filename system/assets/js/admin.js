@@ -1,3 +1,7 @@
+$(document).on('click', '[data-submit]', function () {
+    $('#'+$(this).data('submit')).submit();
+});
+
 $(document).ready(function () {
     stickMenu($('#menu'));
 
