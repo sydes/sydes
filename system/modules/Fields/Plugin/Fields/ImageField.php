@@ -6,7 +6,7 @@
  */
 namespace Module\Fields\Plugin\Fields;
 
-class ImagesField extends FieldBase
+class ImageField extends FieldBase
 {
     protected $contains = 'array';
 
