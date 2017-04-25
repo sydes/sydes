@@ -82,7 +82,7 @@ function moduleDir($name)
  * @param $module
  * @return false|string
  */
-function assetsDir($module)
+function assetsPath($module)
 {
     if ($dir = moduleDir($module)) {
         return str_replace(DIR_ROOT, '', $dir).'/assets';

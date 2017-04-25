@@ -18,7 +18,7 @@ class Handlers
         });
 
         $events->on('render.started', 'admin/*', function (Document $doc) {
-            $root = assetsDir('fields');
+            $root = assetsPath('fields');
             $doc->addPackage('fields', $root.'/js/fields.js', $root.'/css/fields.css', 16);
         });
     }
