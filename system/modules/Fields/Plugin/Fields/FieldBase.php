@@ -15,8 +15,10 @@ abstract class FieldBase implements FieldInterface
         'required' => false,
         'helpText' => '',
         'multiple' => false,
+        'label' => '',
     ];
-    protected $contains = 'plain';
+    protected $fieldSettings = [];
+    protected $contains = 'text';
     protected $formatters = [
         'default' => [
             'name' => 'default',
@@ -33,7 +35,7 @@ abstract class FieldBase implements FieldInterface
     {
         $this->name = $name;
         $this->fromString($value);
-        $this->settings = $settings;
+        $this->settings = array_merge($this->defaultSettings, $this->fieldSettings, $settings);
     }
 
     /**
@@ -62,6 +64,14 @@ abstract class FieldBase implements FieldInterface
         }
 
         return $this->value;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
     }
 
     /**
