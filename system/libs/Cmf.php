@@ -48,9 +48,7 @@ class Cmf
 
         $themes = str_replace(DIR_THEME.'/', '', glob(DIR_THEME.'/*', GLOB_ONLYDIR));
 
-        mkdir(DIR_SITE.'/1');
-        app()['siteId'] = '1';
-        app('site')->set([
+        model('Sites')->create([
             'name' => $params['siteName'],
             'theme' => $themes[0],
             'domains' => [$params['domain']],
@@ -58,9 +56,7 @@ class Cmf
             'locales' => [$params['locale']],
             'localeIn' => 'url',
             'work' => 1,
-            'modules' => [],
-            'menu' => [],
-        ])->save();
+        ]);
 
         $modules = model('Modules');
 
@@ -81,8 +77,6 @@ class Cmf
                 $this->downloadTranslation($module, $locale);
             }
         }
-
-        $modules->install($modules->filter('default'));
     }
 
     public function update()
