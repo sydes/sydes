@@ -86,7 +86,7 @@ class BS4 extends Base
     {
         $attr['class'][] = 'form-control';
 
-        return parent::tag('textarea', static::encode($value), $attr);
+        return parent::textarea($name, $value, $attr);
     }
 
     public static function button($label = 'Button', array $attr = [])
