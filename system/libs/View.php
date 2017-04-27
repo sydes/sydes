@@ -20,11 +20,7 @@ class View
      */
     public function __construct($view, $data = [])
     {
-        $part = explode('/', $view);
-
-        if (count($part) != 2) {
-            throw new \InvalidArgumentException(t('error_view_argument'));
-        }
+        $part = explode('/', $view, 2);
 
         $this->module = $part[0];
         $this->view = $part[1];
