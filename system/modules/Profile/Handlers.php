@@ -15,14 +15,14 @@ class Handlers
                 'title' => app('user')->username,
                 'items' => [
                     'profile' => [
-                        'title' => 'profile',
+                        'title' => t('profile'),
                         'url' => '/admin/profile',
                     ],
                     'div1' => [
                         'attr' => ['class' => 'divider'],
                     ],
                     'logout' => [
-                        'title' => 'logout',
+                        'title' => t('logout'),
                         'url' => '/auth/logout',
                         'attr' => ['id' => 'logout'],
                     ]
