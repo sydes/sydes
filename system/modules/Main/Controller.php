@@ -37,7 +37,7 @@ class Controller
 
             app('user')->login($r->input('username'), $r->input('password'));
 
-            return redirect('/admin/sites/1/edit');
+            return redirect('/admin/sites/1');
         }
 
         $installed = glob(DIR_L10N.'/locales/*.php');
