@@ -19,18 +19,45 @@ class Controller
     public function installer()
     {
         if (file_exists(DIR_APP.'/config.php')) {
-            return 'Installed';
+            return text('Site already installed');
         }
 
         $r = app('request');
-        if ($r->isPost()) {
-            app('cmf')->install([
-                'email' => $r->input('email'),
-                'username' => $r->input('username'),
-                'password' => $r->input('password'),
-                'mastercode' => $r->input('mastercode'),
+        $step = $r->input('step', 1);
+        $installer = model('Main/Installer');
+
+        $stepData = [];
+        if ($step == 1) {
+            $installed = str_replace([DIR_L10N.'/locales/', '.php'], '', glob(DIR_L10N.'/locales/*.php'));
+
+            if (empty($installed)) {
+                $data = app('api')->getTranslations('Main');
+                if (!$data) {
+                    return text('Api server down. Please, download language package manually and unzip into /app/l10n');
+                }
+
+                $all = app('api')->getLocales();
+                foreach ($data as $d) {
+                    $stepData['locales'][$d] = $all[$d];
+                }
+            } else {
+                foreach ($installed as $key) {
+                    $className = 'Locales\\'.$key;
+                    $class = new $className;
+                    $stepData['locales'][$class->getisoCode()] = $class->getNativeName();
+                }
+            }
+
+            $installer->step1();
+        } elseif ($step == 2) {
+            $stepData['locale'] = $r->input('locale');
+
+            $installer->step2($stepData['locale']);
+
+            app('translator')->init($stepData['locale']);
+        } elseif ($step == 3) {
+            $installer->step3($r->only('email', 'username', 'password', 'mastercode', 'locale') + [
                 'siteName' => 'Site Name',
-                'locale' => $r->input('locale'),
                 'domain' => $r->getUri()->getHost(),
                 'timeZone' => $r->input('time_zone'),
             ]);
@@ -40,35 +67,15 @@ class Controller
             return redirect('/admin/sites/1');
         }
 
-        $installed = glob(DIR_L10N.'/locales/*.php');
-        $locales = [];
+        return $this->step($step, $stepData);
+    }
 
-        if (empty($installed)) {
-            $data = app('api')->getTranslations('Main');
-            if (!is_array($data)) {
-                return text('Api server down. Please, download language package manually and unzip into /app/l10n');
-            }
+    private function step($num, $data)
+    {
+        $dir = DIR_SYSTEM.'/modules/Main/views/installer';
+        $step = render($dir.'/step'.$num.'.php', $data);
 
-            $all = app('api')->getLocales();
-            foreach ($data as $d) {
-                $locales[$d] = $all[$d];
-            }
-        } else {
-            foreach ($installed as $package) {
-                $key = str_replace([DIR_L10N.'/locales/', '.php'], '', $package);
-
-                $className = 'Locales\\'.$key;
-                $class = new $className;
-                $locales[$class->getisoCode()] = $class->getNativeName();
-            }
-        }
-
-        return html(render(DIR_SYSTEM.'/modules/Auth/views/form.php', [
-            'locales' => $locales,
-            'errors' => checkServer(),
-            'title' => 'Sign up for',
-            'signUp' => true,
-        ]));
+        return html(render($dir.'.php', compact('step', 'num')));
     }
 
     public function siteNotFound()

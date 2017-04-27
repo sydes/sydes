@@ -35,4 +35,17 @@ return array(
     'settings' => 'Settings',
     'upload' => 'Upload',
     'save' => 'Save',
+
+    'next' => 'Next',
+    'your_account' => 'Create your account',
+    'username' => 'Username',
+    'password' => 'Password',
+    'developer_password' => 'Developer password',
+    'email' => 'E-mail',
+    'installer_step_2' => 'Installer - Step 2',
+
+    'profile' => 'Profile',
+    'remember_me' => 'Remember me',
+    'login' => 'Login',
+    'logout' => 'Logout',
 );

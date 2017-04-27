@@ -25,39 +25,15 @@
         <?=$errors;?>
         <div><a href=".">Refresh page</a></div>
     <?php } else { ?>
-        <div><input class="input" type="text" name="username" placeholder="Username" required></div>
-        <div><input class="input" type="password" name="password" placeholder="Password" required></div>
-        <?php if ($signUp) { ?>
-            <div><input class="input" type="text" name="mastercode" placeholder="Developer password" required></div>
-            <div><input class="input" type="email" name="email" placeholder="Email" required></div>
-            <div><?=H::select('locale', '', $locales, ['class' => ['input']]);?></div>
-            <div class="two">&nbsp;</div><div class="two last"><button type="submit">Create account</button></div>
-            <input type="hidden" id="time_zone" name="time_zone">
-<script>
-    document.getElementById('time_zone').value = (new Date()).getTimezoneOffset() / 60;
-    var lang = (navigator.languages && navigator.languages.length) ?
-        navigator.languages[0] : navigator.language || navigator.userLanguage,
-        fallback = lang.split('-')[0];
-    var select = document.getElementsByName('locale')[0], locales = [];
-    for (var i in select.options) {
-        if (!select.options.hasOwnProperty(i)) continue;
-        locales.push(select.options[i].value);
-    }
-    if (locales.indexOf(lang) != -1) {
-        select.value = lang;
-    } else if (locales.indexOf(fallback) != -1) {
-        select.value = fallback;
-    } else {
-        select.value = 'en';
-    }
-</script>
-        <?php } else { ?>
-            <div class="two">
-                <?php if ($autoLogin){?>
-                    <label><input type="checkbox" name="remember"> <?=t('remember_me')?></label>
-                <?php } ?>
-            </div><div class="two last"><button type="submit"><?=t('login');?></button></div>
-        <?php } ?>
+        <div><input class="input" type="text" name="username" placeholder="<?=t('username');?>" required></div>
+        <div><input class="input" type="password" name="password" placeholder="<?=t('password');?>" required></div>
+
+        <div class="two">
+            <?php if ($autoLogin){?>
+                <label><input type="checkbox" name="remember"> <?=t('remember_me')?></label>
+            <?php } ?>
+        </div><div class="two last"><button type="submit"><?=t('login');?></button></div>
+
     <?php } ?>
     <?=csrf_field();?>
 </form>

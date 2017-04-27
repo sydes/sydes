@@ -35,4 +35,17 @@ return array(
     'settings' => 'Настройки',
     'upload' => 'Загрузить',
     'save' => 'Сохранить',
+
+    'next' => 'Далее',
+    'your_account' => 'Создание аккаунта',
+    'username' => 'Логин',
+    'password' => 'Пароль',
+    'developer_password' => 'Пароль разработчика',
+    'email' => 'Почта',
+    'installer_step_2' => 'Установка - Шаг 2',
+
+    'profile' => 'Профиль',
+    'remember_me' => 'Запомни меня',
+    'login' => 'Войти',
+    'logout' => 'Выйти',
 );

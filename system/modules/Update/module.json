@@ -1,8 +1,0 @@
-{
-  "name": "Cms Updater",
-  "description": "Checks updates for sydes",
-  "version": "1.0",
-  "require": [
-    "Modules"
-  ]
-}

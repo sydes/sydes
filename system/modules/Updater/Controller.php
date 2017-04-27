@@ -4,7 +4,7 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Update;
+namespace Module\Updater;
 
 use Sydes\AdminMenu;
 use Sydes\Route;
@@ -13,13 +13,13 @@ class Controller
 {
     public static function routes(Route $r)
     {
-        $r->get('/admin/update', 'Update@index');
+        $r->get('/admin/update', 'Updater@index');
     }
 
     public function install(AdminMenu $menu)
     {
-        $menu->addItem('modules/tools/update', [
-            'title' => 'module_update',
+        $menu->addItem('modules/tools/updater', [
+            'title' => 'module_updater',
             'url' => '/admin/update',
         ], 20);
     }
@@ -29,7 +29,8 @@ class Controller
         $d = document([
             'content' => 'Current version: '.SYDES_VERSION,
         ]);
-        $d->title = t('module_update');
+        $d->title = t('module_updater');
+
         return $d;
     }
 }

@@ -50,6 +50,10 @@ class Cli
 
                     $you->say('You installed '.$extension.' '.$name);
                 } else {
+                    if (file_exists(DIR_APP.'/config.php')) {
+                        $you->say('Site already installed');
+                        return;
+                    }
 
                     $params = [
                         'email' => 'admin@domain.tld',
@@ -91,7 +95,10 @@ Username: demo\nPassword: demo\nDeveloper password: demo\nBut we need some info.
                     $params['domain'] = $you->ask('Domain (test.com)');
                     $you->rewind();
 
-                    app('cmf')->install($params);
+                    $installer = model('Main/Installer');
+                    $installer->step1();
+                    $installer->step2($params['locale']);
+                    $installer->step3($params);
 
                     $what = $demo ? 'Demo site' : 'Site';
                     $you->say($what.' installed')
@@ -133,7 +140,7 @@ Username: demo\nPassword: demo\nDeveloper password: demo\nBut we need some info.
                         $commands->run('delete', [$extension, $name]);
                     }
                 } else {
-                    app('cmf')->uninstall();
+                    model('Main/Installer')->uninstall();
                     $you->say('SyDES uninstalled');
                 }
             }, ['Uninstall site or provide type and name of extension to uninstall it', [

@@ -168,7 +168,7 @@ class Modules
     private function load()
     {
         if (empty($this->list)) {
-            $installed = array_keys(app('site')->get('modules'));
+            $installed = array_keys(app('site')->get('modules', []));
             $this->list['default'] = str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
             $this->list['custom'] = str_replace(DIR_APP.'/modules/', '', glob(DIR_APP.'/modules/*', GLOB_ONLYDIR));
             $this->list['uninstalled'] = array_diff($this->list['custom'], $installed);

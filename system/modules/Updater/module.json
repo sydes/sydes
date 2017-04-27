@@ -1,0 +1,8 @@
+{
+  "name": "Updater",
+  "description": "Checks updates for sydes and extensions",
+  "version": "1.0",
+  "require": [
+    "Modules"
+  ]
+}

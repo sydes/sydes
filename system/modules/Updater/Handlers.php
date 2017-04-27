@@ -1,6 +1,6 @@
 <?php
 
-namespace Module\Update;
+namespace Module\Updater;
 
 use Sydes\Event;
 
