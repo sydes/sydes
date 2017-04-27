@@ -24,4 +24,16 @@ class Route extends \FastRoute\RouteCollector
         $this->put('/admin/'.$alias.'/{id:'.$itemRegex.'}', $module.'@update');
         $this->delete('/admin/'.$alias.'/{id:'.$itemRegex.'}', $module.'@destroy');
     }
+
+    /**
+     * This single route declaration for viewing and editing module settings
+     *
+     * @param string $alias
+     * @param string $module
+     */
+    public function settings($alias, $module)
+    {
+        $this->get('/admin/'.$alias.'/settings', $module.'@settings');
+        $this->put('/admin/'.$alias.'/settings', $module.'@updateSettings');
+    }
 }
