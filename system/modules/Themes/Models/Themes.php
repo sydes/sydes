@@ -6,7 +6,6 @@
  */
 namespace Module\Themes\Models;
 
-
 class Themes
 {
     private $ext = '.html';
