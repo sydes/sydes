@@ -10,6 +10,6 @@ class TextField extends FieldBase
 {
     public function getField()
     {
-        return \H::textInput($this->name, $this->value);
+        return \H::textInput($this->name, $this->value, $this->settings);
     }
 }

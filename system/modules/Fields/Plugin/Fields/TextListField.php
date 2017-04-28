@@ -12,7 +12,7 @@ class TextListField extends FieldBase
 
     public function getField()
     {
-        return \H::textarea($this->name, implode("\n", $this->value));
+        return \H::textarea($this->name, implode("\n", $this->value), $this->settings);
     }
 
     public function defaultFormatter()
