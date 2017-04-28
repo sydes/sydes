@@ -23,11 +23,11 @@ class Controller
         }
 
         $r = app('request');
-        $step = $r->input('step', 1);
+        $num = $r->input('step', 1);
         $installer = model('Main/Installer');
 
         $stepData = [];
-        if ($step == 1) {
+        if ($num == 1) {
             $installed = str_replace([DIR_L10N.'/locales/', '.php'], '', glob(DIR_L10N.'/locales/*.php'));
 
             if (empty($installed)) {
@@ -49,13 +49,13 @@ class Controller
             }
 
             $installer->step1();
-        } elseif ($step == 2) {
+        } elseif ($num == 2) {
             $stepData['locale'] = $r->input('locale');
 
             $installer->step2($stepData['locale']);
 
             app('translator')->init($stepData['locale']);
-        } elseif ($step == 3) {
+        } elseif ($num == 3) {
             $installer->step3($r->only('email', 'username', 'password', 'mastercode', 'locale') + [
                 'siteName' => 'Site Name',
                 'domain' => $r->getUri()->getHost(),
@@ -67,13 +67,8 @@ class Controller
             return redirect('/admin/sites/1');
         }
 
-        return $this->step($step, $stepData);
-    }
-
-    private function step($num, $data)
-    {
         $dir = DIR_SYSTEM.'/modules/Main/views/installer';
-        $step = render($dir.'/step'.$num.'.php', $data);
+        $step = render($dir.'/step'.$num.'.php', $stepData);
 
         return html(render($dir.'.php', compact('step', 'num')));
     }
