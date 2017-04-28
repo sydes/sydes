@@ -1,5 +1,9 @@
 $(document).on('click', '[data-submit]', function () {
-    $('#'+$(this).data('submit')).submit();
+    var form = $('#'+$(this).data('submit'));
+    if (form.find('[type=submit]').length == 0) {
+        form.append($('<button/>', {type: 'submit'}).hide());
+    }
+    form.find('[type=submit]').trigger('click');
 });
 
 $(document).ready(function () {
