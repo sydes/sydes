@@ -150,13 +150,6 @@ class DefaultServicesProvider
             return new Api();
         };
 
-        /**
-         * @return Cmf
-         */
-        $c['cmf'] = function () {
-            return new Cmf();
-        };
-
         $c['app'] = function () {
             $path = DIR_APP.'/config.php';
 
