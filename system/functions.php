@@ -514,10 +514,10 @@ function head($status = 204, $headers = [])
 /**
  * Get PSR-7 Response object with Content-Type as json
  *
- * @param string $array
- * @param int    $status
- * @param array  $headers
- * @param int    $encodingOptions
+ * @param array $array
+ * @param int   $status
+ * @param array $headers
+ * @param int   $encodingOptions
  * @return ResponseInterface
  */
 function json($array, $status = 200, $headers = [], $encodingOptions = 79)
