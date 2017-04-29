@@ -2,6 +2,8 @@
 return array(
     'module_main' => 'Главный модуль',
 
+    'error_cannot_override_service' => 'Не могу перезаписать сервис {class}',
+    'error_found_circular_dependencies' => 'Найдены циклические зависимости: {cycle}',
     'error_class_not_found' => 'Класс {class} не найден',
     'error_method_not_found' => 'Метод {method} не найден в {class}',
     'error_module_folder_not_found' => 'Директория модуля {module} не найдена',

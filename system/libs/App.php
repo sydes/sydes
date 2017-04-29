@@ -15,17 +15,29 @@ class App
 {
     /** @var Container */
     private $container;
+    private $defaultSettings = [
+        'cacheRouter'  => true,
+        'debugLevel'   => 0,
+        'checkUpdates' => true,
+    ];
 
     public function __construct(array $values = [])
     {
         session_start();
         mb_internal_encoding('UTF-8');
 
-        $this->container = new Container($values);
-        Container::setContainer($this->container);
-
         error_reporting(-1);
         set_error_handler('sydesErrorHandler');
+
+        $values['settings'] = array_merge($this->defaultSettings, ifsetor($values['settings'], []));
+        $values['section'] = 'base';
+
+        $this->container = new Container($values, ['namespaces' => ['Sydes']]);
+
+        $this->container->register(new DefaultServicesProvider);
+        $this->container->register(new ExceptionHandlersProvider);
+
+        Container::setContainer($this->container);
 
         class_alias('Sydes\Html\BS4','H');
         class_alias('Sydes\Html\FormBuilder','Form');
@@ -254,7 +266,7 @@ class App
             throw new \Exception(t('error_class_not_found', ['class' => $class]));
         }
 
-        $instance = new $class;
+        $instance = $this->container->instantiate($class);
         if (!method_exists($instance, $route['method'])) {
             throw new \Exception(t('error_method_not_found', [
                 'class' => $class,
@@ -262,7 +274,7 @@ class App
             ]));
         }
 
-        return call_user_func_array([$instance, $route['method']], ifsetor($params[1], []));
+        return $this->container->call([$instance, $route['method']], ifsetor($params[1], []));
     }
 
     private function prepare($content)

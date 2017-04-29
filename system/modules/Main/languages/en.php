@@ -2,6 +2,8 @@
 return array(
     'module_main' => 'Main Module',
 
+    'error_cannot_override_service' => 'Cannot override frozen service {class}',
+    'error_found_circular_dependencies' => 'Found circular dependencies: {cycle}',
     'error_class_not_found' => 'Class {class} not found',
     'error_method_not_found' => 'Method {method} not found in {class}',
     'error_module_folder_not_found' => 'Folder for module {module} is not found',

@@ -6,16 +6,14 @@
  */
 namespace Sydes;
 
+use Pimple\ServiceProviderInterface;
 use Sydes\Exception\AppException;
 use Sydes\Exception\BaseHandler;
 use Sydes\Exception\RedirectException;
 
-class ExceptionHandlersProvider
+class ExceptionHandlersProvider implements ServiceProviderInterface
 {
-    /**
-     * @param Container $c
-     */
-    public function register($c)
+    public function register(\Pimple\Container $c)
     {
         $c['RedirectExceptionHandler'] = $c->protect(function (RedirectException $e) {
             return redirect($e->getUrl());
