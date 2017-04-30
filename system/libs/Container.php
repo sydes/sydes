@@ -133,6 +133,8 @@ class Container extends PimpleContainer implements ContainerInterface
                 $val = $args[$param->name];
             } elseif ($param->isOptional()) {
                 $val = $param->getDefaultValue();
+            } elseif (isset($this[$param->name])) {
+                $val = $this[$param->name];
             } else {
                 $val = null;
             }
@@ -223,6 +225,10 @@ class Container extends PimpleContainer implements ContainerInterface
                 $val = isset($this[$paramClass]) ? $this[$paramClass] : $this->make($paramClass);
             } elseif (array_key_exists($param->name, $args)) {
                 $val = $args[$param->name];
+            } elseif ($param->isOptional()) {
+                $val = $param->getDefaultValue();
+            } elseif (isset($this[$param->name])) {
+                $val = $this[$param->name];
             } else {
                 $val = null;
             }
