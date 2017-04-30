@@ -10,8 +10,9 @@ class Model
 {
     /** @var \PDO */
     protected $db;
-    public function __construct()
+
+    public function __construct($db)
     {
-        $this->db = app('db');
+        $this->db = $db;
     }
 }
