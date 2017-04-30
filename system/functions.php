@@ -667,7 +667,7 @@ function model($module)
     $part = strpos($module, '/') !== false ? explode('/', $module) : [$module, $module];
     $class = 'Module\\'.$part[0].'\\Models\\'.$part[1];
 
-    return new $class();
+    return app()->instantiate($class);
 }
 
 /**
