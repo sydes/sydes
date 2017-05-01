@@ -58,11 +58,11 @@ class Installer
             'email' => $params['email'],
         ]);
 
-        model('Settings/App')->save([
+        model('Settings/App')->create([
             'timeZone' => 'Etc/GMT'.$params['timeZone'],
-            'dateFormat' => 'd.m.Y',
             'locale' => $params['locale'],
-            'emailFrom' => '',
+            'mailer_defaultFrom' => 'robot@'.$params['domain'],
+            'mailer_defaultTo' => $params['email'],
         ]);
 
         $themes = str_replace(DIR_THEME.'/', '', glob(DIR_THEME.'/*', GLOB_ONLYDIR));
