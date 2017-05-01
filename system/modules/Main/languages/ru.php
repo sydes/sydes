@@ -8,6 +8,7 @@ return array(
     'error_method_not_found' => 'Метод {method} не найден в {class}',
     'error_module_folder_not_found' => 'Директория модуля {module} не найдена',
     'error_iblock_not_found' => 'Инфоблок {name} не найден',
+    'invalid_csrf_token' => 'Неверный csrf токен',
 
     'confirm_deletion' => 'Вы действительно хотите удалить это?',
 
