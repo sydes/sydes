@@ -20,6 +20,9 @@ class Kernel
         session_start();
         mb_internal_encoding('UTF-8');
 
+        error_reporting(-1);
+        set_error_handler('sydesErrorHandler');
+
         if (!isset($_SESSION['site'])) {
             $_SESSION['site'] = 1;
         }
@@ -28,6 +31,8 @@ class Kernel
 
         $this->container = new Container($values);
         Container::setContainer($this->container);
+
+        $this->container->register(new \Sydes\DefaultServicesProvider);
 
         $this->output = new Output();
         $this->container['siteId'] = $_SESSION['site'];
