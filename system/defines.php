@@ -16,6 +16,7 @@ define('DIR_L10N',   DIR_APP.'/l10n');
 define('DIR_LOG',    DIR_APP.'/logs');
 define('DIR_MODULE', DIR_APP.'/modules');
 define('DIR_SITE',   DIR_APP.'/sites');
+define('DIR_STORAGE',DIR_APP.'/storage');
 define('DIR_TEMP',   DIR_APP.'/temp');
 
 define('SYDES_VERSION', '3.0.0-b1');

@@ -77,7 +77,7 @@ class DefaultServicesProvider implements ServiceProviderInterface
         };
 
         $default['app'] = function () {
-            $path = DIR_APP.'/config.php';
+            $path = DIR_STORAGE.'/app.php';
 
             return new Settings($path, new FileDriver());
         };
