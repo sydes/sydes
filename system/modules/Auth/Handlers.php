@@ -12,7 +12,7 @@ class Handlers
          * Auth middleware :)
          */
         $events->on('route.found', 'admin/*', function () {
-            if (!app('user')->isLoggedIn()) {
+            if (!app('Auth')->check()) {
                 $_SESSION['entry'] = app('request')->getUri()->getPath();
                 throw new RedirectException('/auth/login');
             }

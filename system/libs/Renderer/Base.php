@@ -80,7 +80,7 @@ class Base
 
         $this->footer[] = '<ul id="notify"></ul>';
 
-        if (app('user')->isLoggedIn()) {
+        if (app('Auth')->check()) {
             $this->footer[] = $this->getToolbar();
         }
 

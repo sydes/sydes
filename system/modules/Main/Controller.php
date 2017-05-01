@@ -62,7 +62,7 @@ class Controller
                 'timeZone' => $r->input('time_zone'),
             ]);
 
-            app('user')->login($r->input('username'), $r->input('password'));
+            app('Auth')->login();
 
             return redirect('/admin/sites/1');
         }

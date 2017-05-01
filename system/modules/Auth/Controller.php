@@ -34,11 +34,12 @@ class Controller
     {
         $r = app('request');
 
-        if (!app('user')->login($r->input('username'), $r->input('password'), $r->has('remember'))) {
+        if (!app('Auth')->attempt($r->input('username'), $r->input('password'), $r->has('remember'))) {
             app('logger')->info("{name} is not logged on. {pass} - wrong password", [
                 'name' => $r->input('username'),
                 'pass' => $r->input('password'),
             ]);
+
             return back();
         }
 
@@ -53,7 +54,8 @@ class Controller
 
     public function logout()
     {
-        app('user')->logout();
+        app('Auth')->logout();
+
         return redirect();
     }
 }

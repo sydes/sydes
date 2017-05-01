@@ -68,12 +68,6 @@ class DefaultServicesProvider implements ServiceProviderInterface
             return new $class;
         };
 
-        $default['user'] = function () {
-            $data = include DIR_APP.'/users.php';
-
-            return new User($data);
-        };
-
         $default['logger'] = function ($c) {
             return new Logger(DIR_LOG.'/'.date('Ym').'.log', $c['request']->getIp());
         };
