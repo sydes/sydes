@@ -86,7 +86,7 @@ class Auth
 
     public function getUser($key = null)
     {
-        return $key == null ? $this->user : $this->user[$key];
+        return $key === null ? $this->user : $this->user[$key];
     }
 
     protected function hash()
