@@ -24,6 +24,8 @@ class Kernel
             $_SESSION['site'] = 1;
         }
 
+        $_SERVER['HTTP_HOST'] = 'from.cli';
+
         $this->container = new Container($values);
         Container::setContainer($this->container);
 
