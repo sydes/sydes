@@ -43,14 +43,14 @@ class Cli
             function ($extension, $name, $demo = false) use ($you) {
                 if ($extension && $name) {
                     if ($extension == 'module') {
-                        app('cmf')->installModule($name);
+                        model('Modules')->install($name);
                     } else {
                         model('Themes')->activate($name);
                     }
 
                     $you->say('You installed '.$extension.' '.$name);
                 } else {
-                    if (file_exists(DIR_APP.'/config.php')) {
+                    if (model('Settings/App')->isCreated()) {
                         $you->say('Site already installed');
                         return;
                     }
@@ -110,15 +110,12 @@ Username: demo\nPassword: demo\nDeveloper password: demo\nBut we need some info.
                 '-d, --demo' => 'Use to install demo site',
             ]]);
 
-        $commands->add('update [extension] [name]', function ($extension = false, $name = false) use ($you) {
-            if ($extension && $name) {
-                $you->say('You updated '.$extension.' '.$name);
-            } else {
-                $error = app('cmf')->update();
-                if ($error === false) {
-                    $you->say('SyDES updated');
+        $commands->add('update [extension] [name]', function ($extension = null, $name = null) use ($you) {
+            if (model('Updater')->up($extension, $name)) {
+                if ($extension && $name) {
+                    $you->say('You updated '.$extension.' '.$name);
                 } else {
-                    $you->say('Not updated. There is error: '.$error);
+                    $you->say('SyDES updated');
                 }
             }
         }, ['Update site or provide type and name of extension to update it', [
@@ -130,7 +127,7 @@ Username: demo\nPassword: demo\nDeveloper password: demo\nBut we need some info.
             function ($extension = false, $name = false, $d = false) use ($commands, $you) {
                 if ($extension && $name) {
                     if ($extension == 'module') {
-                        app('cmf')->uninstallModule($name);
+                        model('Modules')->uninstall($name);
                         $you->say('You uninstalled module '.$name);
                     } else {
                         $you->say('You can\'t uninstall theme');

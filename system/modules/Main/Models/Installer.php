@@ -11,7 +11,7 @@ class Installer
     public function step1()
     {
         $folders = ['', '/cache', '/iblocks', '/l10n/locales', '/l10n/translations', '/logs',
-            '/modules', '/sites', '/temp', '/thumbs'];
+            '/modules', '/sites', '/storage', '/temp', '/thumbs'];
         foreach ($folders as $folder) {
             if (!file_exists(DIR_APP.$folder)) {
                 mkdir(DIR_APP.$folder, 0777, true);
@@ -51,20 +51,19 @@ class Installer
             $params['locale'] = 'en';
         }
 
-        array2file([
+        model('Main/UserRepo')->create([
             'username' => $params['username'],
-            'password' => password_hash($params['password'], PASSWORD_DEFAULT),
-            'mastercode' => password_hash($params['mastercode'], PASSWORD_DEFAULT),
+            'password' => $params['password'],
+            'mastercode' => $params['mastercode'],
             'email' => $params['email'],
-            'autologin' => 0,
-        ], DIR_APP.'/user.php');
+        ]);
 
-        app('app')->set([
+        model('Settings/App')->save([
             'timeZone' => 'Etc/GMT'.$params['timeZone'],
             'dateFormat' => 'd.m.Y',
             'locale' => $params['locale'],
             'emailFrom' => '',
-        ])->save();
+        ]);
 
         $themes = str_replace(DIR_THEME.'/', '', glob(DIR_THEME.'/*', GLOB_ONLYDIR));
 

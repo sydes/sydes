@@ -18,7 +18,7 @@ class Controller
 
     public function installer()
     {
-        if (file_exists(DIR_APP.'/config.php')) {
+        if (model('Settings/App')->isCreated()) {
             return text('Site already installed');
         }
 

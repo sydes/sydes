@@ -60,7 +60,7 @@ class App
 
     private function process()
     {
-        if (!file_exists(DIR_APP.'/config.php')) {
+        if (!model('Settings/App')->isCreated()) {
             return $this->execute(['Main@installer']);
         }
 

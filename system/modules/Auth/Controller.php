@@ -23,7 +23,7 @@ class Controller
     public function loginForm()
     {
         return view('auth/form', [
-            'autoLogin' => app('user')->autologin,
+            'autoLogin' => app('Auth')->getUser('autoLogin'),
             'errors' => checkServer(),
             'title' => 'Log in to',
             'signUp' => false,
