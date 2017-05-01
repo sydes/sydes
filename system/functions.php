@@ -95,13 +95,13 @@ function assetsPath($module)
  * Load and execute file with given data.
  *
  * @param string $file
- * @param array  $data
+ * @param array  $renderData
  * @return string
  * @throws Exception
  */
-function render($file, $data = [])
+function render($file, $renderData = [])
 {
-    extract($data, EXTR_SKIP);
+    extract($renderData, EXTR_SKIP);
 
     try {
         ob_start();
