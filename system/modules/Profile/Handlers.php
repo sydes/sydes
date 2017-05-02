@@ -8,9 +8,9 @@ class Handlers
 {
     public function __construct(Event $events)
     {
-        $events->on('render.started', '*', function (Document $content) {
+        $events->on('render.started', '*', function (Document $doc) {
 
-            $content->addContextMenu('right', 'profile', [
+            $doc->addContextMenu('right', 'profile', [
                 'weight' => 0,
                 'title' => app('Auth')->getUser('username'),
                 'items' => [

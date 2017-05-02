@@ -36,6 +36,33 @@ class UserRepo
     }
 
     /**
+     * @param int   $id
+     * @param array $new
+     */
+    public function update($id, array $new)
+    {
+        $old = $this->get($id);
+
+        if (isset($new['username'])) {
+            $old['username'] = $new['username'];
+        }
+        if (isset($new['password'])) {
+            $old['password'] = password_hash($new['password'], PASSWORD_DEFAULT);
+        }
+        if (isset($new['mastercode'])) {
+            $old['mastercode'] = password_hash($new['mastercode'], PASSWORD_DEFAULT);
+        }
+        if (isset($new['autoLogin'])) {
+            $old['autoLogin'] = $new['autoLogin'];
+        }
+        if (isset($new['email'])) {
+            $old['email'] = $new['email'];
+        }
+
+        $this->save($old);
+    }
+
+    /**
      * @param int $id
      * @return array
      */
@@ -51,7 +78,7 @@ class UserRepo
     /**
      * @param array $user
      */
-    public function save(array $user)
+    protected function save(array $user)
     {
         $this->users[$user['id']] = $user;
         array2file($this->users, $this->storage);

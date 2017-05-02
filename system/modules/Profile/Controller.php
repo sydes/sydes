@@ -13,46 +13,49 @@ class Controller
     public static function routes(Route $r)
     {
         $r->get('/admin/profile', 'Profile@edit');
-        $r->post('/admin/profile', 'Profile@update');
+        $r->put('/admin/profile', 'Profile@update');
     }
 
     public function edit()
     {
         $d = document([
-            'content'       => view('profile/form', ['autologin' => app('user')->autologin]),
-            'sidebar_left'  => '',
-            'sidebar_right' => saveButton(DIR_APP.'/config.php').\H::mastercodeInput(),
-            'form_url'      => '/admin/profile',
-            'meta_title'    => t('module_profile'),
-            'breadcrumbs'   => [
-                ['title' => t('module_profile')],
-            ],
+            'title' => t('module_profile'),
+            'header_actions' => \H::submitButton(t('save'), ['button' => 'primary', 'data-submit' => 'form-main']),
+            'content' => view('profile/form', ['autoLogin' => app('Auth')->getUser('autoLogin')]),
         ]);
+
         return $d;
     }
 
     public function update()
     {
-        restricted();
+        $r = app('request');
 
-        $config = app('config');
-        unset($config['site']);
-        $post = app('request')->request;
+        if (!app('Auth')->isDev()) {
+            abort(403, t('mastercode_needed'));
+        }
 
-        if ($post['newusername'] != ''){
-            $config['user']['username'] = $post['newusername'];
-        }
-        if ($post['newpassword'] != ''){
-            $config['user']['password'] = md5($post['newpassword']);
-        }
-        if ($post['newmastercode'] != ''){
-            $config['user']['mastercode'] = md5($post['newmastercode']);
-        }
-        $config['user']['autologin'] = app('request')->has('autologin');
+        $user = [];
+        $post = $r->only('newusername', 'newpassword', 'newmastercode', 'newemail');
 
-        array2file($config, DIR_APP.'/config.php');
+        if ($post['newusername'] != '') {
+            $user['username'] = $post['newusername'];
+        }
+        if ($post['newpassword'] != '') {
+            $user['password'] = $post['newpassword'];
+        }
+        if ($post['newmastercode'] != '') {
+            $user['mastercode'] = $post['newmastercode'];
+        }
+        if ($post['newemail'] != '') {
+            $user['email'] = $post['newemail'];
+        }
+        $user['autoLogin'] = $r->input('autoLogin');
+
+        model('Main/UserRepo')->update(app('Auth')->getUser('id'), $user);
 
         notify(t('saved'));
+
         return back();
     }
 }
