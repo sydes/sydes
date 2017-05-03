@@ -2,7 +2,6 @@
 
 <div class="group"><input class="input" type="text" name="username" placeholder="<?=t('username');?>" required></div>
 <div class="group"><input class="input" type="password" name="password" placeholder="<?=t('password');?>" required></div>
-<div class="group"><input class="input" type="text" name="mastercode" placeholder="<?=t('developer_password');?>" required></div>
 <div class="group"><input class="input" type="email" name="email" placeholder="<?=t('email');?>" required></div>
 
 <input type="hidden" name="time_zone">

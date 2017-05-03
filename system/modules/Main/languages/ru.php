@@ -9,7 +9,6 @@ return array(
     'error_module_folder_not_found' => 'Директория модуля {module} не найдена',
     'error_iblock_not_found' => 'Инфоблок {name} не найден',
     'invalid_csrf_token' => 'Неверный csrf токен',
-    'mastercode_needed' => 'Требуется пароль разработчика',
 
     'confirm_deletion' => 'Вы действительно хотите удалить это?',
 
@@ -44,7 +43,6 @@ return array(
     'your_account' => 'Создание аккаунта',
     'username' => 'Логин',
     'password' => 'Пароль',
-    'developer_password' => 'Пароль разработчика',
     'email' => 'Почта',
     'installer_step_2' => 'Установка - Шаг 2',
 

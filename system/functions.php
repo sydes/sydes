@@ -647,15 +647,6 @@ function e($str)
     return Base::encode($str);
 }
 
-function restricted()
-{
-    if (!app('user')->isAdmin()) {
-        alert(t('error_mastercode_needed'), 'warning');
-        $to = ifsetor(app('request')->headers['REFERER'], '/admin');
-        throw new Sydes\Exception\RedirectException($to);
-    }
-}
-
 /**
  * Loads model of the specified module
  *

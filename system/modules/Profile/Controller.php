@@ -31,21 +31,14 @@ class Controller
     {
         $r = app('request');
 
-        if (!app('Auth')->isDev()) {
-            abort(403, t('mastercode_needed'));
-        }
-
         $user = [];
-        $post = $r->only('newusername', 'newpassword', 'newmastercode', 'newemail');
+        $post = $r->only('newusername', 'newpassword', 'newemail');
 
         if ($post['newusername'] != '') {
             $user['username'] = $post['newusername'];
         }
         if ($post['newpassword'] != '') {
             $user['password'] = $post['newpassword'];
-        }
-        if ($post['newmastercode'] != '') {
-            $user['mastercode'] = $post['newmastercode'];
         }
         if ($post['newemail'] != '') {
             $user['email'] = $post['newemail'];

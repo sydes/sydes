@@ -18,10 +18,6 @@
                     <input type="text" name="newpassword" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label><?=t('new_mastercode');?></label>
-                    <input type="text" name="newmastercode" class="form-control">
-                </div>
-                <div class="form-group">
                     <label><?=t('enable_autologin');?></label>
                     <?=H::yesNo('autoLogin', $autoLogin);?>
                 </div>
@@ -30,8 +26,8 @@
         <hr>
         <div class="row">
             <div class="col-sm-6 offset-sm-3 form-group">
-                <label><?=t('mastercode');?></label>
-                <input type="password" name="mastercode" class="form-control" required>
+                <label><?=t('current_password');?></label>
+                <input type="password" name="password" class="form-control" required>
             </div>
         </div>
         <?=Form::close();?>

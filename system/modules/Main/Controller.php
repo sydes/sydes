@@ -56,7 +56,7 @@ class Controller
 
             app('translator')->init($stepData['locale']);
         } elseif ($num == 3) {
-            $installer->step3($r->only('email', 'username', 'password', 'mastercode', 'locale') + [
+            $installer->step3($r->only('email', 'username', 'password', 'locale') + [
                 'siteName' => 'Site Name',
                 'domain' => $r->getUri()->getHost(),
                 'timeZone' => $r->input('time_zone'),

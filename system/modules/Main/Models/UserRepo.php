@@ -27,7 +27,6 @@ class UserRepo
 
         $user['id'] = $max;
         $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
-        $user['mastercode'] = password_hash($user['mastercode'], PASSWORD_DEFAULT);
         $user['autoLogin'] = 0;
 
         $this->save($user);
@@ -48,9 +47,6 @@ class UserRepo
         }
         if (isset($new['password'])) {
             $old['password'] = password_hash($new['password'], PASSWORD_DEFAULT);
-        }
-        if (isset($new['mastercode'])) {
-            $old['mastercode'] = password_hash($new['mastercode'], PASSWORD_DEFAULT);
         }
         if (isset($new['autoLogin'])) {
             $old['autoLogin'] = $new['autoLogin'];

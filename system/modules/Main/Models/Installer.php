@@ -54,7 +54,6 @@ class Installer
         model('Main/UserRepo')->create([
             'username' => $params['username'],
             'password' => $params['password'],
-            'mastercode' => $params['mastercode'],
             'email' => $params['email'],
         ]);
 

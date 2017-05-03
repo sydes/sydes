@@ -59,7 +59,6 @@ class Cli
                         'email' => 'admin@domain.tld',
                         'username' => 'demo',
                         'password' => 'demo',
-                        'mastercode' => 'demo',
                         'siteName' => 'Demo site',
                         'locale' => 'en',
                         'domain' => '',
@@ -80,8 +79,6 @@ Username: demo\nPassword: demo\nDeveloper password: demo\nBut we need some info.
                         $params['username'] = $you->ask('Username');
                         $you->rewind();
                         $params['password'] = $you->ask('Password');
-                        $you->rewind();
-                        $params['mastercode'] = $you->ask('Developer password');
                         $you->rewind();
                         $you->say('Good!');
                         $you->say("Now we'll create your site");

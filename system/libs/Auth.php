@@ -74,16 +74,6 @@ class Auth
         return $this->logged;
     }
 
-    public function isDev()
-    {
-        $r = app('request');
-        if ($r->has('mastercode') && password_verify($r->input('mastercode'), $this->user['mastercode'])) {
-            $_SESSION['dev'] = 1;
-        }
-
-        return isset($_SESSION['dev']);
-    }
-
     public function getUser($key = null)
     {
         return $key === null ? $this->user : $this->user[$key];

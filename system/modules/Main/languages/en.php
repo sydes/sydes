@@ -9,7 +9,6 @@ return array(
     'error_module_folder_not_found' => 'Folder for module {module} is not found',
     'error_iblock_not_found' => 'InfoBlock {name} not found',
     'invalid_csrf_token' => 'Invalid csrf token',
-    'mastercode_needed' => 'Developer password needed',
 
     'confirm_deletion' => 'Are you really want to delete this?',
 
@@ -44,7 +43,6 @@ return array(
     'your_account' => 'Create your account',
     'username' => 'Username',
     'password' => 'Password',
-    'developer_password' => 'Developer password',
     'email' => 'E-mail',
     'installer_step_2' => 'Installer - Step 2',
 
