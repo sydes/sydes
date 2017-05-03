@@ -16,7 +16,7 @@ SyDES is a free open source content management framework for various small or me
 3. Friendly and customizable interface with some magic and changeable skins
 4. Easily expandable with modules, plugins, constructors and infoblocks
 5. Uses a SQLite3 via PDO
-6. Ease the development and integration of new templates, modules and plugins
+6. Easy the development and integration of new templates, modules and plugins
 7. User-friendly URLs, automatic robots.txt, sitemap.xml and rss
 
 ## Install
@@ -25,8 +25,8 @@ SyDES is a free open source content management framework for various small or me
 
 1. Download compiled archive from [last release](https://github.com/sydes/sydes/releases) and unzip in site root folder
 2. Open this site in browser
-3. Edit chmod, if needed
-4. Enter login, password, master code and e-mail
+3. Select your language from available
+4. Enter login, password and e-mail
 5. Create new site
 
 ### From console
