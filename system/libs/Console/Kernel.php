@@ -29,10 +29,9 @@ class Kernel
 
         $_SERVER['HTTP_HOST'] = 'from.cli';
 
-        $this->container = new Container($values);
+        $config = include DIR_SYSTEM.'/config.php';
+        $this->container = new Container($values, $config);
         Container::setContainer($this->container);
-
-        $this->container->register(new \Sydes\DefaultServicesProvider);
 
         $this->output = new Output();
         $this->container['siteId'] = $_SESSION['site'];

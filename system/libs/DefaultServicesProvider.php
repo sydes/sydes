@@ -7,20 +7,14 @@
 namespace Sydes;
 
 use Pimple\ServiceProviderInterface;
-use Sydes\L10n\Translator;
 use Sydes\Settings\Container as Settings;
 use Sydes\Settings\FileDriver;
-use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Diactoros\ServerRequestFactory;
 
 class DefaultServicesProvider implements ServiceProviderInterface
 {
     public function register(\Pimple\Container $container)
     {
-        $default['emitter'] = function () {
-            return new SapiEmitter();
-        };
-
         $default['request'] = function () {
             $r = ServerRequestFactory::fromGlobals();
 
@@ -38,24 +32,8 @@ class DefaultServicesProvider implements ServiceProviderInterface
             );
         };
 
-        $default['router'] = function () {
-            return new Router();
-        };
-
         $default['cache'] = function () {
             return new Cache(DIR_CACHE);
-        };
-
-        $default['translator'] = function () {
-            return new Translator();
-        };
-
-        $default['event'] = function () {
-            return new Event();
-        };
-
-        $default['csrf'] = function () {
-            return new Csrf();
         };
 
         $default['db'] = function ($c) {
@@ -70,10 +48,6 @@ class DefaultServicesProvider implements ServiceProviderInterface
 
         $default['logger'] = function ($c) {
             return new Logger(DIR_LOG.'/'.date('Ym').'.log', $c['request']->getIp());
-        };
-
-        $default['api'] = function () {
-            return new Api();
         };
 
         $default['app'] = function () {

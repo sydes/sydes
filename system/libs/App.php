@@ -32,10 +32,8 @@ class App
         $values['settings'] = array_merge($this->defaultSettings, ifsetor($values['settings'], []));
         $values['section'] = 'base';
 
-        $this->container = new Container($values, ['namespaces' => ['Sydes']]);
-
-        $this->container->register(new DefaultServicesProvider);
-        $this->container->register(new ExceptionHandlersProvider);
+        $config = include DIR_SYSTEM.'/config.php';
+        $this->container = new Container($values, $config);
 
         Container::setContainer($this->container);
 

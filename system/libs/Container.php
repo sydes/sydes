@@ -16,6 +16,7 @@ class Container extends PimpleContainer implements ContainerInterface
     protected static $container = null;
 
     protected $namespaces;
+    protected $aliases;
     protected $edges = [];
 
     /**
@@ -28,7 +29,19 @@ class Container extends PimpleContainer implements ContainerInterface
     {
         parent::__construct($values);
 
+        $this->bootstrap($options);
+    }
+
+    public function bootstrap($options)
+    {
         $this->namespaces = ifsetor($options['namespaces'], []);
+        $this->aliases = ifsetor($options['aliases'], []);
+
+        if (isset($options['providers'])) {
+            foreach ($options['providers'] as $provider) {
+                $this->register(new $provider);
+            }
+        }
     }
 
     /**
@@ -88,8 +101,14 @@ class Container extends PimpleContainer implements ContainerInterface
      */
     public function offsetGet($id)
     {
-        if (!isset($this[$id]) && $this->resolveClassName($id)) {
-            return $this->make($id);
+        if (!isset($this[$id])) {
+            if ($this->resolveClassName($id)) {
+                return $this->make($id);
+            } elseif (isset($this->aliases[$id])) {
+                $alias = $this->aliases[$id];
+
+                return isset($this[$alias]) ? $this[$alias] : $this->make($alias);
+            }
         }
 
         if (isset($this[$id])) {
@@ -163,9 +182,9 @@ class Container extends PimpleContainer implements ContainerInterface
         }
 
         if (isset($this[$name])) {
-            throw new \RuntimeException(t('error_class_not_found', ['class' => $name]));
+            throw new \RuntimeException(t('error_service_frozen', ['class' => $name]));
         } elseif ($origName !== $name && isset($this[$origName])) {
-            throw new \RuntimeException(t('error_class_not_found', ['class' => $origName]));
+            throw new \RuntimeException(t('error_service_frozen', ['class' => $origName]));
         }
 
         $self = $this;
