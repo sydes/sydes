@@ -14,7 +14,6 @@ class Controller
     {
         $menu->addItem('modules/fileman', [
             'title' => 'module_fileman',
-            'url' => '#',
         ], 0);
     }
 }

@@ -21,7 +21,6 @@ class Controller
     {
         $menu->addItem('system/settings', [
                 'title' => 'module_settings',
-                'url' => '#',
             ], 40)
             ->addItem('system/settings/app', [
                 'title' => 'app_settings',

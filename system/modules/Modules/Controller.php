@@ -24,21 +24,24 @@ class Controller
 
     public function install(AdminMenu $menu)
     {
-        $menu->addGroup('modules', 'menu_modules', 'th-list', 500)
+        $menu->addGroup('modules', [
+            'title' => 'menu_modules',
+            'icon' => 'th-list'
+        ], 500)
             ->addItem('modules/constructors', [
                 'title' => 'menu_constructors',
-                'url' => '#',
             ], 20)
             ->addItem('modules/tools', [
                 'title' => 'menu_tools',
-                'url' => '#',
             ], 30)
             ->addItem('modules/services', [
                 'title' => 'menu_services',
-                'url' => '#',
             ], 40);
 
-        $menu->addGroup('system', 'menu_system', 'cog', 600)
+        $menu->addGroup('system', [
+            'title' => 'menu_system',
+            'icon' => 'cog'
+        ], 600)
             ->addItem('system/modules', [
                 'title' => 'module_modules',
                 'url' => '/admin/modules',

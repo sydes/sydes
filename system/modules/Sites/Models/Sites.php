@@ -47,7 +47,6 @@ class Sites
         mkdir(DIR_SITE.'/'.$id);
 
         $params['modules'] = [];
-        $params['menu'] = [];
 
         $this->save($id, $params);
 

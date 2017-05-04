@@ -10,6 +10,7 @@ return [
     ],
 
     'aliases' => [
+        'adminMenu' => 'Sydes\AdminMenu',
         'api' => 'Sydes\Api',
         'auth' => 'Sydes\Auth',
         'csrf' => 'Sydes\Csrf',

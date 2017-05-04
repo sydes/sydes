@@ -23,6 +23,8 @@ class Modules
                 $this->register($module);
             }
         }
+
+        app('adminMenu')->save();
     }
 
     /**

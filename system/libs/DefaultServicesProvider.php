@@ -62,10 +62,6 @@ class DefaultServicesProvider implements ServiceProviderInterface
             return new Settings($path, new FileDriver());
         };
 
-        $default['adminMenu'] = function ($c) {
-            return new AdminMenu($c['site']);
-        };
-
         foreach ($default as $id => $provider) {
             if (!isset($container[$id])) {
                 $container[$id] = $provider;

@@ -41,7 +41,7 @@ class Admin extends Base
 
     public function getMenu()
     {
-        $rawMenu = app('site')->get('menu');
+        $rawMenu = app('adminMenu')->getMenu();
         $menuFlat = [];
 
         uasort($rawMenu, 'sortByWeight');

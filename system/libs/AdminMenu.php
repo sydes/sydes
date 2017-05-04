@@ -8,33 +8,34 @@ namespace Sydes;
 
 class AdminMenu
 {
-    private $site;
     private $menu;
 
-    public function __construct(Settings\Container $site)
+    public function __construct($siteId)
     {
-        $this->site = $site;
-        $this->menu = $site->get('menu');
+        $this->storage = DIR_SITE.'/'.$siteId.'/menu.php';
+        $this->menu = file_exists($this->storage) ? include $this->storage : [];
+    }
+
+    public function getMenu()
+    {
+        return $this->menu;
     }
 
     /**
-     * @param string $group
-     * @param string $title
-     * @param string $icon
+     * @param string $path
+     * @param array  $data
      * @param int    $weight
      * @return $this
      */
-    public function addGroup($group, $title, $icon = 'asterisk', $weight = 150)
+    public function addGroup($path, $data, $weight = 150)
     {
-        if (!isset($this->menu[$group])) {
-            $this->menu[$group] = [
+        if (!isset($this->menu[$path])) {
+            $this->menu[$path] = [
                 'weight' => $weight,
-                'title'  => $title,
-                'icon'   => $icon,
+                'title'  => $data['title'],
+                'icon'   => ifsetor($data['icon'], 'asterisk'),
                 'items'  => [],
             ];
-
-            $this->site->set('menu', $this->menu)->save();
         }
 
         return $this;
@@ -48,8 +49,6 @@ class AdminMenu
     {
         if (isset($this->menu[$group])) {
             unset($this->menu[$group]);
-
-            $this->site->set('menu', $this->menu)->save();
         }
 
         return $this;
@@ -67,9 +66,7 @@ class AdminMenu
         $item = array_pop($path);
 
         $temp = &$this->selectBy($path);
-        $temp['items'][$item] = array_merge(['weight' => $weight], $data);
-
-        $this->site->set('menu', $this->menu)->save();
+        $temp['items'][$item] = array_merge(['url' => '#', 'weight' => $weight], $data);
 
         return $this;
     }
@@ -85,8 +82,6 @@ class AdminMenu
 
         $temp = &$this->selectBy($path);
         unset($temp['items'][$item]);
-
-        $this->site->set('menu', $this->menu)->save();
 
         return $this;
     }
@@ -109,5 +104,10 @@ class AdminMenu
         }
 
         return $temp;
+    }
+
+    public function save()
+    {
+        array2file($this->menu, $this->storage);
     }
 }
