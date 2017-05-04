@@ -3,6 +3,8 @@ return array(
     'module_modules' => 'Модули',
     'module_modules_description' => 'Менеджер модулей',
 
+    'error_this_required_for_module' => 'Не могу удалить {this}! Этот модуль требуется для {module}. Удалите его первым',
+
     'menu_modules' => 'Модули',
     'menu_constructors' => 'Конструкторы',
     'menu_tools' => 'Инструменты',

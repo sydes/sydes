@@ -3,6 +3,8 @@ return array(
     'module_modules' => 'Modules',
     'module_modules_description' => 'Modules manager',
 
+    'error_this_required_for_module' => 'Can\'t uninstall {this}! This module required for {module} module. Uninstall him first',
+
     'menu_modules' => 'Modules',
     'menu_constructors' => 'Constructors',
     'menu_tools' => 'Tools',

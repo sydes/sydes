@@ -76,6 +76,7 @@ class Modules
         $modules = app('site')->get('modules');
         $name = studly_case($name);
         if (isset($modules[$name])) {
+            $this->checkDependencies($name);
             unset($modules[$name]);
 
             app('site')->set('modules', $modules)->save();
@@ -99,6 +100,18 @@ class Modules
         }
 
         call_user_func_array([$instance, $method], [app('adminMenu')]);
+    }
+
+    private function checkDependencies($name)
+    {
+        foreach ($this->getList('installed') as $module) {
+            if (in_array($name, $module->get('require', []))) {
+                abort(403, t('error_this_required_for_module', [
+                    'this' => $this->getManifest($name)->get('name'),
+                    'module' => $module->get('name'),
+                ]));
+            }
+        }
     }
 
     /**
