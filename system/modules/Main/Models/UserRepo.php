@@ -6,6 +6,8 @@
  */
 namespace Module\Main\Models;
 
+use Sydes\User;
+
 class UserRepo
 {
     protected $storage;
@@ -18,65 +20,33 @@ class UserRepo
     }
 
     /**
-     * @param array $user
-     * @return array
+     * @param User $user
      */
-    public function create(array $user)
+    public function create(User $user)
     {
-        $max = count($this->users);
-
-        $user['id'] = $max;
-        $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
-        $user['autoLogin'] = 0;
-
+        $user->set('id', count($this->users));
         $this->save($user);
-
-        return $user;
-    }
-
-    /**
-     * @param int   $id
-     * @param array $new
-     */
-    public function update($id, array $new)
-    {
-        $old = $this->get($id);
-
-        if (isset($new['username'])) {
-            $old['username'] = $new['username'];
-        }
-        if (isset($new['password'])) {
-            $old['password'] = password_hash($new['password'], PASSWORD_DEFAULT);
-        }
-        if (isset($new['autoLogin'])) {
-            $old['autoLogin'] = $new['autoLogin'];
-        }
-        if (isset($new['email'])) {
-            $old['email'] = $new['email'];
-        }
-
-        $this->save($old);
     }
 
     /**
      * @param int $id
-     * @return array
+     * @return bool|User
      */
     public function get($id = 0)
     {
         if (!isset($this->users[$id])) {
-            abort(404, 'user_not_found');
+            return null;
         }
 
-        return $this->users[$id];
+        return new User($this->users[$id]);
     }
 
     /**
-     * @param array $user
+     * @param User $user
      */
-    protected function save(array $user)
+    public function save(User $user)
     {
-        $this->users[$user['id']] = $user;
+        $this->users[$user->get('id')] = $user;
         array2file($this->users, $this->storage);
     }
 }

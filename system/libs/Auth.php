@@ -8,6 +8,7 @@ namespace Sydes;
 
 class Auth
 {
+    /** @var User */
     protected $user;
     protected $logged;
 
@@ -16,21 +17,31 @@ class Auth
         $this->user = model('Main/UserRepo')->get();
     }
 
+    /**
+     * @param string $username
+     * @param string $pass
+     * @param bool   $remember
+     * @return bool
+     */
     public function attempt($username, $pass, $remember = false)
     {
-        if ($username != $this->user['username'] || !password_verify($pass, $this->user['password'])) {
+        if ($username != $this->user->get('username') || !$this->user->checkPassword($pass)) {
             return false;
         }
 
         return $this->login($remember);
     }
 
+    /**
+     * @param bool $remember
+     * @return bool
+     */
     public function login($remember = false)
     {
         $_SESSION['hash'] = $this->hash();
         setcookie('entered', '1', time() + 604800, '/');
 
-        if ($remember && $this->user['autoLogin'] == 1) {
+        if ($remember && $this->user->get('autoLogin') == 1) {
             setcookie('hash', $_SESSION['hash'], time() + 604800);
         }
 
@@ -44,7 +55,7 @@ class Auth
         setcookie('entered', '', 1, '/');
     }
 
-    public function checkLogin()
+    private function checkLogin()
     {
         $hash = $this->hash();
 
@@ -54,7 +65,7 @@ class Auth
             } else {
                 $this->logout();
             }
-        } elseif ($this->user['autoLogin'] == 1 && isset($_COOKIE['hash'])) { // login by cookies
+        } elseif ($this->user->get('autoLogin') == 1 && isset($_COOKIE['hash'])) { // login by cookies
             if ($_COOKIE['hash'] == $hash) {
                 return $this->login(true);
             } else {
@@ -65,6 +76,9 @@ class Auth
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function check()
     {
         if (is_null($this->logged)) {
@@ -74,13 +88,17 @@ class Auth
         return $this->logged;
     }
 
+    /**
+     * @param string $key
+     * @return string|User
+     */
     public function getUser($key = null)
     {
-        return $key === null ? $this->user : $this->user[$key];
+        return $key === null ? $this->user : $this->user->get($key);
     }
 
     protected function hash()
     {
-        return md5($this->user['username'].$this->user['password'].app('request')->getIp());
+        return md5($this->user->get('username').$this->user->get('password').app('request')->getIp());
     }
 }

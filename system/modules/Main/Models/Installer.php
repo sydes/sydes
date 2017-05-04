@@ -6,6 +6,8 @@
  */
 namespace Module\Main\Models;
 
+use Sydes\User;
+
 class Installer
 {
     public function step1()
@@ -51,11 +53,11 @@ class Installer
             $params['locale'] = 'en';
         }
 
-        model('Main/UserRepo')->create([
+        model('Main/UserRepo')->create(User::create([
             'username' => $params['username'],
             'password' => $params['password'],
             'email' => $params['email'],
-        ]);
+        ]));
 
         model('Settings/App')->create([
             'timeZone' => 'Etc/GMT'.$params['timeZone'],
