@@ -73,4 +73,9 @@ class User
     {
         return password_verify($pass, $this->data['password']);
     }
+
+    public function toArray()
+    {
+        return $this->data;
+    }
 }

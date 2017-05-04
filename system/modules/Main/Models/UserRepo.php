@@ -46,7 +46,7 @@ class UserRepo
      */
     public function save(User $user)
     {
-        $this->users[$user->get('id')] = $user;
+        $this->users[$user->get('id')] = $user->toArray();
         array2file($this->users, $this->storage);
     }
 }
