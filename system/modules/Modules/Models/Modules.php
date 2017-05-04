@@ -2,6 +2,7 @@
 
 namespace Module\Modules\Models;
 
+use Sydes\Exception\RedirectException;
 use Sydes\Settings\Container;
 use Sydes\Settings\JsonDriver;
 use Psr\Http\Message\UploadedFileInterface;
@@ -106,10 +107,12 @@ class Modules
     {
         foreach ($this->getList('installed') as $module) {
             if (in_array($name, $module->get('require', []))) {
-                abort(403, t('error_this_required_for_module', [
+                alert(t('error_this_required_for_module', [
                     'this' => $this->getManifest($name)->get('name'),
                     'module' => $module->get('name'),
-                ]));
+                ]), 'danger');
+
+                throw new RedirectException('/admin/modules');
             }
         }
     }
