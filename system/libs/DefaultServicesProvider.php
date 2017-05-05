@@ -36,10 +36,6 @@ class DefaultServicesProvider implements ServiceProviderInterface
             return new Cache(DIR_CACHE);
         };
 
-        $default['db'] = function ($c) {
-            return new Database($c['siteId']);
-        };
-
         $default['renderer'] = function ($c) {
             $class = 'Sydes\Renderer\\'.ucfirst($c['section']);
 

@@ -11,37 +11,28 @@ class Database
     /** @var \PDO */
     protected $db;
 
-    /**
-     * Connects to database of specified site
-     *
-     * @param string $site site id
-     */
-    public function __construct($site)
+    public function __construct($connection = null)
     {
-        if (empty($site)) {
-            return;
+        $config = include DIR_CONFIG.'/database.php';
+
+        $current = $config['connections'][$connection ?: $config['default']];
+
+        if ($current['driver'] == 'sqlite') {
+            $dsn = 'sqlite:'.$current['database'];
+            $user = null;
+            $pass = null;
+        } elseif ($current['driver'] == 'mysql') {
+            $dsn = 'mysql:host='.$current['host'].';dbname='.$current['database'].';charset='.$current['charset'];
+            $user = $current['username'];
+            $pass = $current['password'];
         }
 
-        $this->db = new \PDO(
-            'sqlite:'.DIR_SITE.'/'.$site.'/database.db', null, null, [
-                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-            ]
-        );
-    }
+        $opt = [
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+        ];
 
-    /**
-     * Checks for the existence the table and create it if have not
-     *
-     * @param string $table  table name
-     * @param string $scheme scheme of table
-     */
-    public function issetTable($table, $scheme)
-    {
-        /* TODO в вечный кеш инфу о созданных таблицах кидать */
-        if (!(bool)$this->db->query("SELECT 1 FROM {$table} WHERE 1")) {
-            $this->db->exec($scheme);
-        }
+        $this->db = new \PDO($dsn, $user, $pass, $opt);
     }
 
     public function __call($name, $args)
