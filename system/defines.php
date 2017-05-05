@@ -7,6 +7,7 @@
 
 define('DIR_ROOT', dirname(__DIR__));
 define('DIR_APP',    DIR_ROOT.'/app');
+define('DIR_CONFIG', DIR_ROOT.'/config');
 define('DIR_SYSTEM', DIR_ROOT.'/system');
 define('DIR_THEME',  DIR_ROOT.'/themes');
 define('DIR_VENDOR', DIR_ROOT.'/vendor');

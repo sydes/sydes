@@ -29,7 +29,7 @@ class Kernel
 
         $_SERVER['HTTP_HOST'] = 'from.cli';
 
-        $config = include DIR_SYSTEM.'/config.php';
+        $config = include DIR_CONFIG.'/app.php';
         $this->container = new Container($values, $config);
         Container::setContainer($this->container);
 
