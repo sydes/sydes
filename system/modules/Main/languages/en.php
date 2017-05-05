@@ -43,6 +43,7 @@ return array(
     'your_account' => 'Create your account',
     'username' => 'Username',
     'password' => 'Password',
+    'password_confirmation' => 'Confirm new password',
     'email' => 'E-mail',
     'installer_step_2' => 'Installer - Step 2',
 

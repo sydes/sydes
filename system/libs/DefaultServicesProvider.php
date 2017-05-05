@@ -15,7 +15,7 @@ class DefaultServicesProvider implements ServiceProviderInterface
 {
     public function register(\Pimple\Container $container)
     {
-        $default['request'] = function () {
+        $default['Sydes\Http\Request'] = function () {
             $r = ServerRequestFactory::fromGlobals();
 
             return new Http\Request(
@@ -32,7 +32,7 @@ class DefaultServicesProvider implements ServiceProviderInterface
             );
         };
 
-        $default['cache'] = function () {
+        $default['Sydes\Cache'] = function () {
             return new Cache(DIR_CACHE);
         };
 

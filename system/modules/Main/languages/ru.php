@@ -43,6 +43,7 @@ return array(
     'your_account' => 'Создание аккаунта',
     'username' => 'Логин',
     'password' => 'Пароль',
+    'password_confirmation' => 'Подтвеждение пароля',
     'email' => 'Почта',
     'installer_step_2' => 'Установка - Шаг 2',
 

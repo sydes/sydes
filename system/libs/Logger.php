@@ -6,7 +6,6 @@
  */
 namespace Sydes;
 
-
 class Logger
 {
     private $file;
