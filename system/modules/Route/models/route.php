@@ -1,10 +1,12 @@
 <?php
-
+/**
+ * @link      https://github.com/sydes/sydes
+ * @copyright 2011-2017, ArtyGrand <artygrand.ru>
+ * @license   GNU GPL v3 or later; see LICENSE
+ */
 namespace Module\Route\Models;
 
-use Sydes\Model;
-
-class Route extends Model
+class Route extends \Sydes\Dao
 {
     /**
      * @param string $alias
