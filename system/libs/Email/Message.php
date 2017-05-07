@@ -18,10 +18,26 @@ class Message extends \Tx\Mailer\Message
 
     public function headersToString()
     {
+        unset($this->header['To']);
+        unset($this->header['Subject']);
         $in = '';
         foreach ($this->header as $key => $value) {
             $in .= $key.': '.$value.$this->CRLF;
         }
+
+        return $in;
+    }
+
+    public function getEncodedBody()
+    {
+        $this->createHeader();
+        $in = '';
+        if (empty($this->attachment)) {
+            $in .= $this->createBody();
+        } else {
+            $in .= $this->createBodyWithAttachment();
+        }
+        $in .= $this->CRLF . $this->CRLF . "." . $this->CRLF;
 
         return $in;
     }

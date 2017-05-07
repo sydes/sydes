@@ -25,6 +25,8 @@ class Sender
         } else {
             $this->server = new Server;
         }
+
+        return $this;
     }
 
     public function send(array $message)
@@ -85,5 +87,7 @@ class Sender
         }
 
         $this->server->send($mail);
+
+        return $this;
     }
 }
