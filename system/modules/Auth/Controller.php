@@ -15,18 +15,22 @@ class Controller
         $r->get('/auth/login', 'Auth@loginForm');
         $r->post('/auth/login', 'Auth@login');
         $r->post('/auth/logout', 'Auth@logout');
-        $r->get('/password/reset', 'Auth/Password@sendMail');
-        $r->get('/password/reset/{token:[a-f0-9]+}', 'Auth/Password@showResetForm');
+        $r->get('/password/reset', 'Auth/Password@showForm');
+        $r->post('/password/email', 'Auth/Password@sendMail');
+        $r->get('/password/reset/{token}', 'Auth/Password@showResetForm');
         $r->post('/password/reset', 'Auth/Password@reset');
     }
 
     public function loginForm()
     {
-        return view('auth/form', [
+        $form = view('auth/login', [
             'autoLogin' => app('Auth')->getUser('autoLogin'),
             'errors' => checkServer(),
-            'title' => 'Log in to',
-            'signUp' => false,
+        ])->render();
+
+        return view('auth/main', [
+            'url' => '/auth/login',
+            'form' => $form,
         ]);
     }
 
@@ -49,6 +53,7 @@ class Controller
 
         $entry = ifsetor($_SESSION['entry'], '/admin');
         unset($_SESSION['entry']);
+
         return redirect($entry);
     }
 
