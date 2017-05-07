@@ -33,11 +33,11 @@ class Route extends \Sydes\Dao
     {
         $stmt = $this->db->prepare("SELECT route, params FROM routes WHERE alias = ?");
         $stmt->execute([$alias]);
-        if (!$route = $stmt->fetch()) {
-            abort(404, t('page_not_found'));
+        if ($route = $stmt->fetch()) {
+            return [$route['route'], json_decode($route['params'], true)];
         }
 
-        return [$route['route'], json_decode($route['params'], true)];
+        return ['Main@error', ['code' => 404]];
     }
 
     /**
