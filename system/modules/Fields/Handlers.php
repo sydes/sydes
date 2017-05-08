@@ -14,6 +14,7 @@ class Handlers
     public function __construct(Event $events)
     {
         $events->on('site.found', '*', function () {
+            app('translator')->loadFrom('module', 'fields');
             model('Fields')->find();
         });
 
