@@ -14,7 +14,7 @@ class Auth
 
     public function __construct()
     {
-        $this->user = model('Main/UserRepo')->get();
+        $this->user = model('Main/User')->get();
     }
 
     /**

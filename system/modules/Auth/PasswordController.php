@@ -97,7 +97,7 @@ class PasswordController
         }
         unlink($this->storage);
 
-        $repo = model('Main/UserRepo');
+        $repo = model('Main/User');
         $user = $repo->get();
         $user->setPassword($req->input('password'));
         $repo->save($user);

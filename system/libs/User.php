@@ -28,8 +28,7 @@ class User
             $data['autoLogin'] = 0;
         }
 
-        $u = new self;
-        $u->data = $data;
+        $u = new self($data);
         $u->setPassword($data['password']);
 
         return $u;

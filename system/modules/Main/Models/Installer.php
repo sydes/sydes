@@ -53,7 +53,7 @@ class Installer
             $params['locale'] = 'en';
         }
 
-        model('Main/UserRepo')->create(User::create([
+        model('Main/User')->save(User::create([
             'username' => $params['username'],
             'password' => $params['password'],
             'email' => $params['email'],
