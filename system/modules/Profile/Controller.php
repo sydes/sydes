@@ -21,7 +21,7 @@ class Controller
         $d = document([
             'title' => t('module_profile'),
             'header_actions' => \H::submitButton(t('save'), ['button' => 'primary', 'data-submit' => 'form-main']),
-            'content' => view('profile/form', ['autoLogin' => app('Auth')->getUser('autoLogin')]),
+            'content' => view('profile/form', ['autoLogin' => app('auth')->getUser('autoLogin')]),
         ]);
 
         return $d;

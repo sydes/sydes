@@ -12,7 +12,7 @@ class Handlers
 
             $doc->addContextMenu('right', 'profile', [
                 'weight' => 0,
-                'title' => app('Auth')->getUser('username'),
+                'title' => app('auth')->getUser('username'),
                 'items' => [
                     'profile' => [
                         'title' => t('profile'),

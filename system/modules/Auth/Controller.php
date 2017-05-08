@@ -24,7 +24,7 @@ class Controller
     public function loginForm()
     {
         $form = view('auth/login', [
-            'autoLogin' => app('Auth')->getUser('autoLogin'),
+            'autoLogin' => app('auth')->getUser('autoLogin'),
             'errors' => checkServer(),
         ])->render();
 
@@ -38,7 +38,7 @@ class Controller
     {
         $r = app('request');
 
-        if (!app('Auth')->attempt($r->input('username'), $r->input('password'), $r->has('remember'))) {
+        if (!app('auth')->attempt($r->input('username'), $r->input('password'), $r->has('remember'))) {
             app('logger')->info("{name} is not logged on. {pass} - wrong password", [
                 'name' => $r->input('username'),
                 'pass' => $r->input('password'),
@@ -59,7 +59,7 @@ class Controller
 
     public function logout()
     {
-        app('Auth')->logout();
+        app('auth')->logout();
 
         return redirect();
     }
