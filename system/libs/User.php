@@ -37,6 +37,7 @@ class User
     /**
      * @param string $key
      * @param string $value
+     * @return $this
      */
     public function set($key, $value)
     {
@@ -45,6 +46,8 @@ class User
         } else {
             $this->data[$key] = $value;
         }
+
+        return $this;
     }
 
     /**
