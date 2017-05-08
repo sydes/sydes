@@ -1,9 +1,5 @@
 <?php
 return [
-    'namespaces' => [
-        'Sydes'
-    ],
-
     'providers' => [
         'Sydes\DefaultServicesProvider',
         'Sydes\ExceptionHandlersProvider',

@@ -15,7 +15,6 @@ class Container extends PimpleContainer implements ContainerInterface
     /** @var \Pimple\Container */
     protected static $container = null;
 
-    protected $namespaces;
     protected $aliases;
     protected $edges = [];
 
@@ -34,7 +33,6 @@ class Container extends PimpleContainer implements ContainerInterface
 
     public function bootstrap($options)
     {
-        $this->namespaces = ifsetor($options['namespaces'], []);
         $this->aliases = ifsetor($options['aliases'], []);
 
         if (isset($options['providers'])) {
@@ -84,14 +82,6 @@ class Container extends PimpleContainer implements ContainerInterface
     public function has($id)
     {
         return isset($this[$id]);
-    }
-
-    /**
-     * @param array $namespaces
-     */
-    public function setNamespaces($namespaces)
-    {
-        $this->namespaces = $namespaces;
     }
 
     /**
@@ -269,13 +259,6 @@ class Container extends PimpleContainer implements ContainerInterface
     {
         if (class_exists($name)) {
             return $name;
-        }
-
-        foreach ($this->namespaces as $namespace) {
-            $named = "$namespace\\$name";
-            if (class_exists($named)) {
-                return $named;
-            }
         }
 
         return null;
