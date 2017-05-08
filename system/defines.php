@@ -20,7 +20,7 @@ define('DIR_SITE',   DIR_APP.'/sites');
 define('DIR_STORAGE',DIR_APP.'/storage');
 define('DIR_TEMP',   DIR_APP.'/temp');
 
-define('SYDES_VERSION', '3.0.0-b1');
+define('SYDES_VERSION', '3.0.0-b2');
 define('APP_START', microtime(true));
 
 if (!defined('DIR_UPLOAD')) {
