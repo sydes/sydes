@@ -14,14 +14,14 @@ class Controller
     {
         $r->get('/admin/profile', 'Profile@edit');
         $r->put('/admin/profile', 'Profile@update');
+        $r->put('/admin/profile/pass', 'Profile@updatePassword');
     }
 
     public function edit()
     {
         $d = document([
             'title' => t('module_profile'),
-            'header_actions' => \H::submitButton(t('save'), ['button' => 'primary', 'data-submit' => 'form-main']),
-            'content' => view('profile/form', ['autoLogin' => app('auth')->getUser('autoLogin')]),
+            'content' => view('profile/form', ['data' => app('auth')->getUser()->toArray()]),
         ]);
 
         return $d;
@@ -30,23 +30,39 @@ class Controller
     public function update()
     {
         $r = app('request');
+        $user = app('auth')->getUser();
+        $user->set('username', $r->input('username'))
+            ->set('email', $r->input('email'))
+            ->set('autoLogin', $r->input('autoLogin'));
 
-        $user = [];
-        $post = $r->only('newusername', 'newpassword', 'newemail');
+        model('Main/User')->save($user);
 
-        if ($post['newusername'] != '') {
-            $user['username'] = $post['newusername'];
+        app('auth')->login();
+        notify(t('saved'));
+
+        return back();
+    }
+
+    public function updatePassword()
+    {
+        $r = app('request');
+        if ($r->input('password') != $r->input('password2')) {
+            alert(t('password_mismatch'), 'warning');
+
+            return back();
         }
-        if ($post['newpassword'] != '') {
-            $user['password'] = $post['newpassword'];
-        }
-        if ($post['newemail'] != '') {
-            $user['email'] = $post['newemail'];
-        }
-        $user['autoLogin'] = $r->input('autoLogin');
 
-        model('Main/UserRepo')->update(app('Auth')->getUser('id'), $user);
+        if (!app('auth')->getUser()->checkPassword($r->input('current_password'))) {
+            alert(t('wrong_current_password'), 'warning');
 
+            return back();
+        }
+
+        $user = app('auth')->getUser();
+        $user->setPassword($r->input('password'));
+        model('Main/User')->save($user);
+
+        app('auth')->login();
         notify(t('saved'));
 
         return back();

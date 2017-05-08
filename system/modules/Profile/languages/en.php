@@ -2,8 +2,8 @@
 return array(
     'module_profile' => 'Profile',
 
-    'new_username' => 'New username',
-    'new_email' => 'New email',
     'enable_autologin' => 'Enable autologin by cookies?',
-    'new_password' => 'New password',
+    'current_password' => 'Current password',
+    'password_mismatch' => 'Password mismatch',
+    'wrong_current_password' => 'Wrong current password',
 );
