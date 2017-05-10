@@ -8,7 +8,7 @@ namespace Sydes;
 
 abstract class Dao
 {
-    /** @var \PDO */
+    /** @var PDO */
     protected $db;
 
     public function __construct(Database $db) {
