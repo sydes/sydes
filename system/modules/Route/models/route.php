@@ -16,12 +16,10 @@ class Route extends \Sydes\Dao
      */
     public function add($alias, $route, $params = [])
     {
-        $stmt = $this->db->prepare("INSERT OR REPLACE INTO routes VALUES (?, ?, ?)");
-
-        return $stmt->execute([
-            $alias,
-            $route,
-            json_encode($params),
+        return $this->db->insert('routes', [
+            'alias' => $alias,
+            'route' => $route,
+            'params' => json_encode($params),
         ]);
     }
 
@@ -31,9 +29,11 @@ class Route extends \Sydes\Dao
      */
     public function findOrFail($alias)
     {
-        $stmt = $this->db->prepare("SELECT route, params FROM routes WHERE alias = ?");
-        $stmt->execute([$alias]);
-        if ($route = $stmt->fetch()) {
+        $route = $this->db->select('route, params FROM routes WHERE alias = :alias', [
+            'alias' => $alias,
+        ])->first();
+
+        if ($route) {
             return [$route['route'], json_decode($route['params'], true)];
         }
 
@@ -57,8 +57,8 @@ class Route extends \Sydes\Dao
      */
     public function delete($alias)
     {
-        $stmt = $this->db->prepare("DELETE FROM routes WHERE alias = ?");
-
-        return $stmt->execute([$alias]);
+        return $this->db->delete('routes', [
+            'alias' => $alias,
+        ]);
     }
 }
