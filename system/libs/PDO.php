@@ -12,21 +12,16 @@ class PDO extends \PDO
     protected $stmt;
 
     /**
-     * @param string $sql command
-     * @return \PDOStatement
-     */
-    public function raw($sql)
-    {
-        return $this->query($sql);
-    }
-
-    /**
      * @param string $sql
      * @param array  $data
      * @return self
      */
     public function run($sql, array $data = null)
     {
+        if (!$data) {
+            return $this->query($sql);
+        }
+
         $stmt = $this->prepare($sql);
         $this->bind($stmt, $data);
         $stmt->execute();
