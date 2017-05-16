@@ -45,15 +45,21 @@ class Kernel
 
         unset($argv[0]);
 
-        $has = $this->parse($argv);
-        $commands = $this->getCommands();
+        $this->container['translator']->init('en');
 
-        list($expects, $callable, $description, $expression) = $commands->get($has['name']);
+        try {
+            $has = $this->parse($argv);
+            $commands = $this->getCommands();
 
-        if (isset($has['options']['h']) || isset($has['options']['help'])) {
-            $this->showHelp($description, $expression);
-        } else {
-            $this->exec($has, $expects, $callable);
+            list($expects, $callable, $description, $expression) = $commands->get($has['name']);
+
+            if (isset($has['options']['h']) || isset($has['options']['help'])) {
+                $this->showHelp($description, $expression);
+            } else {
+                $this->exec($has, $expects, $callable);
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
         }
     }
 
