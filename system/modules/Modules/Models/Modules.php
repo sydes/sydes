@@ -40,7 +40,9 @@ class Modules
         }
 
         $data = [];
-        $dir = moduleDir($name);
+        if (!$dir = moduleDir($name)) {
+            throw new \Exception(t('error_module_not_found', ['name' => $name]));
+        }
 
         $iblocks = str_replace($dir.'/iblocks/', '', glob($dir.'/iblocks/*'));
         if (!empty($iblocks)) {
