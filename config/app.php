@@ -3,6 +3,7 @@ return [
     'providers' => [
         'Sydes\DefaultServicesProvider',
         'Sydes\ExceptionHandlersProvider',
+        'Sydes\View\ViewServiceProvider',
     ],
 
     'aliases' => [

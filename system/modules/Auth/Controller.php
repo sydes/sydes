@@ -23,14 +23,11 @@ class Controller
 
     public function loginForm()
     {
-        $form = view('auth/login', [
-            'autoLogin' => app('auth')->getUser('autoLogin'),
-            'errors' => checkServer(),
-        ])->render();
-
         return view('auth/main', [
             'url' => '/auth/login',
-            'form' => $form,
+        ])->nest('form', 'auth/login', [
+            'autoLogin' => app('auth')->getUser('autoLogin'),
+            'errors' => checkServer(),
         ]);
     }
 

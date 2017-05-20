@@ -19,12 +19,9 @@ class PasswordController
 
     public function showForm()
     {
-        $form = view('auth/link')->render();
-
         return view('auth/main', [
             'url' => '/password/email',
-            'form' => $form,
-        ]);
+        ])->nest('form', 'auth/link');
     }
 
     public function sendMail(Request $req)
@@ -73,11 +70,10 @@ class PasswordController
 
     public function showResetForm($token)
     {
-        $form = view('auth/pass', ['token' => $token])->render();
-
         return view('auth/main', [
             'url' => '/password/reset',
-            'form' => $form,
+        ])->nest('form', 'auth/pass', [
+            'token' => $token,
         ]);
     }
 

@@ -9,6 +9,7 @@ namespace Sydes;
 use FastRoute\Dispatcher;
 use Sydes\Exception\RedirectException;
 use Sydes\Http\Redirect;
+use Sydes\View\View;
 use Zend\Diactoros\Response;
 
 class App

@@ -7,7 +7,7 @@
 namespace Sydes\Renderer;
 
 use Sydes\Document;
-use Sydes\View;
+use Sydes\View\View;
 
 class Base
 {

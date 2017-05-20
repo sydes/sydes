@@ -95,24 +95,12 @@ function assetsPath($module)
  * Load and execute file with given data.
  *
  * @param string $file
- * @param array  $renderData
+ * @param array  $data
  * @return string
- * @throws Exception
  */
-function render($file, $renderData = [])
+function render($file, $data = [])
 {
-    extract($renderData, EXTR_SKIP);
-
-    try {
-        ob_start();
-        include $file;
-        $output = ob_get_clean();
-    } catch(Exception $e) {
-        ob_end_clean();
-        throw $e;
-    }
-
-    return $output;
+    return (new Sydes\View\Engines\PhpEngine)->get($file, $data);
 }
 
 /**
@@ -666,11 +654,11 @@ function model($module)
  *
  * @param string $view module-name/view-name
  * @param array  $data
- * @return Sydes\View
+ * @return Sydes\View\View
  */
 function view($view, $data = [])
 {
-    return new Sydes\View($view, $data);
+    return app('view')->make($view, $data);
 }
 
 /**

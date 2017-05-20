@@ -175,13 +175,13 @@ class Theme
     public function getThemedView($entity, $name, $view)
     {
         $places = [
-            'iblock' => $this->dir.'/iblocks/'.$name.'/views/'.$view.'.php',
-            'module' => $this->dir.'/modules/'.$name.'/'.$view.'.php'
+            'iblock' => $this->dir.'/iblocks/'.$name.'/views/'.$view,
+            'module' => $this->dir.'/modules/'.$name.'/'.$view
         ];
-        $dir = $places[$entity];
+        $file = $places[$entity];
 
-        if (file_exists($dir)) {
-            return $dir;
+        if (file_exists($file)) {
+            return $file;
         } elseif ($this->parentTheme) {
             return $this->parentTheme->getThemedView($entity, $name, $view);
         }
