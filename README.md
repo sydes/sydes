@@ -7,6 +7,9 @@
 
 ## Overview
 
+SyDES is a free open source content management framework for small/medium sites with non-typical functionality and complex
+design. With iblocks you can put any dynamic or static content to any page that allows you to create any entity, such as a
+blog, catalog or even gallery. Multi-Site will allow to create network of satellites with any domain or language.
 
 ## Main features
 
