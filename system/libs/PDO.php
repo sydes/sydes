@@ -4,6 +4,7 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
 namespace Sydes;
 
 class PDO extends \PDO
@@ -14,9 +15,9 @@ class PDO extends \PDO
     /**
      * @param string $sql
      * @param array  $data
-     * @return self
+     * @return self|\PDOStatement
      */
-    public function run($sql, array $data = null)
+    public function run($sql, array $data = [])
     {
         if (!$data) {
             return $this->query($sql);
@@ -31,16 +32,12 @@ class PDO extends \PDO
         return $this;
     }
 
-    /**
-     * @param  string $sql  sql query
-     * @param  array  $data named params
-     * @return self
-     */
-    public function select($sql, array $data = [])
+
+    public function select($table, array $cols = ['*'], array $wheres = [], array $opts = [])
     {
-        if (strtolower(substr($sql, 0, 7)) !== 'select ') {
-            $sql = 'SELECT '.$sql;
-        }
+        list($where, $data) = $this->makeWhere($wheres);
+
+        $sql = 'SELECT '.implode(', ', $cols).' FROM '.$table.' WHERE '.$where;
 
         $stmt = $this->prepare($sql);
         $this->bind($stmt, $data);
@@ -49,6 +46,66 @@ class PDO extends \PDO
         $this->stmt = $stmt;
 
         return $this;
+    }
+
+    protected function makeWhere($wheres)
+    {
+        $data = $sql = [];
+        if (!is_array($wheres[0])) {
+            $wheres = [$wheres];
+        }
+
+        foreach ($wheres as $where) {
+            if (count($where) == 1) {
+                $sql[] = "{$where[0]} IS NOT NULL";
+            } elseif (count($where) == 2) {
+                if (strpos($where[1], '*') !== false) {
+                    $sql[] = "{$where[0]} LIKE :{$where[0]}";
+                    $data[$where[0]] = str_replace('*', '%', $where[1]);
+                } else {
+                    $sql[] = "{$where[0]} = :{$where[0]}";
+                    $data[$where[0]] = $where[1];
+                }
+            } else {
+                $where[1] = strtolower($where[1]);
+                if ($where[1] == 'between') {
+                    $sql[] = "{$where[0]} BETWEEN :{$where[0]}1 AND :{$where[0]}2";
+                    if (count($where) == 3 && is_array($where[2])) {
+                        $data[$where[0].'1'] = (int)$where[2][0];
+                        $data[$where[0].'2'] = (int)$where[2][1];
+                    } else {
+                        $data[$where[0].'1'] = (int)$where[2];
+                        $data[$where[0].'2'] = (int)$where[3];
+                    }
+                } elseif ($where[1] == 'in') {
+                    if (is_string($where[2])) {
+                        $where[2] = explode(',', $where[2]);
+                    }
+
+                    foreach ($where[2] as $i => $val) {
+                        $values[] = ':'.$where[0].$i;
+                        $data[$where[0].$i] = (int)$val;
+                    }
+                    $values = implode(',', $values);
+
+                    $sql[] = "{$where[0]} IN ({$values})";
+                } else {
+                    if (!in_array(strtolower($where[1]), ['>', '>=', '<', '<=', '=', '!=', 'LIKE'])) {
+                        throw new \Exception('Unknown where criterion '.$where[1]);
+                    }
+
+                    if ($where[1] == 'LIKE') {
+                        $where[2] = str_replace('*', '%', $where[2]);
+                    }
+                    $sql[] = "{$where[0]} {$where[1]} :{$where[0]}";
+                    $data[$where[0]] = $where[2];
+                }
+            }
+        }
+
+        $sql = implode(' AND ', $sql);
+
+        return [$sql, $data];
     }
 
     /**
@@ -126,7 +183,20 @@ class PDO extends \PDO
      */
     public function truncate($table)
     {
-        return $this->exec("TRUNCATE TABLE $table");
+        $this->exec("DELETE FROM $table");
+
+        return $this->exec("VACUUM");
+    }
+
+    /**
+     * @param  string $table name
+     * @return int
+     */
+    public function drop($table)
+    {
+        $this->exec("DROP TABLE IF EXISTS $table");
+
+        return $this->exec("VACUUM");
     }
 
     /**
