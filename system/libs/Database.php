@@ -24,6 +24,10 @@ class Database
         }
 
         if (!isset($this->connections[$name])) {
+            if (!isset($this->config['connections'][$name])) {
+                throw new \RuntimeException('Wrong connection name '.$name);
+            }
+
             $current = $this->config['connections'][$name];
 
             if ($current['driver'] == 'sqlite') {
@@ -42,6 +46,10 @@ class Database
             ];
 
             $this->connections[$name] = new PDO($dsn, $user, $pass, $opt);
+
+            if ($current['driver'] == 'sqlite') {
+                $this->connections[$name]->exec('PRAGMA foreign_keys = ON');
+            }
         }
 
         return $this->connections[$name];
