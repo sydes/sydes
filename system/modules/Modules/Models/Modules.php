@@ -102,7 +102,7 @@ class Modules
             return;
         }
 
-        call_user_func_array([$instance, $method], [app('adminMenu')]);
+        app()->call([$instance, $method]);
     }
 
     private function checkDependencies($name)
