@@ -9,6 +9,7 @@ return array(
     'error_module_folder_not_found' => 'Директория модуля {module} не найдена',
     'error_iblock_not_found' => 'Инфоблок {name} не найден',
     'invalid_csrf_token' => 'Неверный csrf токен',
+    'error_module_not_found' => 'Модуль {name} не найден',
 
     'confirm_deletion' => 'Вы действительно хотите удалить это?',
 
