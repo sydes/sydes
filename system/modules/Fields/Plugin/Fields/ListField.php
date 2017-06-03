@@ -8,7 +8,7 @@ namespace Module\Fields\Plugin\Fields;
 
 class ListField extends FieldBase
 {
-    protected $fieldSettings = [
+    protected $settings = [
         'canDisplay' => ['select', 'checkboxList', 'radioList'],
         'display' => 'select',
         'items' => [],
@@ -16,7 +16,7 @@ class ListField extends FieldBase
 
     public function getField()
     {
-        $display = $this->settings['display'];
-        return \H::$display($this->name, $this->value, $this->settings['items']);
+        $display = $this->getSettings('display');
+        return \H::$display($this->name, $this->value, $this->getSettings('items'));
     }
 }

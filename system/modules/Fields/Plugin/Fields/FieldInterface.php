@@ -10,13 +10,13 @@ interface FieldInterface
 {
     public function __construct($name, $value, $settings = []);
 
-    public function fromString($value);
+    public function set($value);
 
-    public function toString();
+    public function get();
 
     public function getValue();
 
-    public function getSettings();
+    public function getSettings($key = null);
 
     public function getFormatters();
 
