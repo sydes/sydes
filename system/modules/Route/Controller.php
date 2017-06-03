@@ -10,7 +10,7 @@ class Controller
 {
     public function install()
     {
-        app('db')->exec("CREATE TABLE routes (
+        app('db')->run("CREATE TABLE routes (
     alias TEXT NOT NULL,
     route TEXT NOT NULL,
     params TEXT,

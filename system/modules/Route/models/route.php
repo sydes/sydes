@@ -29,7 +29,7 @@ class Route extends \Sydes\Dao
      */
     public function findOrFail($alias)
     {
-        $route = $this->db->select('route, params FROM routes WHERE alias = :alias', [
+        $route = $this->db->run('SELECT route, params FROM routes WHERE alias = :alias', [
             'alias' => $alias,
         ])->first();
 
