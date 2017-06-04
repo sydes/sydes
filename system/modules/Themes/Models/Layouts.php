@@ -17,7 +17,7 @@ class Layouts
 
     public function __construct($theme, $parent = null)
     {
-        $this->dir = DIR_THEME.'/'.$theme.'/layouts/';
+        $this->dir = app('dir.theme').'/'.$theme.'/layouts/';
         $this->parentLayouts = $parent;
         $this->list = str_replace([$this->dir, $this->ext], '', glob($this->dir.'*'.$this->ext));
 

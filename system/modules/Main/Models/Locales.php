@@ -24,7 +24,7 @@ class Locales
         $data = $this->api->loadLocale($locale);
 
         if ($data) {
-            $file = DIR_L10N.'/locales/'.ucfirst($locale).'.php';
+            $file = app('dir.l10n').'/locales/'.ucfirst($locale).'.php';
             file_put_contents($file, $data);
         }
     }
@@ -39,7 +39,7 @@ class Locales
             $data = $this->api->loadTranslation($module, $locale);
 
             if ($data) {
-                $file = DIR_L10N.'/translations/'.$locale.'/modules/'.$module.'.php';
+                $file = app('dir.l10n').'/translations/'.$locale.'/modules/'.$module.'.php';
                 file_put_contents($file, $data);
             }
         }

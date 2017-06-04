@@ -20,7 +20,7 @@ class Theme
     public function __construct($id)
     {
         $this->id = $id;
-        $this->dir = DIR_THEME.'/'.$id;
+        $this->dir = app('dir.theme').'/'.$id;
 
         if (!file_exists($this->dir.'/theme.json')) {
             throw new \Exception(t('error_theme_manifest_not_found', ['id' => $id]));
@@ -28,7 +28,7 @@ class Theme
 
         $parent = $this->getInfo('parent');
         if ($parent) {
-            if (!is_dir(DIR_THEME.'/'.$parent)) {
+            if (!is_dir(app('dir.theme').'/'.$parent)) {
                 throw new \Exception(t('error_parent_theme_not_found', ['id' => $parent]));
             }
 

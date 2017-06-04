@@ -28,7 +28,7 @@ class Controller
 
         $stepData = [];
         if ($num == 1) {
-            $installed = str_replace([DIR_L10N.'/locales/', '.php'], '', glob(DIR_L10N.'/locales/*.php'));
+            $installed = str_replace([app('dir.l10n').'/locales/', '.php'], '', glob(app('dir.l10n').'/locales/*.php'));
 
             if (empty($installed)) {
                 $data = app('api')->getTranslations('Main');
@@ -67,7 +67,7 @@ class Controller
             return redirect('/admin/sites/1');
         }
 
-        $dir = DIR_SYSTEM.'/modules/Main/views/installer';
+        $dir = app('dir.system').'/modules/Main/views/installer';
         $step = render($dir.'/step'.$num.'.php', $stepData);
 
         return html(render($dir.'.php', compact('step', 'num')));

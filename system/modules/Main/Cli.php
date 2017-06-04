@@ -27,7 +27,7 @@ class Cli
         });
 
         $commands->add('goto-site id', function ($id) use ($you) {
-            if (!is_int($id) || !file_exists(DIR_SITE.'/'.$id)) {
+            if (!is_int($id) || !file_exists(app('dir.site').'/'.$id)) {
                 $you->say("Can't find site with id ".$id);
                 return;
             }

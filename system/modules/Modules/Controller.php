@@ -97,7 +97,7 @@ class Controller
 
     public function deleteModule($name)
     {
-        removeDir(DIR_MODULE.'/'.studly_case($name));
+        removeDir(app('dir.module').'/'.studly_case($name));
         notify(t('deleted'));
 
         return redirect('/admin/modules');

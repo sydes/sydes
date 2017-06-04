@@ -92,7 +92,7 @@ class Modules
 
     private function run($name, $method)
     {
-        $class = 'Module\\'.$name.'\Controller';
+        $class = 'Module\\'.$name.'\Runner';
         if (!class_exists($class)) {
             return;
         }
@@ -189,8 +189,8 @@ class Modules
     {
         if (empty($this->list)) {
             $installed = array_keys(app('site')->get('modules', []));
-            $this->list['default'] = str_replace(DIR_SYSTEM.'/modules/', '', glob(DIR_SYSTEM.'/modules/*', GLOB_ONLYDIR));
-            $this->list['custom'] = str_replace(DIR_APP.'/modules/', '', glob(DIR_APP.'/modules/*', GLOB_ONLYDIR));
+            $this->list['default'] = str_replace(app('dir.system').'/modules/', '', glob(app('dir.system').'/modules/*', GLOB_ONLYDIR));
+            $this->list['custom'] = str_replace(app('dir.module').'/', '', glob(app('dir.module').'/*', GLOB_ONLYDIR));
             $this->list['uninstalled'] = array_diff($this->list['custom'], $installed);
             $this->list['installed'] = array_diff($installed, $this->list['default']);
         }
@@ -198,7 +198,7 @@ class Modules
 
     public function uploadByUrl($url)
     {
-        $temp = DIR_TEMP.'/'.token(5);
+        $temp = app('dir.temp').'/'.token(5);
 
         if (extractOuterZip($temp, $url)) {
             $name = basename($url, '.zip');
@@ -214,13 +214,13 @@ class Modules
             abort('403', t('only_zip_supported'));
         }
 
-        $temp = DIR_TEMP.'/'.token(5);
+        $temp = app('dir.temp').'/'.token(5);
         $file->moveTo($temp);
 
         $name = str_replace('.zip', '', $file->getClientFilename());
         $zip = new \ZipArchive;
         if ($zip->open($temp) === true) {
-            $dir = DIR_TEMP.'/'.token(4);
+            $dir = app('dir.temp').'/'.token(4);
             $zip->extractTo($dir);
             $zip->close();
 
@@ -248,7 +248,7 @@ class Modules
 
         $name = preg_replace('/(^sydes-|-module|-master$)/i', '', $name);
 
-        rename($from, DIR_MODULE.'/'.studly_case($name));
+        rename($from, app('dir.module').'/'.studly_case($name));
 
         removeDir($root);
 

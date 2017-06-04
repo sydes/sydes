@@ -14,7 +14,7 @@ class PasswordController
 
     public function __construct()
     {
-        $this->storage = DIR_STORAGE.'/password_restore.php';
+        $this->storage = app('dir.storage').'/password_restore.php';
     }
 
     public function showForm()

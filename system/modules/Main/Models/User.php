@@ -15,7 +15,7 @@ class User
 
     public function __construct()
     {
-        $this->storage = DIR_STORAGE.'/user.php';
+        $this->storage = app('dir.storage').'/user.php';
         $this->data = file_exists($this->storage) ? include $this->storage : [];
     }
 

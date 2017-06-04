@@ -5,13 +5,8 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-require __DIR__.'/vendor/autoload.php';
+$app = require __DIR__.'/system/bootstrap.php';
 
-$app = new Sydes\App([
-        'settings' => [
-            'debugLevel' => 2,
-            'checkUpdates' => false,
-        ]
-    ]);
+$runner = $app->make('System\Runner');
 
-$app->run();
+$runner->run();

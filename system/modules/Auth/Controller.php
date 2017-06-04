@@ -27,7 +27,6 @@ class Controller
             'url' => '/auth/login',
         ])->nest('form', 'auth/login', [
             'autoLogin' => app('auth')->getUser('autoLogin'),
-            'errors' => checkServer(),
         ]);
     }
 
@@ -36,17 +35,8 @@ class Controller
         $r = app('request');
 
         if (!app('auth')->attempt($r->input('username'), $r->input('password'), $r->has('remember'))) {
-            app('logger')->info("{name} is not logged on. {pass} - wrong password", [
-                'name' => $r->input('username'),
-                'pass' => $r->input('password'),
-            ]);
-
             return back();
         }
-
-        app('logger')->info('{name} is logged on with a password', [
-            'name' => $r->input('username'),
-        ]);
 
         $entry = ifsetor($_SESSION['entry'], '/admin');
         unset($_SESSION['entry']);
