@@ -20,4 +20,13 @@ return [
         'router' => 'Sydes\Router',
         'translator' => 'Sydes\L10n\Translator',
     ],
+
+    'db.default' => 'site',
+
+    'db.connections' => [
+        'site' => [
+            'driver' => 'sqlite',
+            'database' => DIR_SITE.'/'.app('siteId').'/database.db',
+        ],
+    ],
 ];
