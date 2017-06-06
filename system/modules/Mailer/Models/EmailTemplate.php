@@ -67,7 +67,7 @@ class EmailTemplate extends Entity
                 ],
                 'position' => 6,
             ],
-            'message_type' => [
+            'messageType' => [
                 'label' => t('email_type'),
                 'type' => 'List',
                 'settings' => [
@@ -94,7 +94,7 @@ class EmailTemplate extends Entity
                 ],
                 'position' => 3,
             ],
-            'reply_to' => [
+            'replyTo' => [
                 'label' => t('email_reply_to'),
                 'type' => 'Email',
                 'position' => 3,
