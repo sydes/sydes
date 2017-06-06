@@ -17,7 +17,7 @@ return [
     'event'      => DI\get('Sydes\Event'),
     'mailer'     => DI\get('Sydes\Email\Sender'),
     'request'    => DI\get('Sydes\Http\Request'),
-    'router'     => DI\get('Sydes\Router'),
+    'router'     => DI\get('Sydes\Router\Router'),
     'translator' => DI\get('Sydes\L10n\Translator'),
 
     // parameters
