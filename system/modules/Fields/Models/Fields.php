@@ -7,8 +7,8 @@ class Fields
     public function find()
     {
         $fields = app('cache')->remember('fields', function () {
-            $core = glob(DIR_SYSTEM.'/modules/*/Plugin/Fields/*Field.php');
-            $user = glob(DIR_MODULE.'/*/Plugin/Fields/*Field.php');
+            $core = glob(app('dir.system').'/modules/*/Plugin/Fields/*Field.php');
+            $user = glob(app('dir.module').'/*/Plugin/Fields/*Field.php');
             $fields = array_merge($core, $user);
             $fieldNames = [];
 
@@ -21,6 +21,6 @@ class Fields
             return $fieldNames;
         }, 3600);
 
-        app()['formFields'] = $fields;
+        app()->set('form.fields', $fields);
     }
 }

@@ -13,7 +13,7 @@ class App
 
     public function __construct()
     {
-        $this->storage = DIR_STORAGE.'/app.php';
+        $this->storage = app('dir.storage').'/app.php';
         $this->config = file_exists($this->storage) ? include $this->storage : [];
     }
 

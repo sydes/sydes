@@ -10,7 +10,7 @@ class MapField extends FieldBase
 {
     protected $contains = 'array';
 
-    public function getField()
+    public function getInput()
     {
         return \H::textInput($this->name, $this->value, ['placeholder' => 'map coords']);
     }

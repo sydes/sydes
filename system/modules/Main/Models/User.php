@@ -15,15 +15,29 @@ class User
 
     public function __construct()
     {
-        $this->storage = DIR_STORAGE.'/user.php';
+        $this->storage = app('dir.storage').'/user.php';
         $this->data = file_exists($this->storage) ? include $this->storage : [];
     }
 
     /**
+     * @param int $id
      * @return Usr
      */
-    public function get()
+    public function get($id)
     {
+        return new Usr($this->data);
+    }
+
+    /**
+     * @param string $name
+     * @return false|Usr
+     */
+    public function getByName($name)
+    {
+        if ($this->data['username'] != $name) {
+            return false;
+        }
+
         return new Usr($this->data);
     }
 
@@ -33,6 +47,9 @@ class User
     public function save(Usr $user)
     {
         $this->data = $user->toArray();
+        if (!isset($data['id'])) {
+            $data['id'] = 1;
+        }
         array2file($this->data, $this->storage);
     }
 }

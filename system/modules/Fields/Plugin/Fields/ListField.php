@@ -14,7 +14,7 @@ class ListField extends FieldBase
         'items' => [],
     ];
 
-    public function getField()
+    public function getInput()
     {
         $display = $this->getSettings('display');
         return \H::$display($this->name, $this->value, $this->getSettings('items'));

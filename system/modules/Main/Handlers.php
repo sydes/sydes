@@ -20,7 +20,7 @@ class Handlers
          * Base assets for front and admin
          */
         $events->on('render.started', '*', function (Document $doc) {
-            $root = '/system/assets/';
+            $root = '/system/modules/Main/assets/';
             $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js', 0);
             $doc->addJs('sydes', $root.'js/sydes.js', 1);
             $doc->addJs('ajax-router', $root.'js/ajaxRouter.js', 2);
@@ -44,7 +44,7 @@ class Handlers
                 'url' => '/admin'
             ]);
 
-            $root = '/system/assets/';
+            $root = '/system/modules/Main/assets/';
             $doc->addJs('front', $root.'js/front.js', 10);
 
             if (app('auth')->check()) {
@@ -79,7 +79,7 @@ class Handlers
                 11
             );
 
-            $root = '/system/assets/';
+            $root = '/system/modules/Main/assets/';
             $doc->addCss('toolbar', $root.'css/toolbar.css', 12);
             $doc->addCss('admin', $root.'css/admin.css', 14);
             $doc->addCss('skin', $root.'css/skin.black.css', 15);

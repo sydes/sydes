@@ -88,7 +88,7 @@ abstract class Entity
      */
     protected function initField($name)
     {
-        $class = app('formFields')[$this->fields[$name]['type']];
+        $class = app('form.fields')[$this->fields[$name]['type']];
         $this->attributes[$name] = new $class($name, $this->data[$name], $this->fields[$name]['settings']);
     }
 

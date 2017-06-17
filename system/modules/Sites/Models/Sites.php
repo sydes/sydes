@@ -17,7 +17,7 @@ class Sites
     public function getAll()
     {
         $data = [];
-        $sites = str_replace(DIR_SITE.'/', '', glob(DIR_SITE.'/*', GLOB_ONLYDIR));
+        $sites = str_replace(app('dir.site').'/', '', glob(app('dir.site').'/*', GLOB_ONLYDIR));
         foreach ($sites as $id) {
             $data[$id] = $this->get($id);
         }
@@ -31,7 +31,7 @@ class Sites
      */
     public function get($id)
     {
-        $path = DIR_SITE.'/'.$id.'/config.php';
+        $path = app('dir.site').'/'.$id.'/config.php';
 
         return new Settings($path, new FileDriver());
     }
@@ -41,18 +41,17 @@ class Sites
      */
     public function create(array $params)
     {
-        $sites = str_replace(DIR_SITE.'/', '', glob(DIR_SITE.'/*', GLOB_ONLYDIR));
+        $sites = str_replace(app('dir.site').'/', '', glob(app('dir.site').'/*', GLOB_ONLYDIR));
         $id = empty($sites) ? 1 : max($sites) + 1;
 
-        mkdir(DIR_SITE.'/'.$id);
+        mkdir(app('dir.site').'/'.$id);
 
         $params['modules'] = [];
 
         $this->save($id, $params);
 
-        unset(app()['site']);
-        app()['site'] = $this->get($id);
-        app()['siteId'] = $id;
+        app()->set('site', $this->get($id));
+        app()->set('site.id', $id);
 
         $modules = model('Modules');
         $modules->install($modules->filter('default'));
@@ -73,7 +72,7 @@ class Sites
      */
     public function delete($id)
     {
-        return removeDir(DIR_SITE.'/'.$id);
+        return removeDir(app('dir.site').'/'.$id);
     }
 
     /**

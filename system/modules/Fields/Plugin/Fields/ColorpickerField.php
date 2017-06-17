@@ -8,7 +8,7 @@ namespace Module\Fields\Plugin\Fields;
 
 class ColorpickerField extends FieldBase
 {
-    public function getField()
+    public function getInput()
     {
         return \H::colorInput($this->name, $this->value);
     }

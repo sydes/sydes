@@ -4,42 +4,27 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Sydes;
+
+namespace System;
 
 use FastRoute\Dispatcher;
+use Psr\Container\ContainerInterface;
+use Sydes\Document;
 use Sydes\Exception\RedirectException;
 use Sydes\Http\Redirect;
 use Sydes\View\View;
 use Zend\Diactoros\Response;
 
-class App
+class Runner
 {
-    /** @var Container */
-    private $container;
-    private $defaultSettings = [
-        'cacheRouter'  => true,
-        'debugLevel'   => 0,
-        'checkUpdates' => true,
-    ];
+    /** @var \DI\Container */
+    protected $app;
 
-    public function __construct(array $values = [])
+    public function __construct(ContainerInterface $app)
     {
+        $this->app = $app;
+
         session_start();
-        mb_internal_encoding('UTF-8');
-
-        error_reporting(-1);
-        set_error_handler('sydesErrorHandler');
-
-        $values['settings'] = array_merge($this->defaultSettings, ifsetor($values['settings'], []));
-        $values['section'] = 'base';
-
-        $config = include DIR_CONFIG.'/app.php';
-        $this->container = new Container($values, $config);
-
-        Container::setContainer($this->container);
-
-        class_alias('Sydes\Html\BS4','H');
-        class_alias('Sydes\Html\FormBuilder','Form');
     }
 
     public function run($silent = false)
@@ -51,7 +36,7 @@ class App
         }
 
         if (!$silent) {
-            $this->container['emitter']->emit($response);
+            $this->app->get('emitter')->emit($response);
         }
 
         return $response;
@@ -63,27 +48,27 @@ class App
             return $this->execute(['Main@installer']);
         }
 
-        date_default_timezone_set($this->container['app']->get('timeZone'));
+        date_default_timezone_set($this->app->get('app')->get('timeZone'));
 
-        $path = '/'.ltrim($this->container['request']->getUri()->getPath(), '/');
-        $this->container['section'] = ($path == '/admin' || strpos($path, '/admin/') === 0) ? 'admin' : 'front';
+        $path = '/'.ltrim($this->app->get('request')->getUri()->getPath(), '/');
+        $this->app->set('section', ($path == '/admin' || strpos($path, '/admin/') === 0) ? 'admin' : 'front');
 
         $this->findSite();
 
         $this->findLocale($path);
-        $this->container['translator']->init($this->container['locale']);
+        $this->app->get('translator')->init($this->app->get('locale'));
 
         $this->includeModules();
 
-        $events = $this->container['event'];
+        $events = $this->app->get('event');
         $events->trigger('site.found');
 
         $route = $this->findRoute($path);
 
         $module = self::parseRoute($route[0]);
-        $this->container['translator']->loadFrom('module', $module['path'][0]);
+        $this->app->get('translator')->loadFrom('module', $module['path'][0]);
 
-        $events->setContext(strtolower($this->container['section'].'/'.
+        $events->setContext(strtolower($this->app->get('section').'/'.
             implode('/', $module['path']).'/'.$module['method']));
 
         $events->trigger('route.found', [&$route]);
@@ -104,31 +89,32 @@ class App
             $className = substr($className, $pos + 1);
         }
 
-        $this->container['event']->trigger('exception.thrown', [$e], $className);
+        $this->app->get('event')->trigger('exception.thrown', [$e], $className);
 
         $handler = $className.'Handler';
 
-        if (!isset($this->container[$handler])) {
+        if (!$this->app->has($handler)) {
             $handler = 'defaultErrorHandler';
         }
+        $handler = $this->app->get($handler);
 
-        return $this->container[$handler]($e);
+        return $handler($e);
     }
 
     private function findSite()
     {
-        if ($this->container['section'] == 'admin' && isset($_SESSION['site'])) {
-            $this->container['siteId'] = $_SESSION['site'];
+        if ($this->app->get('section') == 'admin' && isset($_SESSION['site'])) {
+            $this->app->set('siteId', $_SESSION['site']);
 
             return;
         }
 
-        $domains = $this->container['cache']->remember('domains', function () {
-            $sites = glob(DIR_SITE.'/*', GLOB_ONLYDIR);
+        $domains = $this->app->get('cache')->remember('domains', function () {
+            $sites = glob(app('dir.site').'/*', GLOB_ONLYDIR);
             $domains = [];
             foreach ($sites as $sitePath) {
                 $config = include $sitePath.'/config.php';
-                $site = str_replace(DIR_SITE.'/', '', $sitePath);
+                $site = str_replace(app('dir.site').'/', '', $sitePath);
                 foreach ($config['domains'] as $domain) {
                     $domains[$domain] = $site;
                 }
@@ -136,31 +122,32 @@ class App
             return $domains;
         }, 31536000);
 
-        $host = $this->container['request']->getUri()->getHost();
+        $host = $this->app->get('request')->getUri()->getHost();
         if (!isset($domains[$host])) {
             abort(400, 'Site not found');
         }
 
-        $this->container['siteId'] = $domains[$host];
+        $this->app->set('site.id', $domains[$host]);
 
-        $mainDomain = $this->container['site']->get('domains')[0];
-        if ($this->container['section'] == 'front' && $mainDomain != $host &&
-            $this->container['site']->get('onlyMainDomain')) {
-            throw new RedirectException('http://'.$mainDomain.$this->container['request']->getUri()->getPath());
+        $mainDomain = $this->app->get('site')->get('domains')[0];
+        if ($this->app->get('section') == 'front' && $mainDomain != $host &&
+            $this->app->get('site')->get('onlyMainDomain')
+        ) {
+            throw new RedirectException('http://'.$mainDomain.$this->app->get('request')->getUri()->getPath());
         }
     }
 
     private function findLocale(&$path)
     {
-        if ($this->container['section'] == 'admin') {
-            $this->container['locale'] = $this->container['app']->get('locale');
+        if ($this->app->get('section') == 'admin') {
+            $this->app->set('locale', $this->app->get('app')->get('locale'));
         } else {
-            $locales = $this->container['site']->get('locales');
-            $this->container['locale'] = $locales[0];
+            $locales = $this->app->get('site')->get('locales');
+            $this->app->set('locale', $locales[0]);
 
             if (count($locales) > 1) {
 
-                if ($this->container['site']->get('localeIn') == 'url') {
+                if ($this->app->get('site')->get('localeIn') == 'url') {
                     if ($path == '/') {
                         throw new RedirectException('/'.$locales[0]);
                     }
@@ -168,14 +155,14 @@ class App
                     $pathParts = explode('/', $path, 3);
 
                     if (in_array($pathParts[1], $locales)) {
-                        $this->container['locale'] = $pathParts[1];
+                        $this->app->set('locale', $pathParts[1]);
                         unset($pathParts[1]);
                         $path = count($pathParts) > 1 ? implode('/', $pathParts) : '/';
                     }
                 } else {
-                    $host = $this->container['request']->getUri()->getHost();
-                    if (isset($this->container['site']->get('host2locale')[$host])){
-                        $this->container['locale'] = $this->container['site']->get('host2locale')[$host];
+                    $host = $this->app->get('request')->getUri()->getHost();
+                    if (isset($this->app->get('site')->get('host2locale')[$host])) {
+                        $this->app->set('locale', $this->app->get('site')->get('host2locale')[$host]);
                     }
                 }
             }
@@ -184,8 +171,8 @@ class App
 
     private function includeModules()
     {
-        $events = $this->container['event'];
-        foreach ($this->container['site']->get('modules') as $name => $module) {
+        $events = $this->app->get('event');
+        foreach ($this->app->get('site')->get('modules') as $name => $module) {
             $dir = moduleDir($name);
 
             if (isset($module['handlers']) && file_exists($dir.'/Handlers.php')) {
@@ -203,14 +190,14 @@ class App
 
     private function findRoute($path)
     {
-        $router = $this->container['router'];
-        if ($this->container['settings']['cacheRouter']) {
-            $router->setCacheFile(DIR_CACHE.'/routes.'.$this->container['siteId'].'.cache');
+        $router = $this->app->get('router');
+        if ($this->app->get('settings')['cacheRouter']) {
+            $router->setCacheFile($this->app->get('dir.theme').'/routes.'.$this->app->get('site.id').'.cache');
         }
 
         $routeInfo = $router->dispatch(
-            array_keys($this->container['site']->get('modules')),
-            $this->container['request']->getMethod(),
+            array_keys($this->app->get('site')->get('modules')),
+            $this->app->get('request')->getMethod(),
             $path
         );
 
@@ -233,7 +220,7 @@ class App
     {
         $parts = explode('@', $route);
         $array = [
-            'path' => explode('/', $parts[0]),
+            'path'   => explode('/', $parts[0]),
             'method' => $parts[1],
         ];
         return $array;
@@ -265,15 +252,15 @@ class App
             throw new \Exception(t('error_class_not_found', ['class' => $class]));
         }
 
-        $instance = $this->container->instantiate($class);
+        $instance = $this->app->make($class);
         if (!method_exists($instance, $route['method'])) {
             throw new \Exception(t('error_method_not_found', [
-                'class' => $class,
-                'method' => $route['method']
+                'class'  => $class,
+                'method' => $route['method'],
             ]));
         }
 
-        return $this->container->call([$instance, $route['method']], ifsetor($params[1], []));
+        return $this->app->call([$instance, $route['method']], ifsetor($params[1], []));
     }
 
     private function prepare($content)
@@ -283,7 +270,7 @@ class App
         } elseif ($content instanceof Response) {
             return $content;
         } elseif ($content instanceof Document) {
-            return html($this->container['renderer']->render($content));
+            return html($this->app->get('renderer')->render($content));
         } elseif ($content instanceof View) {
             return html($content->render());
         } elseif (is_array($content)) {

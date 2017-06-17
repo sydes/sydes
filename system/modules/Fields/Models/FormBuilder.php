@@ -1,16 +1,18 @@
 <?php
 /**
- * @link      https://github.com/sydes/sydes
+ * @link      https://github.com/sydes/framework
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
- * @license   GNU GPL v3 or later; see LICENSE
+ * @license   MIT license; see LICENSE
  */
-namespace Sydes\Html;
+namespace Module\Fields\Models;
 
 use Module\Fields\Plugin\Fields\FieldInterface;
+use Sydes\Html\BS4;
 
 class FormBuilder
 {
     private static $data = [];
+    private static $fields = [];
 
     /**
      * Open up a new HTML form.
@@ -66,6 +68,7 @@ class FormBuilder
     public static function fromArray(array $data, array $options = [])
     {
         self::$data = $data;
+        self::$fields = app('form.fields');
 
         return self::open($options);
     }
@@ -79,9 +82,7 @@ class FormBuilder
      */
     public static function field($fieldType, $name, $value = null, $settings = [])
     {
-        $fields = app()['formFields'];
-
-        if (!isset($fields[$fieldType])) {
+        if (!isset(self::$fields[$fieldType])) {
             throw new \InvalidArgumentException(t('field_not_exists', ['name' => $fieldType]));
         }
 
@@ -90,9 +91,9 @@ class FormBuilder
         }
 
         /** @var FieldInterface $field */
-        $field = new $fields[$fieldType]($name, $value, $settings);
+        $field = new self::$fields[$fieldType]($name, $value, $settings);
 
-        return $field->getField();
+        return $field->getInput();
     }
 
     /**

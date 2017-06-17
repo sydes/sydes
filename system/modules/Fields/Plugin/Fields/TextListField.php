@@ -10,7 +10,7 @@ class TextListField extends FieldBase
 {
     protected $contains = 'array';
 
-    public function getField()
+    public function getInput()
     {
         return \H::textarea($this->name, implode("\n", $this->value), $this->settings);
     }

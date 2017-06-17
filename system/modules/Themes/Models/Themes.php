@@ -16,7 +16,7 @@ class Themes
     public function getAll()
     {
         $data = [];
-        $themes = str_replace(DIR_THEME.'/', '', glob(DIR_THEME.'/*', GLOB_ONLYDIR));
+        $themes = str_replace(app('dir.theme').'/', '', glob(app('dir.theme').'/*', GLOB_ONLYDIR));
         foreach ($themes as $id) {
             $data[$id] = $this->get($id)->getInfo();
         }
@@ -56,15 +56,15 @@ class Themes
     {
         $id = snake_case($name, '-');
 
-        if (is_dir(DIR_THEME.'/'.$id)) {
+        if (is_dir(app('dir.theme').'/'.$id)) {
             throw new \RuntimeException(t('error_theme_already_exists', ['id' => $id]));
         }
 
         foreach ([$id, $id.'/layouts'] as $dir) {
-            mkdir(DIR_THEME.'/'.$dir);
+            mkdir(app('dir.theme').'/'.$dir);
         }
 
-        $dir = DIR_THEME.'/'.$id.'/';
+        $dir = app('dir.theme').'/'.$id.'/';
 
         $manifest = ['info' => [
             'name' => $name,
@@ -95,6 +95,6 @@ class Themes
      */
     public function delete($id)
     {
-        return removeDir(DIR_THEME.'/'.$id);
+        return removeDir(app('dir.theme').'/'.$id);
     }
 }

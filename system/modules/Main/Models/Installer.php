@@ -15,15 +15,15 @@ class Installer
         $folders = ['', '/cache', '/iblocks', '/l10n/locales', '/l10n/translations', '/logs',
             '/modules', '/sites', '/storage', '/temp', '/thumbs'];
         foreach ($folders as $folder) {
-            if (!file_exists(DIR_APP.$folder)) {
-                mkdir(DIR_APP.$folder, 0777, true);
+            if (!file_exists(app('dir.app').$folder)) {
+                mkdir(app('dir.app').$folder, 0777, true);
             }
         }
     }
 
     public function step2($locale)
     {
-        app()['siteId'] = 1;
+        app()->set('site.id', 1);
         $model = new Locales;
         $locales = ['en', $locale];
         foreach ($locales as $locale) {
@@ -33,7 +33,7 @@ class Installer
                 continue;
             }
 
-            $dir = DIR_L10N.'/translations/'.$locale.'/modules';
+            $dir = app('dir.l10n').'/translations/'.$locale.'/modules';
             if (!file_exists($dir)) {
                 mkdir($dir, 0777, true);
             }
@@ -66,7 +66,7 @@ class Installer
             'mailer_defaultTo' => $params['email'],
         ]);
 
-        $themes = str_replace(DIR_THEME.'/', '', glob(DIR_THEME.'/*', GLOB_ONLYDIR));
+        $themes = str_replace(app('dir.theme').'/', '', glob(app('dir.theme').'/*', GLOB_ONLYDIR));
 
         model('Sites')->create([
             'name' => $params['siteName'],
@@ -81,6 +81,6 @@ class Installer
 
     public function uninstall()
     {
-        removeDir(DIR_APP);
+        removeDir(app('dir.app'));
     }
 }
