@@ -8,7 +8,7 @@ namespace Module\Fields\Plugin\Fields;
 
 class TextField extends FieldBase
 {
-    public function getField()
+    public function getInput()
     {
         return \H::textInput($this->name, $this->value, $this->settings);
     }

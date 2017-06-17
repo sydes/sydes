@@ -70,7 +70,7 @@ abstract class FieldBase implements FieldInterface
     /**
      * @param mixed $value
      */
-    public function setValue($value)
+    public function setRaw($value)
     {
         $this->value = $value;
     }
@@ -78,7 +78,7 @@ abstract class FieldBase implements FieldInterface
     /**
      * @return mixed
      */
-    public function getValue()
+    public function getRaw()
     {
         return $this->value;
     }

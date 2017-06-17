@@ -10,7 +10,7 @@ class ImageField extends FieldBase
 {
     protected $contains = 'array';
 
-    public function getField()
+    public function getInput()
     {
         // создать див с мини картинками и дроп2аплодом
         return \H::fileInput($this->name.'_new').\H::hiddenInput($this->name, $this->value);

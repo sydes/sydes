@@ -8,7 +8,7 @@ namespace Module\Fields\Plugin\Fields;
 
 class EmailField extends FieldBase
 {
-    public function getField()
+    public function getInput()
     {
         return \H::emailInput($this->name, $this->value, $this->settings);
     }

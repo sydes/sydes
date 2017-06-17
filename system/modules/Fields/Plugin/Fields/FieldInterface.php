@@ -14,7 +14,9 @@ interface FieldInterface
 
     public function get();
 
-    public function getValue();
+    public function setRaw($value);
+
+    public function getRaw();
 
     public function getSettings($key = null);
 
@@ -22,7 +24,7 @@ interface FieldInterface
 
     public function validate();
 
-    public function getField();
+    public function getInput();
 
     public function getSettingsForm();
 

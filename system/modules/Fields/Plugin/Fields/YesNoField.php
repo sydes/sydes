@@ -8,7 +8,7 @@ namespace Module\Fields\Plugin\Fields;
 
 class YesNoField extends FieldBase
 {
-    public function getField()
+    public function getInput()
     {
         return \H::yesNo($this->name, $this->value);
     }
