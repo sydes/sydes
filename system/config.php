@@ -6,6 +6,11 @@ return [
         'Sydes\View\ViewServiceProvider',
     ],
 
+    'Sydes\AdminMenu' => DI\object()->constructor(DI\string('{dir.site}/{site.id}/menu.php')),
+    'Sydes\Api' => DI\object()->constructor(SYDES_VERSION, 'http://api.sydes.ru/'),
+    'Sydes\Auth' => DI\object()->constructor(DI\get('Module\Main\Models\User')),
+    'Sydes\L10n\Translator' => DI\object()->constructor(DI\string('{dir.l10n}/translations/')),
+
     // aliases
     'admin.menu' => DI\get('Sydes\AdminMenu'),
     'api'        => DI\get('Sydes\Api'),
