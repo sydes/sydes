@@ -9,6 +9,8 @@ return [
     'Sydes\AdminMenu' => DI\object()->constructor(DI\string('{dir.site}/{site.id}/menu.php')),
     'Sydes\Api' => DI\object()->constructor(SYDES_VERSION, 'http://api.sydes.ru/'),
     'Sydes\Auth' => DI\object()->constructor(DI\get('Module\Main\Models\User')),
+    'Sydes\Cache' => DI\object()->constructor(\DI\get('dir.cache')),
+    'Sydes\Database' => DI\object()->constructor(\DI\get('db.config')),
     'Sydes\L10n\Translator' => DI\object()->constructor(DI\string('{dir.l10n}/translations/')),
 
     // aliases
@@ -31,7 +33,7 @@ return [
         'connections' => [
             'site' => [
                 'driver' => 'sqlite',
-                'database' => '{dir.site}/{site.id}/database.db',
+                'database' => '{dir.site.this}/database.db',
             ],
         ],
     ],
@@ -48,6 +50,7 @@ return [
     'dir.logs'    => DI\string('{dir.app}/logs'),
     'dir.module'  => DI\string('{dir.app}/modules'),
     'dir.site'    => DI\string('{dir.app}/sites'),
+    'dir.site.this' => DI\string('{dir.site}/{site.id}'),
     'dir.storage' => DI\string('{dir.app}/storage'),
     'dir.temp'    => DI\string('{dir.app}/temp'),
 
