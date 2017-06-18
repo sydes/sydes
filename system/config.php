@@ -1,4 +1,8 @@
 <?php
+use Sydes\Settings\Container as Settings;
+use Sydes\Settings\FileDriver;
+use Interop\Container\ContainerInterface;
+
 return [
     'providers' => [
         'Sydes\Services\DefaultServicesProvider',
@@ -11,7 +15,20 @@ return [
     'Sydes\Auth' => DI\object()->constructor(DI\get('Module\Main\Models\User')),
     'Sydes\Cache' => DI\object()->constructor(\DI\get('dir.cache')),
     'Sydes\Database' => DI\object()->constructor(\DI\get('db.config')),
-    'Sydes\L10n\Translator' => DI\object()->constructor(DI\string('{dir.l10n}/translations/')),
+    'Sydes\L10n\Translator' => DI\object()->constructor(DI\string('{dir.l10n}/translations')),
+
+    'renderer' => function (ContainerInterface $c) {
+        $class = 'System\Renderer\\'.ucfirst($c->get('section'));
+        return $c->make($class);
+    },
+    'app' => function (ContainerInterface $c) {
+        $path = $c->get('dir.storage').'/app.php';
+        return new Settings($path, new FileDriver());
+    },
+    'site' => function (ContainerInterface $c) {
+        $path = $c->get('dir.site.this').'/config.php';
+        return new Settings($path, new FileDriver());
+    },
 
     // aliases
     'admin.menu' => DI\get('Sydes\AdminMenu'),
