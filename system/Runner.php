@@ -192,6 +192,7 @@ class Runner
     {
         $router = $this->app->get('router');
         if ($this->app->get('settings')['cacheRouter']) {
+            $router->setCacheFile($this->app->get('dir.cache.route'));
         }
 
         $modules = array_keys($this->app->get('site')->get('modules'));
