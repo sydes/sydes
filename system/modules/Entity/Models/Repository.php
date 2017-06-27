@@ -4,33 +4,42 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
 namespace Module\Entity\Models;
 
-use Sydes\Database;
-use Sydes\PDO;
+use Pixie\QueryBuilder\QueryBuilderHandler;
 
 class Repository
 {
-    /** @var PDO */
+    /** @var \PDO */
     protected $db;
     /** @var Entity */
     protected $model;
-    /** @var PDO */
-    protected $result;
+    protected $entity;
+    protected $query;
 
-    public function __construct(Database $db)
+    public function __construct(QueryBuilderHandler $query)
     {
-        $this->db = $db;
+        $this->query = $query;
+        $this->db = $query->pdo();
+
+        if ($this->entity) {
+            $this->model($this->entity);
+        }
     }
 
     /**
-     * @param string $model Model name
+     * @param string $model class name
      * @return $this
      */
-    public function forModel($model)
+    public function model($model)
     {
-        $this->model = model($model);
-        $this->db = $this->db->connection($this->model->getConnection());
+        $this->entity = $model;
+        $this->model = new $model;
+
+        $this->query = $this->query
+            ->table($this->model->getTable())
+            ->setFetchMode(\PDO::FETCH_ASSOC);
 
         return $this;
     }
@@ -58,7 +67,7 @@ class Repository
             ];
 
             foreach ($this->model->getLocalized() as $col) {
-                $cols[] = $fields[$col]->getSchema();
+                $cols = $fields[$col]->onCreate($cols);
                 unset($fields[$col]);
             }
 
@@ -68,11 +77,11 @@ class Repository
         }
 
         $cols = [
-            $this->model->getPk().' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT',
+            $this->model->getKeyName().' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT',
         ];
 
         foreach ($fields as $field) {
-            $cols[] = $field->getSchema();
+            $cols = $field->onCreate($cols);
         }
 
         if ($this->model->usesTimestamps()) {
@@ -110,43 +119,19 @@ UNIQUE (entity_id, key)\n)");
         $this->db->drop($table);
     }
 
-    /**
-     * @param mixed $criteria
-     * @param array $cols
-     * @param array $opts
-     * @return $this
-     */
-    public function find($criteria, array $cols = ['*'], $opts = [])
-    {
-        if (is_numeric($criteria)) {
-            $criteria = ['id', $criteria];
-        }
-
-        // если $criterion[0] не поле и не мета, искать id в локализованных или еав
-        // найдя id
-        // или иначе, получить данные со всех таблиц
-        $this->result = $this->db->select($this->model->getTable(), $cols, $criteria, $opts);
-
-        return $this;
-    }
-
     public function first()
     {
-        $model = clone $this->model;
-        $item = $this->result->first();
-
-        return $model->fill($item)->withProps($item);
+        return new $this->entity($this->query->first());
     }
 
     public function all()
     {
-        $results = [];
-        foreach ($this->result->all() as $item) {
-            $model = clone $this->model;
-            $results[] = $model->fill($item)->withProps($item);
+        $models = [];
+        foreach ($this->query->get() as $row) {
+            $models[] = new $this->entity($row);
         }
 
-        return $results;
+        return $models;
     }
 
     public function save(Entity $entity)
@@ -161,18 +146,11 @@ UNIQUE (entity_id, key)\n)");
 
     public function __call($name, $args) {
         if (substr($name, 0, 6) == 'findBy') {
-            $field = strtolower(substr($name, 6));
-
-            if (!isset($args[1])) {
-                $args[1] = ['*'];
-            }
-
-            return $this->find([$field, $args[0]], $args[1]);
+            $this->query->find($args[0], strtolower(substr($name, 6)));
         }
 
-        throw new \InvalidArgumentException('Wrong method '.$name);
+        call_user_func_array([$this->query, $name], $args);
+
+        return $this;
     }
 }
-// TODO написать класс, который на основе этой модели будет работать с базой.
-// на основе id обновлять или удалять данные в таблице, полученной через getTable
-// в репозитории уже его использовать

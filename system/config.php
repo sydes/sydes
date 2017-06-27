@@ -29,6 +29,9 @@ return [
         $path = $c->get('dir.site.this').'/config.php';
         return new Settings($path, new FileDriver());
     },
+    'Pixie\QueryBuilder\QueryBuilderHandler' => function (Sydes\Database $db) {
+        return new Pixie\QueryBuilder\QueryBuilderHandler(new Module\Entity\Models\PixieConnection($db));
+    },
 
     // aliases
     'admin.menu' => DI\get('Sydes\AdminMenu'),

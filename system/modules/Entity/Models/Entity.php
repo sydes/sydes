@@ -4,21 +4,21 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
 namespace Module\Entity\Models;
 
-use Module\Fields\Plugin\Fields\FieldInterface;
-
-abstract class Entity
+abstract class Entity implements EntityInterface
 {
-    protected $connection = 'site';
     protected $table;
     protected $primaryKey = 'id';
     protected $timestamps = true;
     protected $eav = false;
     protected $localized = [];
     protected $fields = [];
-    protected $attributes = [];
+    protected $props = [];
+    protected $_fields = [];
     protected $data = [];
+    protected $inited = false;
 
     /**
      * Entity constructor.
@@ -27,43 +27,32 @@ abstract class Entity
      */
     public function __construct(array $attrs = [])
     {
-        $this->fill($attrs);
-    }
-
-    /**
-     * @param array $attrs
-     * @return $this
-     */
-    public static function create(array $attrs)
-    {
-        return new static($attrs);
-    }
-
-    /**
-     * @param array $attrs
-     * @return $this
-     */
-    public function fill(array $attrs)
-    {
-        foreach (array_intersect_key($attrs, $this->fields) as $key => $value) {
-            $this->data[$key] = $value;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param array $props
-     * @return $this
-     */
-    public function withProps(array $props)
-    {
-        foreach (array_intersect_key($props, [
+        $this->props = [
             $this->primaryKey => 1,
             'status' => 1,
             'created_at' => 1,
             'updated_at' => 1,
-        ]) as $key => $value) {
+        ];
+
+        $this->fill($attrs);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function create(array $attrs)
+    {
+        $me = new static;
+
+        return $me->fill($attrs);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fill(array $attrs)
+    {
+        foreach (array_intersect_key($attrs, $this->fields + $this->props) as $key => $value) {
             $this->data[$key] = $value;
         }
 
@@ -71,29 +60,55 @@ abstract class Entity
     }
 
     /**
-     * @param string $name
-     * @return FieldInterface
+     * {@inheritDoc}
      */
-    public function getField($name)
+    public function allFields()
     {
-        if (!isset($this->attributes[$name])) {
-            $this->initField($name);
+        if (!$this->inited) {
+            foreach ($this->fields + $this->props as $name) {
+                $this->field($name);
+            }
+            $this->inited = true;
         }
 
-        return $this->attributes[$name];
+        return $this->_fields;
     }
 
     /**
-     * @param string $name
+     * {@inheritDoc}
+     */
+    public function field($name)
+    {
+        if (!isset($this->_fields[$name])) {
+            $this->_fields[$name] = $this->initField($name);
+        }
+
+        return $this->_fields[$name];
+    }
+
+    /**
+     * {@inheritDoc}
      */
     protected function initField($name)
     {
-        $class = app('form.fields')[$this->fields[$name]['type']];
-        $this->attributes[$name] = new $class($name, $this->data[$name], $this->fields[$name]['settings']);
+        if (isset($this->fields[$name])) {
+            $field = $this->fields[$name];
+        } elseif (isset($this->props[$name])) {
+            $field = [
+                'type' => 'Hidden',
+                'settings' => [],
+            ];
+        } else {
+            throw new \InvalidArgumentException('Field '.$name.' not found in '.get_class($this));
+        }
+
+        $class = app('form.fields')[$field['type']];
+
+        return new $class($name, $this->data[$name], $field['settings']);
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function toArray()
     {
@@ -101,21 +116,21 @@ abstract class Entity
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getTable()
     {
-        if ($this->table) {
-            return $this->table;
-        } else {
+        if (!$this->table) {
             $name = get_class($this);
 
             return snake_case(($pos = strrpos($name, '\\')) ? substr($name, $pos + 1) : $name).'s';
         }
+
+        return $this->table;
     }
 
     /**
-     * @param mixed $table
+     * {@inheritDoc}
      */
     public function setTable($table)
     {
@@ -123,7 +138,7 @@ abstract class Entity
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function getFields()
     {
@@ -131,31 +146,17 @@ abstract class Entity
     }
 
     /**
-     * @param array $fields
+     * {@inheritDoc}
      */
     public function setFields($fields)
     {
         $this->fields = $fields;
+
+        return $this;
     }
 
     /**
-     * @return string
-     */
-    public function getConnection()
-    {
-        return $this->connection;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setConnection($name)
-    {
-        $this->connection = $name;
-    }
-
-    /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function usesTimestamps()
     {
@@ -163,15 +164,45 @@ abstract class Entity
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
-    public function getPk()
+    public function useTimestamps($val = true)
+    {
+        $this->timestamps = $val;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getKeyName()
     {
         return $this->primaryKey;
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
+     */
+    public function getKey()
+    {
+        return $this->_fields[$this->getKeyName()];
+    }
+
+    /**
+     * Get the default foreign key name for the model.
+     *
+     * @return string
+     */
+    public function getForeignKey()
+    {
+        $name = get_class($this);
+
+        return snake_case(($pos = strrpos($name, '\\')) ? substr($name, $pos + 1) : $name).'_'.$this->primaryKey;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function usesEav()
     {
@@ -179,7 +210,17 @@ abstract class Entity
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
+     */
+    public function useEav($val = true)
+    {
+        $this->eav = $val;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function hasLocalized()
     {
@@ -187,7 +228,7 @@ abstract class Entity
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function getLocalized()
     {
@@ -195,21 +236,31 @@ abstract class Entity
     }
 
     /**
-     * @param string $key
-     * @return FieldInterface
+     * {@inheritDoc}
      */
-    public function __get($key)
+    public function setLocalized($fields = [])
     {
-        return $this->getField($key)->render();
+        $this->localized = $fields;
+
+        return $this;
     }
 
     /**
      * @param string $key
-     * @param mixed $value
+     * @return string
+     */
+    public function __get($key)
+    {
+        return $this->field($key)->render();
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
      */
     public function __set($key, $value)
     {
-        $this->getField($key)->set($value);
+        $this->data[$key] = $value;
     }
 
     /**
@@ -218,7 +269,7 @@ abstract class Entity
      */
     public function __isset($key)
     {
-        return array_key_exists($key, $this->attributes);
+        return array_key_exists($key, $this->_fields);
     }
 
     /**
@@ -226,6 +277,78 @@ abstract class Entity
      */
     public function __unset($key)
     {
-        $this->getField($key)->set('');
+        $this->data[$key] = '';
+        $this->field($key)->fromString('');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function makeTable()
+    {
+        $cols = [];
+        foreach ($this->allFields() as $field) {
+            $cols = $field->onCreate($cols);
+        }
+
+        return $cols;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function dropTable()
+    {
+        foreach ($this->allFields() as $field) {
+            $field->onDrop();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function beforeSave()
+    {
+        foreach ($this->allFields() as $field) {
+            if ($field->beforeSave() === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function afterSave()
+    {
+        foreach ($this->allFields() as $field) {
+            $field->afterSave();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function beforeDelete()
+    {
+        foreach ($this->allFields() as $field) {
+            if ($field->beforeDelete() === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function afterDelete()
+    {
+        foreach ($this->allFields() as $field) {
+            $field->afterDelete();
+        }
     }
 }
