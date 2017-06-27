@@ -4,9 +4,11 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Fields\Plugin\Fields;
+namespace Module\Entity\Plugins\Fields;
 
-class ListField extends FieldBase
+use Module\Entity\Models\Field;
+
+class ListField extends Field
 {
     protected $settings = [
         'canDisplay' => ['select', 'checkboxList', 'radioList'],
@@ -14,7 +16,7 @@ class ListField extends FieldBase
         'items' => [],
     ];
 
-    public function getInput()
+    public function formInput()
     {
         $display = $this->getSettings('display');
         return \H::$display($this->name, $this->value, $this->getSettings('items'));

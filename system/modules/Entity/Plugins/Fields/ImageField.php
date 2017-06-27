@@ -4,13 +4,15 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Fields\Plugin\Fields;
+namespace Module\Entity\Plugins\Fields;
 
-class ImageField extends FieldBase
+use Module\Entity\Models\Field;
+
+class ImageField extends Field
 {
     protected $contains = 'array';
 
-    public function getInput()
+    public function formInput()
     {
         // создать див с мини картинками и дроп2аплодом
         return \H::fileInput($this->name.'_new').\H::hiddenInput($this->name, $this->value);

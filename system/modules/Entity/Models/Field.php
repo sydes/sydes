@@ -4,9 +4,10 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Fields\Plugin\Fields;
 
-abstract class FieldBase implements FieldInterface
+namespace Module\Entity\Models;
+
+abstract class Field implements FieldInterface
 {
     protected $name;
     protected $value;
@@ -22,14 +23,12 @@ abstract class FieldBase implements FieldInterface
     protected $schema = 'TEXT';
 
     /**
-     * @param string $name
-     * @param string $value
-     * @param array  $settings
+     * {@inheritDoc}
      */
     public function __construct($name, $value, $settings = [])
     {
         $this->name = $name;
-        $this->set($value);
+        $this->fromString($value);
         $this->_settings = array_merge([
             'required' => false,
             'helpText' => '',
@@ -40,9 +39,9 @@ abstract class FieldBase implements FieldInterface
     }
 
     /**
-     * @param mixed $value
+     * {@inheritDoc}
      */
-    public function set($value)
+    public function fromString($value)
     {
         if ($this->contains == 'array') {
             if (is_string($value)) {
@@ -53,12 +52,14 @@ abstract class FieldBase implements FieldInterface
         }
 
         $this->value = $value;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
-    public function get()
+    public function toString()
     {
         if ($this->contains == 'array') {
             return json_encode($this->value, JSON_UNESCAPED_UNICODE);
@@ -68,24 +69,25 @@ abstract class FieldBase implements FieldInterface
     }
 
     /**
-     * @param mixed $value
+     * {@inheritDoc}
      */
-    public function setRaw($value)
+    public function set($value)
     {
         $this->value = $value;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * {@inheritDoc}
      */
-    public function getRaw()
+    public function get()
     {
         return $this->value;
     }
 
     /**
-     * @param string|null $key
-     * @return array|mixed
+     * {@inheritDoc}
      */
     public function getSettings($key = null)
     {
@@ -93,7 +95,7 @@ abstract class FieldBase implements FieldInterface
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function getFormatters()
     {
@@ -101,7 +103,7 @@ abstract class FieldBase implements FieldInterface
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function validate()
     {
@@ -109,8 +111,7 @@ abstract class FieldBase implements FieldInterface
     }
 
     /**
-     * @param callable $formatter
-     * @return string
+     * {@inheritDoc}
      */
     public function render($formatter = null)
     {
@@ -130,13 +131,53 @@ abstract class FieldBase implements FieldInterface
         return $this->value;
     }
 
-    public function getSettingsForm()
+    public function formSettings()
     {
         return '';
     }
 
-    public function getSchema()
+    /**
+     * {@inheritDoc}
+     */
+    public function onCreate(array $cols)
     {
-        return $this->name.' '.$this->schema;
+        $cols[] = $this->name.' '.$this->schema;
+
+        return $cols;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function onDrop()
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function beforeSave()
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function afterSave()
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function beforeDelete()
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function afterDelete()
+    {
     }
 }

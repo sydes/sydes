@@ -4,7 +4,7 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Fields;
+namespace Module\Entity;
 
 use Sydes\Document;
 use Sydes\Event;
@@ -15,7 +15,7 @@ class Handlers
     {
         $events->on('site.found', '*', function () {
             app('translator')->loadFrom('module', 'fields');
-            model('Fields')->find();
+            model('Entity/Fields')->find();
         });
 
         $events->on('render.started', 'admin/*', function (Document $doc) {

@@ -4,13 +4,15 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Fields\Plugin\Fields;
+namespace Module\Entity\Plugins\Fields;
 
-class MapField extends FieldBase
+use Module\Entity\Models\Field;
+
+class MapField extends Field
 {
     protected $contains = 'array';
 
-    public function getInput()
+    public function formInput()
     {
         return \H::textInput($this->name, $this->value, ['placeholder' => 'map coords']);
     }

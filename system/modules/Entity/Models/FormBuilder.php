@@ -1,13 +1,11 @@
 <?php
 /**
- * @link      https://github.com/sydes/framework
+ * @link      https://github.com/sydes/sydes
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
- * @license   MIT license; see LICENSE
+ * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Fields\Models;
 
-use Module\Fields\Plugin\Fields\FieldInterface;
-use Sydes\Html\BS4;
+namespace Module\Entity\Models;
 
 class FormBuilder
 {
@@ -45,7 +43,7 @@ class FormBuilder
             $attr['id'] = 'form-'.$options['form'];
         }
 
-        return BS4::beginTag('form', $attr).$append;
+        return \H::beginTag('form', $attr).$append;
     }
 
     /**
@@ -93,7 +91,7 @@ class FormBuilder
         /** @var FieldInterface $field */
         $field = new self::$fields[$fieldType]($name, $value, $settings);
 
-        return $field->getInput();
+        return $field->formInput();
     }
 
     /**

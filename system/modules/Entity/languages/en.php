@@ -1,6 +1,6 @@
 <?php
 return array(
-    'module_fields' => 'Form fields',
+    'module_entity' => 'Form fields',
     'field_not_exists' => 'Field {name} not exists',
 
     'field_text' => 'Text',
