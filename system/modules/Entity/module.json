@@ -1,5 +1,5 @@
 {
-  "name": "Entity",
-  "description": "Api and UI for creating various entities",
+  "name": "Entity API",
+  "description": "Provides api for creating entities with custom fields",
   "version": "1.0"
 }
