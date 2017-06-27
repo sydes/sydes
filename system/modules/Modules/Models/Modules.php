@@ -58,10 +58,6 @@ class Modules
             $data['handlers'] = true;
         }
 
-        if (file_exists($dir.'/Cli.php')) {
-            $data['console'] = true;
-        }
-
         $modules[$name] = $data;
 
         app('site')->set('modules', $modules)->save();
@@ -92,7 +88,7 @@ class Modules
 
     private function run($name, $method)
     {
-        $class = 'Module\\'.$name.'\Runner';
+        $class = 'Module\\'.$name.'\Controller';
         if (!class_exists($class)) {
             return;
         }
