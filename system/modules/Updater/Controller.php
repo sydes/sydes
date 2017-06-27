@@ -7,15 +7,9 @@
 namespace Module\Updater;
 
 use Sydes\AdminMenu;
-use Sydes\Route;
 
 class Controller
 {
-    public static function routes(Route $r)
-    {
-        $r->get('/admin/update', 'Updater@index');
-    }
-
     public function install(AdminMenu $menu)
     {
         $menu->addItem('modules/tools/updater', [

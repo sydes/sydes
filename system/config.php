@@ -62,6 +62,7 @@ return [
     'dir.theme'   => DI\string('{dir.root}/themes'),
     'dir.vendor'  => DI\string('{dir.root}/vendor'),
     'dir.cache'   => DI\string('{dir.app}/cache'),
+    'dir.cache.route' => DI\string('{dir.cache}/routes.{site.id}.cache'),
     'dir.iblock'  => DI\string('{dir.app}/iblocks'),
     'dir.l10n'    => DI\string('{dir.app}/l10n'),
     'dir.logs'    => DI\string('{dir.app}/logs'),

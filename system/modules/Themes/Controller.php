@@ -7,25 +7,9 @@
 namespace Module\Themes;
 
 use Sydes\AdminMenu;
-use Sydes\Route;
 
 class Controller
 {
-    public static function routes(Route $r)
-    {
-        $r->addGroup('/admin/theme', function (Route $r) {
-            $r->get('s', 'Themes@index');
-            $r->get('s/add', 'Themes@add');
-
-            $r->get('/{name:[a-z-]+}', 'Themes@view');
-            $r->post('/{name:[a-z-]+}', 'Themes@activate');
-            $r->delete('/{name:[a-z-]+}', 'Themes@delete');
-
-            $r->get('/layout/{name:[a-z-]+}', 'Themes/Layouts@edit');
-            $r->post('/layout/{name:[a-z-]+}', 'Themes/Layouts@save');
-        });
-    }
-
     public function install(AdminMenu $menu)
     {
         $menu->addItem('system/themes', [

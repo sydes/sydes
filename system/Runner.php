@@ -192,11 +192,18 @@ class Runner
     {
         $router = $this->app->get('router');
         if ($this->app->get('settings')['cacheRouter']) {
-            $router->setCacheFile($this->app->get('dir.theme').'/routes.'.$this->app->get('site.id').'.cache');
         }
 
+        $modules = array_keys($this->app->get('site')->get('modules'));
+        $sys = $this->app->get('dir.system').'/modules/';
+        $usr = $this->app->get('dir.module').'/';
+        $files = [];
+        foreach ($modules as $module) {
+            $files[] = $sys.$module.'/routes/web.php';
+            $files[] = $usr.$module.'/routes/web.php';
+        }
         $routeInfo = $router->dispatch(
-            array_keys($this->app->get('site')->get('modules')),
+            $files,
             $this->app->get('request')->getMethod(),
             $path
         );

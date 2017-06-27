@@ -7,16 +7,9 @@
 namespace Module\Sites;
 
 use Sydes\AdminMenu;
-use Sydes\Route;
 
 class Controller
 {
-    public static function routes(Route $r)
-    {
-        $r->resource('sites', 'Sites');
-        $r->get('/admin/sites/go/{id:\d+}', 'Sites@go');
-    }
-
     public function install(AdminMenu $menu)
     {
         $menu->addItem('system/settings/sites', [

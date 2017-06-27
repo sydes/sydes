@@ -7,15 +7,9 @@
 namespace Module\Import;
 
 use Sydes\AdminMenu;
-use Sydes\Route;
 
 class Controller
 {
-    public static function routes(Route $r)
-    {
-        $r->get('/admin/import', 'Import@index');
-    }
-
     public function install(AdminMenu $menu)
     {
         $menu->addItem('modules/tools/import', [

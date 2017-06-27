@@ -7,16 +7,9 @@
 namespace Module\Settings;
 
 use Sydes\AdminMenu;
-use Sydes\Route;
 
 class Controller
 {
-    public static function routes(Route $r)
-    {
-        $r->get('/admin/app', 'Settings@editApp');
-        $r->put('/admin/app', 'Settings@updateApp');
-    }
-
     public function install(AdminMenu $menu)
     {
         $menu->addItem('system/settings', [

@@ -7,15 +7,9 @@
 namespace Module\Forms;
 
 use Sydes\AdminMenu;
-use Sydes\Route;
 
 class Controller
 {
-    public static function routes(Route $r)
-    {
-        $r->get('/admin/forms', 'Forms@index');
-    }
-
     public function install(AdminMenu $menu)
     {
         $menu->addItem('modules/constructors/forms', [

@@ -6,16 +6,8 @@
  */
 namespace Module\Main;
 
-use Sydes\Route;
-
 class Controller
 {
-    public static function routes(Route $r)
-    {
-        $r->get('/robots.txt', 'Main@robots');
-        $r->get('/sitemap.xml', 'Main@sitemap');
-    }
-
     public function installer()
     {
         if (model('Settings/App')->isCreated()) {

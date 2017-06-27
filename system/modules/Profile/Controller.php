@@ -6,17 +6,8 @@
  */
 namespace Module\Profile;
 
-use Sydes\Route;
-
 class Controller
 {
-    public static function routes(Route $r)
-    {
-        $r->get('/admin/profile', 'Profile@edit');
-        $r->put('/admin/profile', 'Profile@update');
-        $r->put('/admin/profile/pass', 'Profile@updatePassword');
-    }
-
     public function edit()
     {
         $d = document([
