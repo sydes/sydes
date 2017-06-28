@@ -11,6 +11,7 @@ class Controller
     public function index()
     {
         $d = document([
+            'title' => 'List of available Entities',
             'content' => 'All Entities',
         ]);
 

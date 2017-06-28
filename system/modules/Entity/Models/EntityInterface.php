@@ -115,12 +115,11 @@ interface EntityInterface
      * @param array $fields
      * @return $this
      */
-    public function setLocalized($fields = []);
+    public function setLocalized(array $fields = []);
 
     /**
      * Triggered on entity table creation
      *
-     * @param array $cols
      * @return string
      */
     public function makeTable();

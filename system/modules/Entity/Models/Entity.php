@@ -238,7 +238,7 @@ abstract class Entity implements EntityInterface
     /**
      * {@inheritDoc}
      */
-    public function setLocalized($fields = [])
+    public function setLocalized(array $fields = [])
     {
         $this->localized = $fields;
 
