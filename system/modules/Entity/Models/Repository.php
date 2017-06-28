@@ -7,7 +7,7 @@
 
 namespace Module\Entity\Models;
 
-use Pixie\QueryBuilder\QueryBuilderHandler;
+use Sydes\Db;
 
 class Repository
 {
@@ -18,7 +18,7 @@ class Repository
     protected $entity;
     protected $query;
 
-    public function __construct(QueryBuilderHandler $query)
+    public function __construct(Db $query)
     {
         $this->query = $query;
         $this->db = $query->pdo();

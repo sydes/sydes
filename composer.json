@@ -19,8 +19,7 @@
   "require": {
     "php": ">=5.5.0",
     "sydes/framework": "^1.0",
-    "phpmailer/phpmailer": "~6.0@dev",
-    "usmanhalalit/pixie": "^2.0@dev"
+    "phpmailer/phpmailer": "~6.0@dev"
   },
   "autoload": {
     "psr-4": {

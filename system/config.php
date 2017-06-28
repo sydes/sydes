@@ -14,8 +14,18 @@ return [
     'Sydes\Api' => DI\object()->constructor(SYDES_VERSION, 'http://api.sydes.ru/'),
     'Sydes\Auth' => DI\object()->constructor(DI\get('Module\Main\Models\User')),
     'Sydes\Cache' => DI\object()->constructor(\DI\get('dir.cache')),
-    'Sydes\Database' => DI\object()->constructor(\DI\get('db.config')),
     'Sydes\L10n\Translator' => DI\object()->constructor(DI\string('{dir.l10n}/translations')),
+    'Sydes\Db' => function (ContainerInterface $c) {
+        $connection = new \Pixie\Connection('sqlite', [
+            'driver'   => 'sqlite',
+            'database' => $c->get('dir.site.this').'/database.db',
+        ], 'QB');
+
+        $db = new Sydes\Db($connection);
+        $db->setFetchMode(PDO::FETCH_ASSOC)->pdo()->exec('PRAGMA foreign_keys = ON');
+
+        return $db;
+    },
 
     'renderer' => function (ContainerInterface $c) {
         $class = 'System\Renderer\\'.ucfirst($c->get('section'));
@@ -29,9 +39,6 @@ return [
         $path = $c->get('dir.site.this').'/config.php';
         return new Settings($path, new FileDriver());
     },
-    'Pixie\QueryBuilder\QueryBuilderHandler' => function (Sydes\Database $db) {
-        return new Pixie\QueryBuilder\QueryBuilderHandler(new Module\Entity\Models\PixieConnection($db));
-    },
 
     // aliases
     'admin.menu' => DI\get('Sydes\AdminMenu'),
@@ -39,24 +46,13 @@ return [
     'auth'       => DI\get('Sydes\Auth'),
     'cache'      => DI\get('Sydes\Cache'),
     'csrf'       => DI\get('Sydes\Csrf'),
-    'db'         => DI\get('Sydes\Database'),
+    'db'         => DI\get('Sydes\Db'),
     'emitter'    => DI\get('Zend\Diactoros\Response\SapiEmitter'),
     'event'      => DI\get('Sydes\Event'),
     'mailer'     => DI\get('Sydes\Email\Sender'),
     'request'    => DI\get('Sydes\Http\Request'),
     'router'     => DI\get('Sydes\Router\Router'),
     'translator' => DI\get('Sydes\L10n\Translator'),
-
-    // parameters
-    'db.config' => [
-        'default' => 'site',
-        'connections' => [
-            'site' => [
-                'driver' => 'sqlite',
-                'database' => '{dir.site.this}/database.db',
-            ],
-        ],
-    ],
 
     // directories
     'dir.root'    => realpath(__DIR__.'/../'),

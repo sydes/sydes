@@ -6,8 +6,14 @@
  */
 namespace Module\Route\Models;
 
-class Route extends \Sydes\Dao
+use Sydes\Db;
+
+class Route
 {
+    public function __construct(Db $db) {
+        $this->table = $db->table('routes');
+    }
+
     /**
      * @param string $alias
      * @param string $route
@@ -16,11 +22,13 @@ class Route extends \Sydes\Dao
      */
     public function add($alias, $route, $params = [])
     {
-        return $this->db->insert('routes', [
+        $data = [
             'alias' => $alias,
             'route' => $route,
             'params' => json_encode($params),
-        ]);
+        ];
+
+        return $this->table->onDuplicateKeyUpdate($data)->insert($data);
     }
 
     /**
@@ -29,9 +37,7 @@ class Route extends \Sydes\Dao
      */
     public function findOrFail($alias)
     {
-        $route = $this->db->run('SELECT route, params FROM routes WHERE alias = :alias', [
-            'alias' => $alias,
-        ])->first();
+        $route = $this->table->where('alias', $alias)->first();
 
         if ($route) {
             return [$route['route'], json_decode($route['params'], true)];
@@ -57,8 +63,6 @@ class Route extends \Sydes\Dao
      */
     public function delete($alias)
     {
-        return $this->db->delete('routes', [
-            'alias' => $alias,
-        ]);
+        return $this->table->where('alias', $alias)->delete();
     }
 }
