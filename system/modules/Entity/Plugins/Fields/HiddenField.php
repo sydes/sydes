@@ -10,7 +10,7 @@ use Module\Entity\Models\Field;
 
 class HiddenField extends Field
 {
-    public function formInput()
+    public function input()
     {
         return '';
     }

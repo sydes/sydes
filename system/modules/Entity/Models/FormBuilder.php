@@ -9,8 +9,8 @@ namespace Module\Entity\Models;
 
 class FormBuilder
 {
-    private static $data = [];
-    private static $fields = [];
+    /** @var EntityInterface */
+    private static $model;
 
     /**
      * Open up a new HTML form.
@@ -53,77 +53,61 @@ class FormBuilder
      */
     public static function close()
     {
-        self::$data = [];
+        self::$model = null;
 
         return '</form>';
     }
 
     /**
-     * @param array $data
+     * @param EntityInterface $model
      * @param array $options
      * @return string
      */
-    public static function fromArray(array $data, array $options = [])
+    public static function model(EntityInterface $model, array $options = [])
     {
-        self::$data = $data;
-        self::$fields = app('form.fields');
+        self::$model = $model;
 
         return self::open($options);
     }
 
     /**
-     * @param string $fieldType
-     * @param string $name
-     * @param string $value
-     * @param array  $settings
-     * @return string
-     */
-    public static function field($fieldType, $name, $value = null, $settings = [])
-    {
-        if (!isset(self::$fields[$fieldType])) {
-            throw new \InvalidArgumentException(t('field_not_exists', ['name' => $fieldType]));
-        }
-
-        if (is_null($value) && isset(self::$data[$name])) {
-            $value = self::$data[$name];
-        }
-
-        /** @var FieldInterface $field */
-        $field = new self::$fields[$fieldType]($name, $value, $settings);
-
-        return $field->formInput();
-    }
-
-    /**
-     * @param array $fields
-     * @param array $data
+     * @param EntityInterface $model
      * @param array $options
      * @return string
      */
-    public static function auto(array $fields, array $data, array $options = [])
+    public static function auto(EntityInterface $model, array $options = [])
     {
-        $form = self::fromArray($data, $options);
+        $form = self::model($model, $options);
 
         if (isset($options['formatter']) && is_callable($options['formatter'])) {
-            $formatter = $options['formatter'];
+            $wrapper = $options['formatter'];
         } else {
-            $formatter = function ($params) {
-                return '<div class="form-group row">
-<label class="col-3 col-form-label">'.$params['label'].'</label>
-<div class="col-9">'.$params['input'].'</div></div>';
+            $wrapper = function (FieldInterface $field) {
+                $help = $field->getSettings('helpText') ?
+                    \H::tag('small', $field->getSettings('helpText'), ['class'=>'form-text text-muted']) : '';
+
+                return '<div class="form-group row">'.
+                    '<label class="col-3 col-form-label">'.t($field->getSettings('label')).'</label>'.
+                    '<div class="col-9">'.$field->input().$help.'</div></div>';
             };
         }
 
-        foreach ($fields as $name => $field) {
-            $settings = ifsetor($field['settings'], []);
-            $form .= $formatter([
-                'label' => $field['label'],
-                'input' => self::field($field['type'], $name, null, $settings)
-            ]);
+        foreach (self::$model->allFields() as $name => $field) {
+            $form .= $field->formInput($wrapper);
         }
 
+        $form .= \H::submitButton(t(ifsetor($options['btn_text'], 'save')), ['button' => 'primary']);
         $form .= self::close();
 
         return $form;
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public static function input($name)
+    {
+        return self::$model->field($name)->formInput();
     }
 }

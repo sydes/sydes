@@ -49,6 +49,13 @@ interface FieldInterface
     public function get();
 
     /**
+     * Gets name of field
+     *
+     * @return mixed
+     */
+    public function getName();
+
+    /**
      * Gets all settings for field or one if key is provided
      *
      * @param string|null $key
@@ -71,11 +78,19 @@ interface FieldInterface
     public function validate();
 
     /**
-     * Gets form input
+     * Gets form input with wrapper
+     *
+     * @param callable $wrapper
+     * @return string
+     */
+    public function formInput($wrapper = null);
+
+    /**
+     * Gets only input
      *
      * @return string
      */
-    public function formInput();
+    public function input();
 
     /**
      * Gets form with settings for this field

@@ -10,7 +10,7 @@ use Module\Entity\Models\Field;
 
 class ColorpickerField extends Field
 {
-    public function formInput()
+    public function input()
     {
         return \H::colorInput($this->name, $this->value);
     }

@@ -12,7 +12,7 @@ class ImageField extends Field
 {
     protected $contains = 'array';
 
-    public function formInput()
+    public function input()
     {
         // создать див с мини картинками и дроп2аплодом
         return \H::fileInput($this->name.'_new').\H::hiddenInput($this->name, $this->value);

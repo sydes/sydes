@@ -10,7 +10,7 @@ use Module\Entity\Models\Field;
 
 class YesNoField extends Field
 {
-    public function formInput()
+    public function input()
     {
         return \H::yesNo($this->name, $this->value);
     }

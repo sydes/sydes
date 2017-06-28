@@ -16,7 +16,7 @@ class ListField extends Field
         'items' => [],
     ];
 
-    public function formInput()
+    public function input()
     {
         $display = $this->getSettings('display');
         return \H::$display($this->name, $this->value, $this->getSettings('items'));

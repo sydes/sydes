@@ -12,7 +12,7 @@ class MapField extends Field
 {
     protected $contains = 'array';
 
-    public function formInput()
+    public function input()
     {
         return \H::textInput($this->name, $this->value, ['placeholder' => 'map coords']);
     }

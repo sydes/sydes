@@ -10,8 +10,8 @@ use Module\Entity\Models\Field;
 
 class TextField extends Field
 {
-    public function formInput()
+    public function input()
     {
-        return \H::textInput($this->name, $this->value, $this->settings);
+        return \H::textInput($this->name, $this->value, ['required'=>$this->getSettings('required')]);
     }
 }

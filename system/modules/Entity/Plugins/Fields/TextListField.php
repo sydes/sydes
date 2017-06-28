@@ -12,9 +12,9 @@ class TextListField extends Field
 {
     protected $contains = 'array';
 
-    public function formInput()
+    public function input()
     {
-        return \H::textarea($this->name, implode("\n", $this->value), $this->settings);
+        return \H::textarea($this->name, implode("\n", $this->value), ['required'=>$this->getSettings('required')]);
     }
 
     public function defaultFormatter()

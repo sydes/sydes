@@ -89,6 +89,14 @@ abstract class Field implements FieldInterface
     /**
      * {@inheritDoc}
      */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getSettings($key = null)
     {
         return $key ? $this->_settings[$key] : $this->_settings;
@@ -129,6 +137,24 @@ abstract class Field implements FieldInterface
     protected function defaultFormatter()
     {
         return $this->value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function formInput($wrapper = null)
+    {
+        if (!$wrapper) {
+            $wrapper = function (FieldInterface $field) {
+                return \H::formGroup(
+                    t($field->getSettings('label')),
+                    $field->input(),
+                    $field->getSettings('helpText')
+                );
+            };
+        }
+
+        return $wrapper($this);
     }
 
     public function formSettings()

@@ -10,8 +10,8 @@ use Module\Entity\Models\Field;
 
 class EmailField extends Field
 {
-    public function formInput()
+    public function input()
     {
-        return \H::emailInput($this->name, $this->value, $this->settings);
+        return \H::emailInput($this->name, $this->value, ['required'=>$this->getSettings('required')]);
     }
 }

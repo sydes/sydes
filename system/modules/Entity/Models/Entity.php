@@ -65,7 +65,7 @@ abstract class Entity implements EntityInterface
     public function allFields()
     {
         if (!$this->inited) {
-            foreach ($this->fields + $this->props as $name) {
+            foreach ($this->fields as $name => $void) {
                 $this->field($name);
             }
             $this->inited = true;
@@ -96,10 +96,13 @@ abstract class Entity implements EntityInterface
         } elseif (isset($this->props[$name])) {
             $field = [
                 'type' => 'Hidden',
-                'settings' => [],
             ];
         } else {
             throw new \InvalidArgumentException('Field '.$name.' not found in '.get_class($this));
+        }
+
+        if (!isset($field['settings'])) {
+            $field['settings'] = [];
         }
 
         $class = app('form.fields')[$field['type']];
@@ -269,7 +272,7 @@ abstract class Entity implements EntityInterface
      */
     public function __isset($key)
     {
-        return array_key_exists($key, $this->_fields);
+        return array_key_exists($key, $this->data);
     }
 
     /**
