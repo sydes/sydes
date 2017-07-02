@@ -4,33 +4,54 @@
 
         <div class="row">
             <div class="col-sm-6">
-                <?=H::formGroup(t('site_name'), Form::field('Text', 'name', null, ['required' => true]));?>
+                <?=Form::input('name', 'Text', [
+                    'required' => true,
+                    'label' => 'site_name',
+                ]);?>
             </div>
             <div class="col-sm-6">
-                <?=H::formGroup(t('site_theme'), Form::field('List', 'theme', null, ['items' => $themes]));?>
+                <?=Form::input('theme', 'List', [
+                    'label' => 'site_theme',
+                    'items' => $themes,
+                ]);?>
             </div>
             <div class="col-sm-6">
-                <?=H::formGroup(t('site_domains'),
-                    Form::field('TextList', 'domains', null, ['required' => true]),
-                    t('one_per_line'));?>
+                <?=Form::input('domains', 'TextList', [
+                    'required' => true,
+                    'label' => 'site_domains',
+                    'helpText' => 'one_per_line',
+                ]);?>
             </div>
             <div class="col-sm-6">
-                <?=H::formGroup(t('site_use_only_main_domain'), Form::field('YesNo', 'onlyMainDomain'));?>
+                <?=Form::input('onlyMainDomain', 'YesNo', [
+                    'label' => 'site_use_only_main_domain',
+                ]);?>
             </div>
             <div class="col-sm-6">
-                <?=H::formGroup(t('site_locales'),
-                    Form::field('TextList', 'locales', null, ['required' => true]),
-                    t('one_per_line'));?>
+                <?=Form::input('locales', 'TextList', [
+                    'required' => true,
+                    'label' => 'site_locales',
+                    'helpText' => 'one_per_line',
+                ]);?>
             </div>
             <div class="col-sm-6">
-                <?=H::formGroup(t('site_locale_in'), Form::field('List', 'localeIn', null, ['items' => [
-                    'url' => t('in_url'),
-                    'domain' => t('in_domain'),
-                ]]));?>
-                <?=H::formGroup(t('domain_to_locale'), Form::field('TextList', 'host2locale'), t('domain_to_locale_hint'));?>
+                <?=Form::input('localeIn', 'List', [
+                    'label' => 'site_locale_in',
+                    'items' => [
+                        'url' => t('in_url'),
+                        'domain' => t('in_domain'),
+                    ]
+                ]);?>
+                <?=Form::input('host2locale', 'TextList', [
+                    'required' => true,
+                    'label' => 'domain_to_locale',
+                    'helpText' => 'domain_to_locale_hint',
+                ]);?>
             </div>
             <div class="col-sm-6">
-                <?=H::formGroup(t('site_works'), Form::field('YesNo', 'work'));?>
+                <?=Form::input('work', 'YesNo', [
+                    'label' => 'site_works',
+                ]);?>
             </div>
         </div>
 

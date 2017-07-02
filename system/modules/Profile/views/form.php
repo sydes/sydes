@@ -3,13 +3,19 @@
         <?=Form::fromArray($data, ['method' => 'put', 'url' => '/admin/profile', 'form' => 'main']);?>
         <div class="row">
             <div class="col-sm-6">
-                <?=H::formGroup(t('username'), Form::field('Text', 'username', null, ['required' => true]));?>
-                <?=H::formGroup(t('email'), Form::field('Email', 'email', null, ['required' => true]));?>
+                <?=Form::input('username', 'Text', [
+                    'required' => true,
+                    'label' => 'username',
+                ]);?>
+                <?=Form::input('email', 'Email', [
+                    'required' => true,
+                    'label' => 'email',
+                ]);?>
             </div>
             <div class="col-sm-6">
-                <div class="form-group">
-                    <?=H::formGroup(t('enable_autologin'), Form::field('YesNo', 'autoLogin'));?>
-                </div>
+                <?=Form::input('autoLogin', 'YesNo', [
+                    'label' => 'enable_autologin',
+                ]);?>
             </div>
         </div>
         <?=H::submitButton(t('save'), ['button' => 'primary']);?>

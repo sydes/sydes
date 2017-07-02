@@ -82,7 +82,6 @@ class Controller
 
     public function edit($id)
     {
-        $site = model('Sites')->get($id)->get();
         $themes = [];
         foreach (model('Themes')->getAll() as $theme => $data) {
             $themes[$theme] = $data['name'];
@@ -92,7 +91,7 @@ class Controller
             'title' => t('site_editing'),
             'header_actions' => \H::submitButton(t('save'), ['button' => 'primary', 'data-submit' => 'form-main']),
             'content' => view('sites/form', [
-                'site' => $site,
+                'site' => model('Sites')->get($id)->get(),
                 'themes' => $themes,
                 'options' => [
                     'method' => 'put',
