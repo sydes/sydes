@@ -11,6 +11,8 @@ class FormBuilder
 {
     /** @var EntityInterface */
     private static $model;
+    private static $data;
+    private static $fields;
 
     /**
      * Open up a new HTML form.
@@ -54,8 +56,24 @@ class FormBuilder
     public static function close()
     {
         self::$model = null;
+        self::$data = null;
 
         return '</form>';
+    }
+
+    /**
+     * @param array $data
+     * @param array $options
+     * @return string
+     */
+    public static function fromArray(array $data, array $options = [])
+    {
+        self::$data = $data;
+        if (self::$fields === null) {
+            self::$fields = app('form.fields');
+        }
+
+        return self::open($options);
     }
 
     /**
@@ -84,7 +102,7 @@ class FormBuilder
         } else {
             $wrapper = function (FieldInterface $field) {
                 $help = $field->getSettings('helpText') ?
-                    \H::tag('small', $field->getSettings('helpText'), ['class'=>'form-text text-muted']) : '';
+                    \H::tag('small', t($field->getSettings('helpText')), ['class'=>'form-text text-muted']) : '';
 
                 return '<div class="form-group row">'.
                     '<label class="col-3 col-form-label">'.t($field->getSettings('label')).'</label>'.
@@ -104,10 +122,24 @@ class FormBuilder
 
     /**
      * @param string $name
+     * @param string $type field type name
+     * @param array  $opts
      * @return string
      */
-    public static function input($name)
+    public static function input($name, $type = 'Text', array $opts = [])
     {
-        return self::$model->field($name)->formInput();
+        if (self::$model !== null) {
+            return self::$model->field($name)->formInput();
+        }
+
+        if (!isset(self::$fields[$type])) {
+            throw new \InvalidArgumentException(t('field_not_exists', ['name' => $type]));
+        }
+
+        $value = ifsetor(self::$data[$name], '');
+        /** @var FieldInterface $field */
+        $field = new self::$fields[$type]($name, $value, $opts);
+
+        return $field->formInput();
     }
 }

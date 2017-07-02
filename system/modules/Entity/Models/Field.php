@@ -43,12 +43,8 @@ abstract class Field implements FieldInterface
      */
     public function fromString($value)
     {
-        if ($this->contains == 'array') {
-            if (is_string($value)) {
-                $value = json_decode($value, true);
-            } elseif (empty($value)) {
-                $value = [];
-            }
+        if ($this->contains == 'array' && is_string($value)) {
+            $value = empty($value) ? [] : json_decode($value, true);
         }
 
         $this->value = $value;
@@ -105,6 +101,20 @@ abstract class Field implements FieldInterface
     /**
      * {@inheritDoc}
      */
+    public function setSettings($key, $value = null)
+    {
+        if (is_array($key)) {
+            $this->_settings = $key;
+        } else {
+            $this->_settings[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getFormatters()
     {
         return $this->formatters;
@@ -149,7 +159,7 @@ abstract class Field implements FieldInterface
                 return \H::formGroup(
                     t($field->getSettings('label')),
                     $field->input(),
-                    $field->getSettings('helpText')
+                    t($field->getSettings('helpText'))
                 );
             };
         }

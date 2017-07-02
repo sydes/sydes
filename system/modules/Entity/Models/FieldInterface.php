@@ -64,6 +64,13 @@ interface FieldInterface
     public function getSettings($key = null);
 
     /**
+     * @param string|array $key
+     * @param mixed        $value
+     * @return $this
+     */
+    public function setSettings($key, $value = null);
+
+    /**
      * Gets list of available value formatters for renderer
      *
      * @return array

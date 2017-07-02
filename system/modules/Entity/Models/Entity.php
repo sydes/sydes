@@ -104,6 +104,9 @@ abstract class Entity implements EntityInterface
         if (!isset($field['settings'])) {
             $field['settings'] = [];
         }
+        if (!isset($this->data[$name])) {
+            $this->data[$name] = '';
+        }
 
         $class = app('form.fields')[$field['type']];
 
@@ -272,7 +275,7 @@ abstract class Entity implements EntityInterface
      */
     public function __isset($key)
     {
-        return array_key_exists($key, $this->data);
+        return array_key_exists($key, $this->fields);
     }
 
     /**
