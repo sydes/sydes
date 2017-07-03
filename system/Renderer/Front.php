@@ -1,6 +1,6 @@
 <?php
 /**
- * @link      https://github.com/sydes/framework
+ * @link      https://github.com/sydes/sydes
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   MIT license; see LICENSE
  */
