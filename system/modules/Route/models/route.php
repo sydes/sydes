@@ -38,7 +38,7 @@ class Route
      * @param $alias
      * @return array|bool
      */
-    public function findOrFail($alias)
+    public function find($alias)
     {
         $route = $this->db->table('routes')->where('alias', $alias)->first();
 

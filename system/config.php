@@ -23,7 +23,7 @@ return [
         return $con;
     },
 
-    'renderer' => function (ContainerInterface $c) {
+    'renderer' => function (DI\Container $c) {
         $class = 'System\Renderer\\'.ucfirst($c->get('section'));
         return $c->make($class);
     },

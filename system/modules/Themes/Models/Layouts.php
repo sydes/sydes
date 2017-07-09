@@ -98,7 +98,7 @@ class Layouts
      */
     public function store($id, array $data)
     {
-        $content = arrayRemove($data, 'content', '');
+        $content = array_remove($data, 'content', '');
         $formatted = '';
         foreach ($data as $key => $value) {
             $formatted .= "@{$key}({$value})";

@@ -215,7 +215,7 @@ class Runner
             return ['Main@error', ['code' => 404]];
         }
 
-        return model('Route')->findOrFail($path);
+        return model('Route')->find($path);
     }
 
     /**
