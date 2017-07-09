@@ -13,18 +13,14 @@ return [
     'Sydes\AdminMenu' => DI\object()->constructor(DI\string('{dir.site}/{site.id}/menu.php')),
     'Sydes\Api' => DI\object()->constructor(SYDES_VERSION, 'http://api.sydes.ru/'),
     'Sydes\Auth' => DI\object()->constructor(DI\get('Module\Main\Models\User')),
-    'Sydes\Cache' => DI\object()->constructor(\DI\get('dir.cache')),
+    'Sydes\Cache' => DI\object()->constructor(DI\get('dir.cache')),
     'Sydes\L10n\Translator' => DI\object()->constructor(DI\string('{dir.l10n}/translations')),
-    'Sydes\Db' => function (ContainerInterface $c) {
-        $connection = new \Pixie\Connection('sqlite', [
-            'driver'   => 'sqlite',
-            'database' => $c->get('dir.site.this').'/database.db',
-        ], 'QB');
-
-        $db = new Sydes\Db($connection);
-        $db->setFetchMode(PDO::FETCH_ASSOC)->pdo()->exec('PRAGMA foreign_keys = ON');
-
-        return $db;
+    'Sydes\Database\Connection' => function (ContainerInterface $c) {
+        $path = $c->get('dir.site.this').'/database.db';
+        $pdo = new PDO('sqlite:'.$path);
+        $con = new Sydes\Database\SQLiteConnection($pdo, $path);
+        $con->getSchemaBuilder()->enableForeignKeyConstraints();
+        return $con;
     },
 
     'renderer' => function (ContainerInterface $c) {
@@ -46,7 +42,7 @@ return [
     'auth'       => DI\get('Sydes\Auth'),
     'cache'      => DI\get('Sydes\Cache'),
     'csrf'       => DI\get('Sydes\Csrf'),
-    'db'         => DI\get('Sydes\Db'),
+    'db'         => DI\get('Sydes\Database\Connection'),
     'emitter'    => DI\get('Zend\Diactoros\Response\SapiEmitter'),
     'event'      => DI\get('Sydes\Event'),
     'mailer'     => DI\get('Sydes\Email\Sender'),

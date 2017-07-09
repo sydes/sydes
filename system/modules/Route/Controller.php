@@ -8,18 +8,13 @@ namespace Module\Route;
 
 class Controller
 {
-    public function install()
+    public function install(Models\Route $model)
     {
-        app('db')->run("CREATE TABLE routes (
-    alias TEXT NOT NULL,
-    route TEXT NOT NULL,
-    params TEXT,
-    UNIQUE (alias,route)
-);");
+        $model->make();
     }
 
-    public function uninstall()
+    public function uninstall(Models\Route $model)
     {
-        app('db')->exec("DROP TABLE IF EXISTS routes");
+        $model->drop();
     }
 }

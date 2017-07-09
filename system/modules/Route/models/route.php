@@ -6,12 +6,15 @@
  */
 namespace Module\Route\Models;
 
-use Sydes\Db;
+use Sydes\Database\Connection;
+use Sydes\Database\Schema\Blueprint;
 
 class Route
 {
-    public function __construct(Db $db) {
-        $this->table = $db->table('routes');
+    protected $db;
+
+    public function __construct(Connection $db) {
+        $this->db = $db;
     }
 
     /**
@@ -28,7 +31,7 @@ class Route
             'params' => json_encode($params),
         ];
 
-        return $this->table->onDuplicateKeyUpdate($data)->insert($data);
+        return $this->db->table('routes')->insert($data);
     }
 
     /**
@@ -37,10 +40,10 @@ class Route
      */
     public function findOrFail($alias)
     {
-        $route = $this->table->where('alias', $alias)->first();
+        $route = $this->db->table('routes')->where('alias', $alias)->first();
 
         if ($route) {
-            return [$route['route'], json_decode($route['params'], true)];
+            return [$route->route, json_decode($route->params, true)];
         }
 
         return ['Main@error', ['code' => 404]];
@@ -54,7 +57,12 @@ class Route
      */
     public function update($alias, $route, $params = [])
     {
-        return $this->add($alias, $route, $params);
+        return $this->db->table('routes')->updateOrInsert([
+            'alias' => $alias,
+        ], [
+            'route' => $route,
+            'params' => json_encode($params),
+        ]);
     }
 
     /**
@@ -63,6 +71,22 @@ class Route
      */
     public function delete($alias)
     {
-        return $this->table->where('alias', $alias)->delete();
+        return $this->db->table('routes')->where('alias', $alias)->delete();
+    }
+
+    public function make()
+    {
+        $this->db->getSchemaBuilder()->create('routes', function (Blueprint $t){
+            $t->string('alias');
+            $t->string('route');
+            $t->string('params');
+
+            $t->primary('alias');
+        });
+    }
+
+    public function drop()
+    {
+        $this->db->getSchemaBuilder()->drop('routes');
     }
 }
