@@ -7,6 +7,9 @@
 
 namespace Module\Entity\Models;
 
+use Sydes\Database\Connection;
+use Sydes\Database\Schema\Blueprint;
+
 abstract class Field implements FieldInterface
 {
     protected $name;
@@ -20,7 +23,6 @@ abstract class Field implements FieldInterface
             'method' => 'defaultFormatter',
         ]
     ];
-    protected $schema = 'TEXT';
 
     /**
      * {@inheritDoc}
@@ -28,14 +30,15 @@ abstract class Field implements FieldInterface
     public function __construct($name, $value, $settings = [])
     {
         $this->name = $name;
-        $this->fromString($value);
         $this->_settings = array_merge([
             'required' => false,
             'helpText' => '',
             'multiple' => false,
+            'default' => null,
             'label' => '',
             'formatter' => 'default',
         ], $this->settings, $settings);
+        $this->fromString($value);
     }
 
     /**
@@ -43,11 +46,17 @@ abstract class Field implements FieldInterface
      */
     public function fromString($value)
     {
-        if ($this->contains == 'array' && is_string($value)) {
-            $value = empty($value) ? [] : json_decode($value, true);
-        }
+        if (is_null($value)) {
+            if (!is_null($this->_settings['default'])) {
+                $this->value = $this->_settings['default'];
+            }
+        } else {
+            if ($this->contains == 'array' && is_string($value)) {
+                $value = empty($value) ? [] : json_decode($value, true);
+            }
 
-        $this->value = $value;
+            $this->value = $value;
+        }
 
         return $this;
     }
@@ -77,15 +86,21 @@ abstract class Field implements FieldInterface
     /**
      * {@inheritDoc}
      */
-    public function get()
+    public function value($key = null)
     {
-        return $this->value;
+        if (is_null($key)) {
+            return $this->value;
+        } elseif (is_array($this->value) && isset($this->value[$key])) {
+            return $this->value[$key];
+        }
+
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function name()
     {
         return $this->name;
     }
@@ -172,48 +187,44 @@ abstract class Field implements FieldInterface
         return '';
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function onCreate(array $cols)
+    public function onCreate(Blueprint $t, Connection $db)
     {
-        $cols[] = $this->name.' '.$this->schema;
-
-        return $cols;
+        $t->string($this->name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function onDrop()
+    public function onDrop(Connection $db)
     {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function beforeSave()
+    public function saving(Connection $db)
     {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function afterSave()
+    public function saved(Connection $db)
     {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function beforeDelete()
+    public function creating(Connection $db)
     {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function afterDelete()
+    public function created(Connection $db)
+    {
+    }
+
+    public function updating(Connection $db)
+    {
+    }
+
+    public function updated(Connection $db)
+    {
+    }
+
+    public function deleting(Connection $db)
+    {
+    }
+
+    public function deleted(Connection $db)
     {
     }
 }

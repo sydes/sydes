@@ -10,8 +10,19 @@ use Module\Entity\Models\Field;
 
 class TextField extends Field
 {
+    protected $settings = [
+        'rows' => 1,
+    ];
+
     public function input()
     {
-        return \H::textInput($this->name, $this->value, ['required'=>$this->getSettings('required')]);
+        if ($this->getSettings('rows') == 1) {
+            return \H::textInput($this->name, $this->value, ['required'=>$this->getSettings('required')]);
+        } else {
+            return \H::textarea($this->name, implode("\n", $this->value), [
+                'required' => $this->getSettings('required'),
+                'rows' => $this->getSettings('rows'),
+            ]);
+        }
     }
 }

@@ -7,6 +7,9 @@
 
 namespace Module\Entity\Models;
 
+use Sydes\Database\Connection;
+use Sydes\Database\Schema\Blueprint;
+
 interface FieldInterface
 {
     /**
@@ -42,18 +45,19 @@ interface FieldInterface
     public function set($value);
 
     /**
-     * Gets value as is
+     * Gets value as is or his part
      *
+     * @param string $key
      * @return mixed
      */
-    public function get();
+    public function value($key = null);
 
     /**
      * Gets name of field
      *
      * @return mixed
      */
-    public function getName();
+    public function name();
 
     /**
      * Gets all settings for field or one if key is provided
@@ -119,41 +123,84 @@ interface FieldInterface
     /**
      * Triggered on entity table creation
      *
-     * @param array $cols
+     * @param Blueprint $t main table
+     * @param Connection $db
      * @return array
      */
-    public function onCreate(array $cols);
+    public function onCreate(Blueprint $t, Connection $db);
 
     /**
      * Triggered on entity table deletion
+     *
+     * @param Connection $db
      */
-    public function onDrop();
+    public function onDrop(Connection $db);
 
     /**
      * Triggered before entity is saved
      *
      * Returning a false will halt the save operation
      *
+     * @param Connection $db
      * @return bool
      */
-    public function beforeSave();
+    public function saving(Connection $db);
 
     /**
      * Triggered after entity was saved.
+     *
+     * @param Connection $db
      */
-    public function afterSave();
+    public function saved(Connection $db);
+
+    /**
+     * Triggered before entity is created
+     *
+     * Returning a false will halt the save operation
+     *
+     * @param Connection $db
+     * @return bool
+     */
+    public function creating(Connection $db);
+
+    /**
+     * Triggered after entity was created.
+     *
+     * @param Connection $db
+     */
+    public function created(Connection $db);
+
+    /**
+     * Triggered before entity is updated
+     *
+     * Returning a false will halt the save operation
+     *
+     * @param Connection $db
+     * @return bool
+     */
+    public function updating(Connection $db);
+
+    /**
+     * Triggered after entity was updated.
+     *
+     * @param Connection $db
+     */
+    public function updated(Connection $db);
 
     /**
      * Triggered before entity is deleted
      *
      * Returning a false will halt the delete operation
      *
+     * @param Connection $db
      * @return bool
      */
-    public function beforeDelete();
+    public function deleting(Connection $db);
 
     /**
      * Triggered after entity was deleted.
+     *
+     * @param Connection $db
      */
-    public function afterDelete();
+    public function deleted(Connection $db);
 }

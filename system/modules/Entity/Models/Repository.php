@@ -7,39 +7,53 @@
 
 namespace Module\Entity\Models;
 
-use Sydes\Db;
+use Sydes\Database\Connection;
+use Sydes\Database\Query\Builder as QueryBuilder;
+use Sydes\Database\Schema\Blueprint;
+use Sydes\Support\Collection;
 
 class Repository
 {
-    /** @var \PDO */
-    protected $db;
-    /** @var Entity */
-    protected $model;
+    /** @var string class name */
     protected $entity;
-    protected $query;
+    /** @var Entity instance */
+    protected $model;
+    /** @var Connection */
+    protected $db;
 
-    public function __construct(Db $query)
+    public function __construct(Connection $db)
     {
-        $this->query = $query;
-        $this->db = $query->pdo();
+        $this->db = $db;
 
         if ($this->entity) {
-            $this->model($this->entity);
+            $this->forEntity($this->entity);
         }
     }
 
     /**
-     * @param string $model class name
+     * Set class name of entity
+     *
+     * @param string $class class name
      * @return $this
      */
-    public function model($model)
+    public function forEntity($class)
     {
-        $this->entity = $model;
-        $this->model = new $model;
+        $this->entity = $class;
+        $this->model = new $class;
 
-        $this->query = $this->query
-            ->table($this->model->getTable())
-            ->setFetchMode(\PDO::FETCH_ASSOC);
+        return $this;
+    }
+
+    /**
+     * Set instance of entity
+     *
+     * @param Entity $model
+     * @return $this
+     */
+    public function setModel(Entity $model)
+    {
+        $this->entity = get_class($model);
+        $this->model = $model;
 
         return $this;
     }
@@ -53,104 +67,219 @@ class Repository
     }
 
     /**
-     * Creates table from entity fields
+     * Get all of the models from the database.
+     *
+     * @param  array $columns
+     * @return Collection
+     */
+    public function all($columns = ['*'])
+    {
+        return $this->newQuery()->get($columns);
+    }
+
+    /**
+     * Save the model to the database
+     *
+     * @param Entity $entity
+     * @return bool
+     */
+    public function save(Entity $entity)
+    {
+        $this->setModel($entity);
+
+        if ($this->fireModelEvent('saving', true) === false) {
+            return false;
+        }
+
+        $query = $this->newQuery();
+        $saved = $entity->exists ? $this->update($query, $entity) : $this->insert($query, $entity);
+
+        if ($saved) {
+            $this->fireModelEvent('saved');
+            $entity->clean();
+        }
+
+        return $saved;
+    }
+
+    /**
+     * Perform a model update operation.
+     *
+     * @param Builder $query
+     * @param Entity  $entity
+     * @return bool
+     */
+    protected function update(Builder $query, Entity $entity)
+    {
+        if ($entity->isClean() || $this->fireModelEvent('updating', true) === false) {
+            return false;
+        }
+
+        $query->where('id', '=', $entity->id)->update($entity->toStorage());
+
+        $this->fireModelEvent('updated');
+
+        return true;
+    }
+
+    /**
+     * Perform a model insert operation.
+     *
+     * @param Builder $query
+     * @param Entity  $entity
+     * @return bool
+     */
+    protected function insert(Builder $query, Entity $entity)
+    {
+        if ($this->fireModelEvent('creating', true) === false) {
+            return false;
+        }
+
+        $entity->id = $query->insertGetId($entity->toStorage(), 'id');
+        $entity->exists = true;
+
+        $this->fireModelEvent('created');
+
+        return true;
+    }
+
+    /**
+     * Delete the model from the database
+     *
+     * @param Entity $entity
+     * @return int
+     */
+    public function delete(Entity $entity)
+    {
+        $this->setModel($entity);
+
+        if ($this->fireModelEvent('deleting', true) === false) {
+            return false;
+        }
+
+        if ($result = $this->newQuery()->delete($entity->id)) {
+            $entity->exists = false;
+        }
+
+        $this->fireModelEvent('deleted');
+
+        return $result;
+    }
+
+    /**
+     * Destroy the models for the given IDs.
+     *
+     * @param  array|int $ids
+     * @return int
+     */
+    public function destroy($ids)
+    {
+        $ids = is_array($ids) ? $ids : func_get_args();
+
+        return $this->newQuery()->whereIn('id', $ids)->delete();
+    }
+
+    /**
+     * Create table for this entity
      */
     public function makeTable()
     {
         $table = $this->model->getTable();
-        $fields = $this->model->getFields();
+        $schema = $this->db->getSchemaBuilder();
+
+        $schema->create($table, function (Blueprint $t) {
+            $this->model->makeTable($t, $this->db);
+        });
 
         if ($this->model->hasLocalized()) {
-            $cols = [
-                "entity_id INTEGER NOT NULL REFERENCES {$table}(id) ON DELETE CASCADE",
-                'locale TEXT NOT NULL',
-            ];
+            $schema->create($table.'_localized', function (Blueprint $t) use ($table) {
+                $t->integer('entity_id')->unsigned();
+                $t->string('locale');
 
-            foreach ($this->model->getLocalized() as $col) {
-                $cols = $fields[$col]->onCreate($cols);
-                unset($fields[$col]);
-            }
+                foreach ($this->model->getLocalized() as $name) {
+                    $this->model->field($name)->onCreate($t, $this->db);
+                }
 
-            $cols[] = 'UNIQUE (entity_id, locale)';
-
-            $this->db->exec("CREATE TABLE {$table}_localized (\n".implode(",\n", $cols)."\n)");
+                $t->foreign('entity_id')->references('id')->on($table)->onDelete('cascade');
+                $t->primary(['entity_id', 'locale']);
+            });
         }
-
-        $cols = [
-            $this->model->getKeyName().' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT',
-        ];
-
-        foreach ($fields as $field) {
-            $cols = $field->onCreate($cols);
-        }
-
-        if ($this->model->usesTimestamps()) {
-            $cols[] = 'created_at INTEGER';
-            $cols[] = 'updated_at INTEGER';
-        }
-
-        $this->db->exec("CREATE TABLE {$table} (\n".implode(",\n", $cols)."\n)");
 
         if ($this->model->usesEav()) {
-            $this->db->exec("CREATE TABLE {$table}_eav (
-id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-entity_id INTEGER NOT NULL REFERENCES {$table}(id) ON DELETE CASCADE,
-key TEXT NOT NULL,
-value TEXT,
-UNIQUE (entity_id, key)\n)");
+            $schema->create($table.'_eav', function (Blueprint $t) use ($table) {
+                $t->increments('id');
+                $t->integer('entity_id')->unsigned();
+                $t->string('key');
+                $t->string('value')->nullable();
+
+                $t->foreign('entity_id')->references('id')->on($table)->onDelete('cascade');
+                $t->unique(['entity_id', 'key']);
+            });
         }
     }
 
     /**
-     * Removes table for this entity
+     * Drop table of this entity
      */
     public function dropTable()
     {
         $table = $this->model->getTable();
+        $schema = $this->db->getSchemaBuilder();
+
+        $this->model->dropTable($this->db);
 
         if ($this->model->hasLocalized()) {
-            $this->db->drop($table.'_localized');
+            $schema->drop($table.'_localized');
         }
-
         if ($this->model->usesEav()) {
-            $this->db->drop($table.'_eav');
+            $schema->drop($table.'_eav');
+        }
+        $schema->drop($table);
+    }
+
+    /**
+     * Get a new query builder for the model's table.
+     *
+     * @return Builder
+     */
+    public function newQuery()
+    {
+        if (!$this->model) {
+            throw new \RuntimeException("Entity not set in this repository");
         }
 
-        $this->db->drop($table);
+        $builder = new Builder($this->newQueryBuilder());
+
+        return $builder->setModel($this->model);
     }
 
-    public function first()
+    /**
+     * @return QueryBuilder
+     */
+    protected function newQueryBuilder()
     {
-        return new $this->entity($this->query->first());
+        return new QueryBuilder($this->db);
     }
 
-    public function all()
+    /**
+     * @param string $key
+     * @param bool   $halt
+     * @return bool
+     */
+    protected function fireModelEvent($key, $halt = false)
     {
-        $models = [];
-        foreach ($this->query->get() as $row) {
-            $models[] = new $this->entity($row);
-        }
-
-        return $models;
+        return $this->model->fire($key, $this->db, $halt);
     }
 
-    public function save(Entity $entity)
+    /**
+     * Handle dynamic method calls into the model.
+     *
+     * @param string $method
+     * @param array  $args
+     * @return mixed
+     */
+    public function __call($method, $args)
     {
-
-    }
-
-    public function destroy(Entity $entity)
-    {
-
-    }
-
-    public function __call($name, $args) {
-        if (substr($name, 0, 6) == 'findBy') {
-            $this->query->find($args[0], strtolower(substr($name, 6)));
-        }
-
-        call_user_func_array([$this->query, $name], $args);
-
-        return $this;
+        return call_user_func_array([$this->newQuery(), $method], $args);
     }
 }

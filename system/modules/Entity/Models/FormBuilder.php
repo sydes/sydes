@@ -9,7 +9,7 @@ namespace Module\Entity\Models;
 
 class FormBuilder
 {
-    /** @var EntityInterface */
+    /** @var Entity */
     private static $model;
     private static $data;
     private static $fields;
@@ -77,11 +77,11 @@ class FormBuilder
     }
 
     /**
-     * @param EntityInterface $model
+     * @param Entity $model
      * @param array $options
      * @return string
      */
-    public static function model(EntityInterface $model, array $options = [])
+    public static function model(Entity $model, array $options = [])
     {
         self::$model = $model;
 
@@ -89,11 +89,11 @@ class FormBuilder
     }
 
     /**
-     * @param EntityInterface $model
+     * @param Entity $model
      * @param array $options
      * @return string
      */
-    public static function auto(EntityInterface $model, array $options = [])
+    public static function auto(Entity $model, array $options = [])
     {
         $form = self::model($model, $options);
 
@@ -110,7 +110,7 @@ class FormBuilder
             };
         }
 
-        foreach (self::$model->allFields() as $name => $field) {
+        foreach (self::$model->getFields() as $name => $field) {
             $form .= $field->formInput($wrapper);
         }
 
