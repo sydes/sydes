@@ -52,4 +52,10 @@ return array(
     'remember_me' => 'Remember me',
     'login' => 'Login',
     'logout' => 'Logout',
+
+    'per_page' => 'Per page',
+    'items_of' => 'of',
+    'set_up' => 'Set Up',
+    'export' => 'Export',
+    'import' => 'Import',
 );

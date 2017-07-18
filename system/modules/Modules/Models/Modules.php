@@ -25,7 +25,7 @@ class Modules
             }
         }
 
-        app('adminMenu')->save();
+        app('admin.menu')->save();
     }
 
     /**
@@ -93,7 +93,7 @@ class Modules
             return;
         }
 
-        $instance = new $class;
+        $instance = app()->make($class);
         if (!method_exists($instance, $method)) {
             return;
         }
