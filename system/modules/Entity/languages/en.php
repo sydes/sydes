@@ -11,4 +11,6 @@ return array(
     'field_map_description' => 'Google or Yandex map constructor',
     'field_color_picker' => 'Color',
     'field_color_picker_description' => 'Default color picker',
+
+    'empty_result' => 'Empty Result',
 );

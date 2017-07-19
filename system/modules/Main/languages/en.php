@@ -15,6 +15,7 @@ return array(
 
     'yes' => 'Yes',
     'no' => 'No',
+    'any' => 'Any',
 
     'or' => 'or',
     'by' => 'By',
@@ -58,4 +59,8 @@ return array(
     'set_up' => 'Set Up',
     'export' => 'Export',
     'import' => 'Import',
+
+    'filter' => 'Filter',
+    'apply' => 'Apply',
+    'clear' => 'Clear',
 );

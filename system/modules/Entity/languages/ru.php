@@ -12,4 +12,6 @@ return array(
     'field_map_description' => 'Констуктор карт от Google или Яндекс',
     'field_color_picker' => 'Цвет',
     'field_color_picker_description' => 'Дефолтный подборщик цвета',
+
+    'empty_result' => 'Пустой результат',
 );
