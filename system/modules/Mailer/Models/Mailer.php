@@ -5,7 +5,7 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Sydes;
+namespace Module\Mailer\Models;
 
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -104,5 +104,30 @@ class Mailer
         $this->mail->send();
 
         return $this;
+    }
+
+    public function addEvent($code, $title, $description)
+    {
+        // TODO save to db
+    }
+
+    public function removeEvent($code)
+    {
+        // TODO delete
+    }
+
+    public function addTemplate($code, $params)
+    {
+        // TODO save to db
+    }
+
+    public function removeTemplate($code)
+    {
+        // TODO how to find???
+    }
+
+    public function fire($code)
+    {
+        // TODO get templates for event $code and send
     }
 }

@@ -3,6 +3,6 @@
   "description": "Mail manager with templates and events",
   "version": "1.0",
   "require": [
-    "Modules"
+    "Modules", "Entity"
   ]
 }

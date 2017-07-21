@@ -54,9 +54,7 @@ class Controller
 
     public function updateApp()
     {
-        $data = app('request')->only('timeZone', 'dateFormat', 'timeFormat', 'locale', 'mailer_defaultFrom',
-            'mailer_defaultTo', 'mailer_useSmtp', 'mailer_smtpHost', 'mailer_smtpPort',
-            'mailer_smtpUser', 'mailer_smtpPassword', 'mailer_sendAlso');
+        $data = app('request')->only('timeZone', 'dateFormat', 'timeFormat', 'locale');
         model('Settings/App')->save($data);
 
         notify(t('saved'));
