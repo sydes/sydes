@@ -19,7 +19,7 @@ class TextField extends Field
         if ($this->getSettings('rows') == 1) {
             return \H::textInput($this->name, $this->value, ['required'=>$this->getSettings('required')]);
         } else {
-            return \H::textarea($this->name, implode("\n", $this->value), [
+            return \H::textarea($this->name, $this->value, [
                 'required' => $this->getSettings('required'),
                 'rows' => $this->getSettings('rows'),
             ]);

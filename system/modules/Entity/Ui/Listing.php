@@ -34,6 +34,7 @@ class Listing
         $this->options = array_merge_recursive([
             'table' => [],
             'show' => [],
+            'columns_limit' => 3,
             'pagination' => [
                 'max_links' => 7,
                 'arrows' => false,
@@ -141,7 +142,12 @@ class Listing
         $row = '<th style="width:25px" title="'.t('check_all').'">'.\H::checkbox('all', false, ['data-check-all' => true]).'</th>';
         $sort = [$this->request->input('by'), $this->request->input('order', 'desc')];
 
-        foreach ($item->getFields($keys) as $field) {
+        $fields = $item->getFields($keys);
+        if (empty($keys)) {
+            $fields = array_slice($fields, 0, $this->options['columns_limit']);
+        }
+
+        foreach ($fields as $field) {
             $row .= $this->th($field->label(), $sort, $field->name());
         }
 
@@ -180,8 +186,13 @@ class Listing
     {
         $row = '<td>'.\H::checkbox('mass[]', false, ['value' => $item->id]).'</td>';
 
-        foreach ($item->getFields($keys) as $col) {
-            $row .= '<td>'.$col->render('table').'</td>';
+        $fields = $item->getFields($keys);
+        if (empty($keys)) {
+            $fields = array_slice($fields, 0, $this->options['columns_limit']);
+        }
+
+        foreach ($fields as $field) {
+            $row .= '<td>'.$field->render('table').'</td>';
         }
 
         $row .= '<td class="actions">'.$this->actions($item->id, $actions).'</td>';

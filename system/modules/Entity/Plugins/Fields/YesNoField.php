@@ -21,4 +21,28 @@ class YesNoField extends Field
     {
         $t->integer($this->name)->default($this->getSettings('default'));
     }
+
+    public function defaultFormatter()
+    {
+        $choice = [t('no'), t('yes')];
+
+        return $choice[$this->value];
+    }
+
+    public function tableFormatter()
+    {
+        $choice = [t('no'), t('yes')];
+
+        return $choice[$this->value];
+    }
+
+    public function filterFormatter($value)
+    {
+        $choice = ['' => t('any'), 1 => t('yes'), 0 => t('no')];
+
+        return \H::formGroup(
+            $this->label(),
+            \H::select('filter['.$this->name.']', $value, $choice)
+        );
+    }
 }

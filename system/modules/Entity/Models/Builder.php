@@ -45,10 +45,12 @@ class Builder
     public function find($id, $columns = ['*'])
     {
         if (is_array($id)) {
-            return empty($id) ? new Collection() : $this->whereIn('id', $id)->get($columns);
+            return empty($id) ?
+                new Collection() :
+                $this->whereIn($this->model->getQualifiedKeyName(), $id)->get($columns);
         }
 
-        return $this->where('id', $id)->first($columns);
+        return $this->where($this->model->getQualifiedKeyName(), $id)->first($columns);
     }
 
     /**
@@ -74,45 +76,41 @@ class Builder
     }
 
     /**
+     * Get a single column's value from the first result of a query.
+     *
+     * @param string $column
+     * @return mixed
+     */
+    public function value($column)
+    {
+        if ($result = $this->first([$column])) {
+            return $result->{$column};
+        }
+    }
+
+    /**
      * Execute the query as a "select" statement.
      *
      * @return Collection
      */
     public function get($columns = ['*'])
     {
-        if (count($models = $this->getModels($columns)) > 0) {
-            $models = $this->eagerLoadRelations($models);
-        }
+        $models = $this->getModels($columns);
 
-        return collect($models);
+        return $models;
     }
 
     /**
      * Get the hydrated models without eager loading.
      *
      * @param array $columns
-     * @return Entity[]
+     * @return Collection
      */
     public function getModels($columns = ['*'])
     {
         return $this->hydrate(
             $this->query->get($columns)->all()
-        )->all();
-    }
-
-    /**
-     * Eager load the relationships for the models.
-     *
-     * @param array $models
-     * @return array
-     */
-    public function eagerLoadRelations(array $models)
-    {
-        foreach ([] as $name => $constraints) {
-           // TODO load eav and localized
-        }
-
-        return $models;
+        );
     }
 
     /**
@@ -130,16 +128,15 @@ class Builder
     }
 
     /**
-     * @param int   $perPage
-     * @param array $columns
-     * @param int   $page
+     * Add a generic "order by" clause if the query doesn't already have one.
+     *
+     * @return void
      */
-    public function paginate($perPage = null, $columns = ['*'], $page = null)
+    protected function enforceOrderBy()
     {
-        $page = 1; // TODO from request
-        $perPage = $perPage ?: $this->perPage;
-
-        $this->oldQuery()->forPage($page, $perPage)->get($columns);
+        if (empty($this->query->orders) && empty($this->query->unionOrders)) {
+            $this->orderBy($this->model->getQualifiedKeyName(), 'asc');
+        }
     }
 
     /**
@@ -198,7 +195,7 @@ class Builder
     public function __call($method, $args)
     {
         if (in_array($method, $this->passthru)) {
-            return call_user_func_array([$this->getQuery(), $method], $args);
+            return call_user_func_array([$this->query, $method], $args);
         }
 
         call_user_func_array([$this->query, $method], $args);

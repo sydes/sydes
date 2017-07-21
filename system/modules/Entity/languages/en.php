@@ -13,4 +13,8 @@ return array(
     'field_color_picker_description' => 'Default color picker',
 
     'empty_result' => 'Empty Result',
+
+    'table_settings' => 'Table Settings',
+    'all_columns' => 'All Columns',
+    'selected_columns' => 'Selected',
 );

@@ -14,4 +14,8 @@ return array(
     'field_color_picker_description' => 'Дефолтный подборщик цвета',
 
     'empty_result' => 'Пустой результат',
+
+    'table_settings' => 'Настройки таблицы',
+    'all_columns' => 'Все колонки',
+    'selected_columns' => 'Выбранные',
 );

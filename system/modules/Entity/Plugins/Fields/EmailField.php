@@ -12,6 +12,7 @@ class EmailField extends Field
 {
     public function input()
     {
-        return \H::emailInput($this->name, $this->value, ['required'=>$this->getSettings('required')]);
+        return \H::textInput($this->name, $this->value, ['required'=>$this->getSettings('required')]);
+        // TODO with custom validation rules like comma separated many mails and {tokens}
     }
 }

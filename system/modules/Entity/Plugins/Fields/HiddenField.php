@@ -12,6 +12,6 @@ class HiddenField extends Field
 {
     public function input()
     {
-        return '';
+        return \H::hiddenInput($this->name, $this->value);
     }
 }

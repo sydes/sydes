@@ -60,6 +60,13 @@ interface FieldInterface
     public function name();
 
     /**
+     * Gets translated label of field
+     *
+     * @return string
+     */
+    public function label();
+
+    /**
      * Gets all settings for field or one if key is provided
      *
      * @param string|null $key
@@ -111,14 +118,15 @@ interface FieldInterface
     public function formSettings();
 
     /**
-     * Defines how the field will actually display its contents on front
+     * Defines how the field will actually display its contents on front or listing
      *
      * If $formatter provided, it will be used for render else default or one from settings
      *
-     * @param callable $formatter
+     * @param \Closure|string $formatter
+     * @param mixed $value
      * @return string
      */
-    public function render($formatter = null);
+    public function render($formatter = null, $value = null);
 
     /**
      * Triggered on entity table creation

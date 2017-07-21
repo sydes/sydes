@@ -15,14 +15,13 @@ abstract class Field implements FieldInterface
     protected $name;
     protected $value;
     protected $settings = [];
-    protected $_settings = [];
     protected $contains = 'text';
     protected $formatters = [
-        'default' => [
-            'name' => 'default',
-            'method' => 'defaultFormatter',
-        ]
+        'default' => 'default_formatter',
     ];
+    protected $searchable = false;
+    protected $filterable = true;
+    protected $sortable = true;
 
     /**
      * {@inheritDoc}
@@ -30,7 +29,7 @@ abstract class Field implements FieldInterface
     public function __construct($name, $value, $settings = [])
     {
         $this->name = $name;
-        $this->_settings = array_merge([
+        $this->settings = array_merge([
             'required' => false,
             'helpText' => '',
             'multiple' => false,
@@ -47,8 +46,8 @@ abstract class Field implements FieldInterface
     public function fromString($value)
     {
         if (is_null($value)) {
-            if (!is_null($this->_settings['default'])) {
-                $this->value = $this->_settings['default'];
+            if (!is_null($this->settings['default'])) {
+                $this->value = $this->settings['default'];
             }
         } else {
             if ($this->contains == 'array' && is_string($value)) {
@@ -105,12 +104,17 @@ abstract class Field implements FieldInterface
         return $this->name;
     }
 
+    public function label()
+    {
+        return t($this->settings['label']);
+    }
+
     /**
      * {@inheritDoc}
      */
     public function getSettings($key = null)
     {
-        return $key ? $this->_settings[$key] : $this->_settings;
+        return !is_null($key) ? $this->settings[$key] : $this->settings;
     }
 
     /**
@@ -119,9 +123,9 @@ abstract class Field implements FieldInterface
     public function setSettings($key, $value = null)
     {
         if (is_array($key)) {
-            $this->_settings = $key;
+            $this->settings = $key;
         } else {
-            $this->_settings[$key] = $value;
+            $this->settings[$key] = $value;
         }
 
         return $this;
@@ -146,20 +150,38 @@ abstract class Field implements FieldInterface
     /**
      * {@inheritDoc}
      */
-    public function render($formatter = null)
+    public function render($formatter = null, $value = null)
     {
-        if ($formatter) {
-            return call_user_func_array($formatter, [$this->name, $this->value, $this->_settings]);
+        if ($formatter instanceof \Closure) {
+            return $formatter($this->name, $this->value, $this->settings);
         }
 
-        if (!isset($this->formatters[$this->_settings['formatter']])) {
+        if ($formatter === null) {
+            $formatter = $this->settings['formatter'];
+        }
+
+        $formatters = $this->formatters + ['table' => 1, 'filter' => 1];
+        if (!is_string($formatter) || !isset($formatters[$formatter])) {
             throw new \RuntimeException('Field formatter for "'.$this->name.'" not found');
         }
 
-        return call_user_func([$this, $this->formatters[$this->_settings['formatter']]['method']]);
+        return $this->{$formatter.'Formatter'}($value);
     }
 
     protected function defaultFormatter()
+    {
+        return $this->value;
+    }
+
+    protected function filterFormatter($value)
+    {
+        return \H::formGroup(
+            $this->label(),
+            \H::textInput('filter['.$this->name.']', $value)
+        );
+    }
+
+    protected function tableFormatter()
     {
         return $this->value;
     }
@@ -169,10 +191,10 @@ abstract class Field implements FieldInterface
      */
     public function formInput($wrapper = null)
     {
-        if (!$wrapper) {
+        if (is_null($wrapper)) {
             $wrapper = function (FieldInterface $field) {
                 return \H::formGroup(
-                    t($field->getSettings('label')),
+                    $field->label(),
                     $field->input(),
                     t($field->getSettings('helpText'))
                 );
@@ -226,5 +248,29 @@ abstract class Field implements FieldInterface
 
     public function deleted(Connection $db)
     {
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSearchable()
+    {
+        return $this->searchable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFilterable()
+    {
+        return $this->filterable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSortable()
+    {
+        return $this->sortable;
     }
 }

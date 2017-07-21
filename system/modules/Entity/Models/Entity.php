@@ -8,10 +8,9 @@
 namespace Module\Entity\Models;
 
 use Sydes\Database\Connection;
-use Sydes\Database\Query\Builder;
 use Sydes\Database\Schema\Blueprint;
 
-class Entity
+class Entity implements EntityInterface
 {
     // Settings
     protected $table;
@@ -123,6 +122,16 @@ class Entity
     }
 
     /**
+     * Get the table qualified key name.
+     *
+     * @return string
+     */
+    public function getQualifiedKeyName()
+    {
+        return $this->getTable().'.id';
+    }
+
+    /**
      * @return bool
      */
     public function usesEav()
@@ -168,6 +177,22 @@ class Entity
     }
 
     /**
+     * @return int
+     */
+    public function getPerPage()
+    {
+        return $this->perPage;
+    }
+
+    /**
+     * @param int $perPage
+     */
+    public function setPerPage($perPage)
+    {
+        $this->perPage = $perPage;
+    }
+
+    /**
      * @param array|\stdClass $attrs
      * @return Entity
      */
@@ -186,6 +211,13 @@ class Entity
         return $model;
     }
 
+    public function create($attrs = [])
+    {
+        $model = clone $this;
+
+        return $model->fill($attrs);
+    }
+
     /**
      * Fire event in fields on entity table creation
      *
@@ -196,7 +228,7 @@ class Entity
     {
         $t->increments('id');
         foreach ($this->getFields() as $name => $field) {
-            if (!isset($this->localized[$name])) {
+            if (!in_array($name, $this->localized)) {
                 $field->onCreate($t, $db);
             }
         }
@@ -218,7 +250,7 @@ class Entity
      * Fire some event in fields
      *
      * @param string  $event
-     * @param Builder $query
+     * @param Connection $db
      * @param bool    $halt
      * @return bool
      */
@@ -242,9 +274,10 @@ class Entity
     /**
      * Boot all fields and return them
      *
+     * @param array $keys
      * @return FieldInterface[]
      */
-    public function getFields()
+    public function getFields(array $keys = [])
     {
         if (!$this->booted) {
             $this->booted = true;
@@ -253,7 +286,13 @@ class Entity
             }
         }
 
-        return $this->bootedFields;
+        if (empty($keys)) {
+            return $this->bootedFields;
+        }
+
+        $keys = array_flip($keys);
+
+        return array_intersect_key(array_replace($keys, $this->bootedFields), $keys);
     }
 
     /**
@@ -323,6 +362,15 @@ class Entity
         $this->fields[$key] = $field;
 
         return $this;
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function hasField($key)
+    {
+        return isset($this->fields[$key]);
     }
 
     /**

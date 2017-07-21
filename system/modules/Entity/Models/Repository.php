@@ -10,6 +10,7 @@ namespace Module\Entity\Models;
 use Sydes\Database\Connection;
 use Sydes\Database\Query\Builder as QueryBuilder;
 use Sydes\Database\Schema\Blueprint;
+use Sydes\Http\Request;
 use Sydes\Support\Collection;
 
 class Repository
@@ -269,6 +270,172 @@ class Repository
     protected function fireModelEvent($key, $halt = false)
     {
         return $this->model->fire($key, $this->db, $halt);
+    }
+
+    public function filteredAndSorted(Request $req)
+    {
+        $query = $this->newQuery();
+
+        foreach ($req->input('filter', []) as $field => $criterion) {
+            if ($this->model->hasField($field) && ($filter = $this->parseCriterion($criterion)) !== null) {
+                $query = $this->applyFilter($field, $filter, $query);
+            }
+        }
+
+        if ($req->has('by')) {
+            $query = $query->orderBy($req->input('by'), $req->input('order', 'desc'));
+        } else {
+            $query = $query->orderByDesc('id');
+        }
+
+        return $query;
+    }
+
+    protected function parseCriterion($value){
+        $ret = null;
+
+        if (!preg_match("/([!<>]?[*>=]?) ?([{}\w ,'-]+) ?(\*?)/iu", $value, $out)) {
+            return $ret;
+        }
+
+        if (empty($out[1])) {
+            if (strpos($out[2], ',') !== false) {
+                $ret = ['in'];
+                foreach (explode(',', $out[2]) as $item) {
+                    $ret[1][] = trim($item);
+                }
+            } elseif (strpos($out[2], '-') !== false) {
+                $val = explode('-', $out[2], 2);
+                $val[0] = trim($val[0]);
+                $val[1] = trim($val[1]);
+                if (is_numeric($val[0]) && is_numeric($val[1])) {
+                    $ret = ['between', $val];
+                }
+            } elseif ($out[3] == '*') {
+                $ret = ['begins_with', $out[2]];
+            } else {
+                $ret = ['equal', $out[2]];
+            }
+        } elseif ($out[1] == '=') {
+            $ret = ['equal', $out[2]];
+            if ($out[2] == "''") {
+                $ret[0] = 'is_empty';
+            }
+        } elseif ($out[1] == '!=' || $out[1] == '<>') {
+            $ret = ['not_equal', $out[2]];
+            if ($out[2] == "''") {
+                $ret[0] = 'is_not_empty';
+            }
+        } elseif ($out[1] == '!') {
+            if (strpos($out[2], ',') !== false) {
+                $ret = ['not_in'];
+                foreach (explode(',', $out[2]) as $item) {
+                    $ret[1][] = trim($item);
+                }
+            } elseif (strpos($out[2], '-') !== false) {
+                $val = explode('-', $out[2], 2);
+                $val[0] = trim($val[0]);
+                $val[1] = trim($val[1]);
+                if (is_numeric($val[0]) && is_numeric($val[1])) {
+                    $ret = ['not_between', $val];
+                }
+            } elseif ($out[3] == '*') {
+                $ret = ['not_begins_with', $out[2]];
+            } else {
+                $ret = ['not_equal', $out[2]];
+            }
+        } elseif ($out[1] == '<') {
+            $ret = ['less', $out[2]];
+        } elseif ($out[1] == '<=') {
+            $ret = ['less_or_equal', $out[2]];
+        } elseif ($out[1] == '>') {
+            $ret = ['greater', $out[2]];
+        } elseif ($out[1] == '>=') {
+            $ret = ['greater_or_equal', $out[2]];
+        } elseif ($out[1] == '*') {
+            if ($out[3] == '*') {
+                $ret = ['contains', $out[2]];
+            } else {
+                $ret = ['ends_with', $out[2]];
+            }
+        } elseif ($out[1] == '!*') {
+            if ($out[3] == '*') {
+                $ret = ['not_contains', $out[2]];
+            } else {
+                $ret = ['not_ends_with', $out[2]];
+            }
+        }
+
+        return $ret;
+    }
+
+    protected function applyFilter($field, array $filter, Builder $query, $boolean = 'and') {
+        $value = $filter[1];
+
+        switch ($filter[0]) {
+            case 'equal':
+                $query->where($field, '=', $value, $boolean);
+                break;
+            case 'not_equal':
+                $query->where($field, '<>', $value, $boolean);
+                break;
+            case 'in':
+                $query->whereIn($field, (array)$value, $boolean);
+                break;
+            case 'not_in':
+                $query->whereNotIn($field, (array)$value, $boolean);
+                break;
+            case 'less':
+                $query->where($field, '<', $value, $boolean);
+                break;
+            case 'less_or_equal':
+                $query->where($field, '<=', $value, $boolean);
+                break;
+            case 'greater':
+                $query->where($field, '>', $value, $boolean);
+                break;
+            case 'greater_or_equal':
+                $query->where($field, '>=', $value, $boolean);
+                break;
+            case 'between':
+                $query->whereBetween($field, (array)$value, $boolean);
+                break;
+            case 'not_between':
+                $query->whereNotBetween($field, (array)$value, $boolean);
+                break;
+            case 'begins_with':
+                $query->where($field, 'like', "{$value}%", $boolean);
+                break;
+            case 'not_begins_with':
+                $query->where($field, 'not like', "{$value}%", $boolean);
+                break;
+            case 'contains':
+                $query->where($field, 'like', "%{$value}%", $boolean);
+                break;
+            case 'not_contains':
+                $query->where($field, 'not like', "%{$value}%", $boolean);
+                break;
+            case 'ends_with':
+                $query->where($field, 'like', "%{$value}", $boolean);
+                break;
+            case 'not_ends_with':
+                $query->where($field, 'not like', "%{$value}", $boolean);
+                break;
+            case 'is_empty':
+                $query->where($field, '=', '', $boolean);
+                break;
+            case 'is_not_empty':
+                $query->where($field, '<>', '', $boolean);
+                break;
+            case 'is_null':
+                $query->whereNull($field, $boolean);
+                break;
+            case 'is_not_null':
+                $query->whereNotNull($field, $boolean);
+                break;
+        }
+
+        return $query;
     }
 
     /**
