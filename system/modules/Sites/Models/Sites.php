@@ -46,8 +46,6 @@ class Sites
 
         mkdir(app('dir.site').'/'.$id);
 
-        $params['modules'] = [];
-
         $this->save($id, $params);
 
         app()->set('site', $this->get($id));

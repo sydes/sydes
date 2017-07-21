@@ -58,7 +58,7 @@ class Runner
         $this->findLocale($path);
         $this->app->get('translator')->init($this->app->get('locale'));
 
-        $this->includeModules();
+        $this->includeModules($this->app->get('modules')->get());
 
         $events = $this->app->get('event');
         $events->trigger('site.found');
@@ -169,10 +169,10 @@ class Runner
         }
     }
 
-    private function includeModules()
+    private function includeModules($modules)
     {
         $events = $this->app->get('event');
-        foreach ($this->app->get('site')->get('modules') as $name => $module) {
+        foreach ($modules as $name => $module) {
             $dir = moduleDir($name);
 
             if (isset($module['handlers']) && file_exists($dir.'/Handlers.php')) {
@@ -195,7 +195,7 @@ class Runner
             $router->setCacheFile($this->app->get('dir.cache.route'));
         }
 
-        $modules = array_keys($this->app->get('site')->get('modules'));
+        $modules = array_keys($this->app->get('modules')->get());
         $sys = $this->app->get('dir.system').'/modules/';
         $usr = $this->app->get('dir.module').'/';
         $files = [];
@@ -245,8 +245,7 @@ class Runner
     {
         $route = self::parseRoute($params[0]);
 
-        $path = moduleDir($route['path'][0]);
-        if (!$path) {
+        if (!$path = moduleDir($route['path'][0])) {
             throw new \Exception(t('error_module_folder_not_found', ['module' => $route['path'][0]]));
         }
 

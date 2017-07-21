@@ -2,10 +2,10 @@
 
 namespace Module\Modules\Models;
 
+use Psr\Http\Message\UploadedFileInterface;
 use Sydes\Exception\RedirectException;
 use Sydes\Settings\Container;
 use Sydes\Settings\JsonDriver;
-use Psr\Http\Message\UploadedFileInterface;
 
 class Modules
 {
@@ -20,8 +20,8 @@ class Modules
             $mods = $this->withRequired($module);
             $mods = array_reverse($mods);
 
-            foreach ($mods as $module => $void) {
-                $this->register($module);
+            foreach ($mods as $mod => $void) {
+                $this->register($mod);
             }
         }
 
@@ -30,19 +30,21 @@ class Modules
 
     /**
      * @param string $name
+     * @throws \Exception
      */
     public function register($name)
     {
-        $modules = app('site')->get('modules');
+        $modules = app('modules')->get();
         $name = studly_case($name);
         if (isset($modules[$name])) {
             return;
         }
 
-        $data = [];
         if (!$dir = moduleDir($name)) {
             throw new \Exception(t('error_module_not_found', ['name' => $name]));
         }
+
+        $data = [];
 
         $iblocks = str_replace($dir.'/iblocks/', '', glob($dir.'/iblocks/*'));
         if (!empty($iblocks)) {
@@ -60,7 +62,7 @@ class Modules
 
         $modules[$name] = $data;
 
-        app('site')->set('modules', $modules)->save();
+        app('modules')->set($modules)->save();
 
         $this->run($name, 'install');
 
@@ -72,13 +74,13 @@ class Modules
      */
     public function uninstall($name)
     {
-        $modules = app('site')->get('modules');
+        $modules = app('modules')->get();
         $name = studly_case($name);
         if (isset($modules[$name])) {
             $this->checkDependencies($name);
             unset($modules[$name]);
 
-            app('site')->set('modules', $modules)->save();
+            app('modules')->set($modules)->save();
 
             $this->run($name, 'uninstall');
 
@@ -167,15 +169,13 @@ class Modules
         return new Container(moduleDir($name).'/module.json', new JsonDriver());
     }
 
-    public function withRequired($module)
+    public function withRequired($module, $matrix = [])
     {
-        static $matrix = [];
-
         $matrix[$module] = true;
 
         $require = $this->getManifest($module)->get('require', []);
         foreach ($require as $mod) {
-            $this->withRequired($mod);
+            $matrix = $this->withRequired($mod, $matrix);
         }
 
         return $matrix;
@@ -184,7 +184,7 @@ class Modules
     private function load()
     {
         if (empty($this->list)) {
-            $installed = array_keys(app('site')->get('modules', []));
+            $installed = array_keys(app('modules')->get());
             $this->list['default'] = str_replace(app('dir.system').'/modules/', '', glob(app('dir.system').'/modules/*', GLOB_ONLYDIR));
             $this->list['custom'] = str_replace(app('dir.module').'/', '', glob(app('dir.module').'/*', GLOB_ONLYDIR));
             $this->list['uninstalled'] = array_diff($this->list['custom'], $installed);

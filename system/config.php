@@ -35,6 +35,10 @@ return [
         $path = $c->get('dir.site.this').'/config.php';
         return new Settings($path, new FileDriver());
     },
+    'modules' => function (ContainerInterface $c) {
+        $path = $c->get('dir.site.this').'/modules.php';
+        return new Settings($path, new FileDriver());
+    },
 
     // aliases
     'admin.menu' => DI\get('Sydes\AdminMenu'),
