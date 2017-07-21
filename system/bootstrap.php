@@ -11,7 +11,7 @@ define('SYDES_VERSION', '3.0.0-b2');
 require __DIR__.'/../vendor/autoload.php';
 
 class_alias('Sydes\Html\BS4', 'H');
-class_alias('Module\Entity\Models\FormBuilder', 'Form');
+class_alias('Module\Entity\Ui\Form', 'Form');
 
 mb_internal_encoding('UTF-8');
 

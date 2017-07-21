@@ -5,9 +5,12 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Entity\Models;
+namespace Module\Entity\Ui;
 
-class FormBuilder
+use Module\Entity\Models\Entity;
+use Module\Entity\Models\FieldInterface;
+
+class Form
 {
     /** @var Entity */
     private static $model;
@@ -105,7 +108,7 @@ class FormBuilder
                     \H::tag('small', t($field->getSettings('helpText')), ['class'=>'form-text text-muted']) : '';
 
                 return '<div class="form-group row">'.
-                    '<label class="col-3 col-form-label">'.t($field->getSettings('label')).'</label>'.
+                    '<label class="col-3 col-form-label">'.$field->label().'</label>'.
                     '<div class="col-9">'.$field->input().$help.'</div></div>';
             };
         }
@@ -114,7 +117,10 @@ class FormBuilder
             $form .= $field->formInput($wrapper);
         }
 
-        $form .= \H::submitButton(t(ifsetor($options['btn_text'], 'save')), ['button' => 'primary']);
+        if (isset($options['submit_button'])) {
+            $form .= \H::submitButton(t($options['submit_button']), ['button' => 'primary']);
+        }
+
         $form .= self::close();
 
         return $form;
