@@ -1,0 +1,46 @@
+.entity-listing .actions {
+    text-align: right;
+    width: 1%;
+}
+.entity-listing .order-desc:after {
+    content: ' ▴';
+}
+.entity-listing .order-asc:after {
+    content: ' ▾';
+}
+.entity-listing .card-block .table {
+    margin-bottom: 0;
+}
+.entity-listing .card-footer .pagination {
+    margin-bottom: 0;
+}
+.entity-listing .empty-result {
+    text-align: center;
+}
+
+.column-sorter-wrapper h6 {
+    margin-bottom: 0;
+}
+.column-sorter {
+    margin: 0;
+    padding: 5px 0;
+    list-style: none;
+    min-height: 109px;
+}
+.column-sorter li {
+    border: 1px solid rgba(0,0,0,.13);
+    background-color: #fff;
+    padding: 4px 5px;
+    cursor: move;
+    margin-bottom: -1px;
+}
+.column-sorter li:before {
+    content: "\f07d";
+    display: inline-block;
+    width: 16px;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
