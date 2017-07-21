@@ -1,3 +1,9 @@
+$(document).on('click', '[data-text-toggler]', function () {
+    var texts = $(this).data('text-toggler');
+
+    $(this).text($(this).text() == texts[0] ? texts[1] : texts[0]);
+});
+
 $(document).on('click', '[data-submit]', function () {
     var form = $('#'+$(this).data('submit'));
     if (form.find('[type=submit]').length == 0) {
@@ -24,7 +30,7 @@ $(document).ready(function () {
         ajaxFormApply()
     });
 
-    $('.modal').on('show.bs.modal', function (e) {
+    /*$('.modal').on('show.bs.modal', function (e) {
         var size = $(e.relatedTarget).data('size'), dialog = $(this).find('.modal-dialog');
         dialog.removeClass('modal-sm modal-lg');
         if (size) {
@@ -35,7 +41,7 @@ $(document).ready(function () {
         modalPosition()
     }).on('hidden.bs.modal', function () {
         $(this).removeData('bs.modal')
-    });
+    });*/
 });
 
 var editorBuffer = '';
@@ -120,17 +126,7 @@ function hotSave(evt) {
     }
 }
 
-function toBuffer(fileUrl, data, allFiles) {
-    var body = '';
-    for (var key in allFiles) {
-        if (allFiles.hasOwnProperty(key)) {
-            body += '<pre>'+allFiles[key]['url']+'<br>&lt;img src="'+allFiles[key]['url']+'"></pre>';
-        }
-    }
-    $('#modal .modal-content').html('<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Ctrl+C</h4></div>' +
-        '<div class="modal-body">'+body+'</div>');
-    $('#modal').modal('show');
-}
+
 
 function modalPosition() {
     $('.modal').each(function () {

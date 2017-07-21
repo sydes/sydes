@@ -53,11 +53,13 @@ class Installer
             $params['locale'] = 'en';
         }
 
-        model('Main/User')->save(User::create([
+        $user = User::create([
+            'id' => 1,
             'username' => $params['username'],
             'password' => $params['password'],
             'email' => $params['email'],
-        ]));
+        ]);
+        model('Main/User')->save($user);
 
         model('Settings/App')->create([
             'timeZone' => 'Etc/GMT'.$params['timeZone'],
@@ -77,6 +79,8 @@ class Installer
             'localeIn' => 'url',
             'work' => 1,
         ]);
+
+        return $user;
     }
 
     public function uninstall()

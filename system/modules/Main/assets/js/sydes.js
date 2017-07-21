@@ -15,7 +15,9 @@ syd.notify = function (message, status, delay) {
     status = status || 'info';
     delay = delay || 4000;
     if (message != null) {
-        $('#notify').append($('<li class="'+status+'">'+message+'</li>').delay(delay).slideUp());
+        $('#notify').append($('<li class="'+status+'">'+message+'</li>').click(function () {
+            $(this).remove()
+        }).delay(delay).slideUp());
     }
 };
 
@@ -48,14 +50,14 @@ syd.modal = function (params) {
     params.size = params.size || '';
 
     var id = 'modal-loaded',
-        title_html = '<div class="modal-header"><div class="modal-title">'+params.title+'</div>\
+        title = '<div class="modal-header"><div class="modal-title">'+params.title+'</div>\
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
             <span aria-hidden="true">&times;</span></button></div>',
-        body_html = params.body ? '<div class="modal-body">'+params.body+'</div>' : '',
-        footer_html = params.footer ? '<div class="modal-footer">'+params.footer+'</div>' : '',
+        body = params.body ? '<div class="modal-body">'+params.body+'</div>' : '',
+        footer = params.footer ? '<div class="modal-footer">'+params.footer+'</div>' : '',
         modal = '<div class="modal fade" id="'+id+'" tabindex="-1" role="dialog">'+
             '<div class="modal-dialog '+params.size+'" role="document">'+
-        '<div class="modal-content">'+title_html+body_html+footer_html+'</div></div></div>';
+        '<div class="modal-content">'+title+body+footer+'</div></div></div>';
     $('body').append(modal);
     $('#'+id).modal('show').on('hidden.bs.modal', function () {
         $(this).remove();
@@ -111,7 +113,7 @@ syd.handleAction = function (event) {
     if (!action || !action.match(/(^\/|:\/\/)/)) {
         action = window.location.href;
     }
-    form = $('<form/>', {method: method, action: action});
+    var form = $('<form/>', {method: method, action: action});
     var target = e.attr('target');
     if (target) {
         form.attr('target', target);
@@ -135,10 +137,15 @@ syd.handleAction = function (event) {
 
 $(document).on('click', '[data-load=modal]', function () {
     var size = $(this).data('size') || 'md';
+    var title = $(this).data('title') || $(this).attr('title') || '';
 
     $.get($(this).attr('href'), function(data) {
+        if (typeof data !== 'string') {
+            return
+        }
+
         syd.modal({
-            title: '',
+            title: title,
             body: data,
             size: 'modal-'+size
         });
@@ -156,5 +163,16 @@ $(document).on('submit', 'form', function () {
 
 $(document).on('click', '[data-method]', syd.handleAction)
     .on('change', '[data-method]', syd.handleAction);
+
+$(document).on('submit', '.ajaxed', function () {
+    $.ajax(
+        $(this).attr('action'), {
+            method: $(this).attr('method'),
+            data: $(this).serialize()
+        }
+    );
+
+    return false;
+});
 
 })(jQuery);

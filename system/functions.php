@@ -5,7 +5,6 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-use Sydes\App;
 use Sydes\Exception\AppException;
 
 /**

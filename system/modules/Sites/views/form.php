@@ -43,7 +43,6 @@
                     ]
                 ]);?>
                 <?=Form::input('host2locale', 'TextList', [
-                    'required' => true,
                     'label' => 'domain_to_locale',
                     'helpText' => 'domain_to_locale_hint',
                 ]);?>

@@ -47,9 +47,6 @@ class User
     public function save(Usr $user)
     {
         $this->data = $user->toArray();
-        if (!isset($data['id'])) {
-            $data['id'] = 1;
-        }
         array2file($this->data, $this->storage);
     }
 }

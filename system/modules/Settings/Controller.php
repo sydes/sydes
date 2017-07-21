@@ -7,10 +7,12 @@
 namespace Module\Settings;
 
 use Sydes\AdminMenu;
+use Sydes\Database\Connection;
+use Sydes\Database\Schema\Blueprint;
 
 class Controller
 {
-    public function install(AdminMenu $menu)
+    public function install(AdminMenu $menu, Connection $db)
     {
         $menu->addItem('system/settings', [
                 'title' => 'module_settings',
@@ -19,6 +21,15 @@ class Controller
                 'title' => 'app_settings',
                 'url' => '/admin/app',
             ], 0);
+
+        $db->getSchemaBuilder()->create('settings', function (Blueprint $t) {
+            $t->increments('id');
+            $t->string('extension');
+            $t->string('key');
+            $t->string('value');
+
+            $t->unique(['extension', 'key']);
+        });
     }
 
     public function editApp()

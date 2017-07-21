@@ -85,6 +85,8 @@ class Handlers
             $doc->addCss('skin', $root.'css/skin.black.css', 15);
 
             $doc->addJs('admin', $root.'js/admin.js', 14);
+
+            $doc->addPackage('jquery-ui', $root.'js/jquery-ui.min.js', $root.'css/jquery-ui.min.css', 9);
         });
 
         $events->on('route.found', 'admin/*', function () {
