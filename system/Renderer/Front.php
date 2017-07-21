@@ -8,7 +8,6 @@ namespace System\Renderer;
 
 use Module\Themes\Models\Theme;
 use Sydes\Document;
-use Sydes\Renderer\Base;
 
 class Front extends Base
 {

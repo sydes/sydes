@@ -7,7 +7,6 @@
 namespace System\Renderer;
 
 use Sydes\Document;
-use Sydes\Renderer\Base;
 
 class Admin extends Base
 {
@@ -86,7 +85,7 @@ class Admin extends Base
             }
         }
 
-        foreach (app('site')->get('modules') as $module => $void) {
+        foreach (app('modules')->get() as $module => $void) {
             app('translator')->loadFrom('module', $module);
         }
 
@@ -101,7 +100,7 @@ class Admin extends Base
             }
 
             if (isset($item['url'])) {
-                $add = $item['quick_add'] ? '<a href="'.$item['url'].'/add" data-toggle="tooltip"
+                $add = $item['quick_add'] ? '<a href="'.$item['url'].'/create" data-toggle="tooltip"
                 data-placement="right" title="'.t('tip_add').'">[+1]</a>' : '';
                 $return = '<a href="'.$item['url'].'">'.t($item['title']).'</a>'.$add;
             } else {
