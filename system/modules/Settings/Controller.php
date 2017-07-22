@@ -47,7 +47,7 @@ class Controller
             ]),
         ]);
 
-        $d->addJs('settings.js', assetsPath('Settings').'/js/settings.js');
+        $d->addJs('settings.js', 'settings:js/settings.js');
 
         return $d;
     }

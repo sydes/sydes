@@ -19,9 +19,8 @@ class Handlers
         });
 
         $events->on('render.started', 'admin/*', function (Document $doc) {
-            $root = assetsPath('Entity');
-            $doc->addPackage('fields', $root.'/js/fields.js', $root.'/css/fields.css', 16);
-            $doc->addPackage('entity-ui', $root.'/js/entity-ui.js', $root.'/css/entity-ui.css', 17);
+            $doc->addPackage('fields', 'entity:js/fields.js', 'entity:css/fields.css', 16);
+            $doc->addPackage('entity-ui', 'entity:js/entity-ui.js', 'entity:css/entity-ui.css', 17);
         });
     }
 }

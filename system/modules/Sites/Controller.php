@@ -56,7 +56,7 @@ class Controller
             ]),
         ]);
 
-        $d->addJs('site.js', assetsPath('Sites').'/js/sites.js');
+        $d->addJs('site.js', 'sites:js/sites.js');
 
         return $d;
     }
@@ -101,7 +101,7 @@ class Controller
             ]),
         ]);
 
-        $d->addJs('site.js', assetsPath('Sites').'/js/sites.js');
+        $d->addJs('site.js', 'sites:js/sites.js');
 
         return $d;
     }

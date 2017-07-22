@@ -65,7 +65,7 @@ class Controller extends EntityController
             ]),
         ]);
 
-        $d->addJs('mailer.js', assetsPath('Mailer').'/js/mailer.js');
+        $d->addJs('mailer.js', 'mailer:js/mailer.js');
 
         return $d;
     }

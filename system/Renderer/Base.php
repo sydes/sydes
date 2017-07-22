@@ -158,12 +158,11 @@ class Base
     protected function prepareAssets($assets, $type)
     {
         usort($assets, 'sortByWeight');
-        $files = [];
 
+        $files = [];
         foreach ($assets as $pack) {
             $files = array_merge($files, $pack['files']);
         }
-
         $files = array_unique($files);
 
         $this->event->trigger('assets.prepared', [&$files, $type]);

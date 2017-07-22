@@ -31,7 +31,7 @@ class Controller
             'header_actions' => \H::a(t('add_theme'), '/admin/themes/add', ['button' => 'primary']),
             'content' => view('themes/list', ['themes' => $themes, 'current' => $current]),
         ]);
-        $d->addCss('module-theme', assetsPath('themes').'/css/style.css');
+        $d->addCss('module-theme', 'themes:css/style.css');
 
         return $d;
     }

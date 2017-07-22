@@ -20,13 +20,12 @@ class Handlers
          * Base assets for front and admin
          */
         $events->on('render.started', '*', function (Document $doc) {
-            $root = '/system/modules/Main/assets/';
             $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js', 0);
-            $doc->addJs('sydes', $root.'js/sydes.js', 1);
-            $doc->addJs('ajax-router', $root.'js/ajaxRouter.js', 2);
-            $doc->addJs('utils', $root.'js/utils.js', 3);
+            $doc->addJs('sydes', 'main:js/sydes.js', 1);
+            $doc->addJs('ajax-router', 'main:js/ajaxRouter.js', 2);
+            $doc->addJs('utils', 'main:js/utils.js', 3);
 
-            $doc->addCss('main', $root.'css/main.css', 0);
+            $doc->addCss('main', 'main:css/main.css', 0);
 
             $doc->addJsSettings(['locale' => app('locale')]);
             $doc->addCsrfToken(app('csrf')->getTokenName(), app('csrf')->getTokenValue());
@@ -44,14 +43,12 @@ class Handlers
                 'url' => '/admin'
             ]);
 
-            $root = '/system/modules/Main/assets/';
-            $doc->addJs('front', $root.'js/front.js', 10);
+            $doc->addJs('front', 'main:js/front.js', 10);
 
             if (app('auth')->check()) {
-                $doc->addCss('toolbar', $root.'css/toolbar.css', 11);
-                $doc->addPackage('front-editor', $root.'js/frontEditor.js', $root.'css/frontEditor.css', 12);
+                $doc->addCss('toolbar', 'main:css/toolbar.css', 11);
+                $doc->addPackage('front-editor', 'main:js/frontEditor.js', 'main:css/frontEditor.css', 12);
             }
-
         });
 
         /**
@@ -79,14 +76,13 @@ class Handlers
                 11
             );
 
-            $root = '/system/modules/Main/assets/';
-            $doc->addCss('toolbar', $root.'css/toolbar.css', 12);
-            $doc->addCss('admin', $root.'css/admin.css', 14);
-            $doc->addCss('skin', $root.'css/skin.black.css', 15);
+            $doc->addCss('toolbar', 'main:css/toolbar.css', 12);
+            $doc->addCss('admin', 'main:css/admin.css', 14);
+            $doc->addCss('skin', 'main:css/skin.black.css', 15);
 
-            $doc->addJs('admin', $root.'js/admin.js', 14);
+            $doc->addJs('admin', 'main:js/admin.js', 14);
 
-            $doc->addPackage('jquery-ui', $root.'js/jquery-ui.min.js', $root.'css/jquery-ui.min.css', 9);
+            $doc->addPackage('jquery-ui', 'main:js/jquery-ui.min.js', 'main:css/jquery-ui.min.css', 9);
         });
 
         $events->on('route.found', 'admin/*', function () {
@@ -94,5 +90,16 @@ class Handlers
                 throw new ConfirmationException;
             }
         }, 15);
+
+        /**
+         * Replace "module-name:" with his assets path in addCss or addJs
+         */
+        $events->on('assets.prepared', '*', function (&$files) {
+            foreach ($files as &$file) {
+                if (($pos = strpos($file, ':')) !== false) {
+                    $file = substr_replace($file, assetsPath(substr($file, 0, $pos)).'/', 0, $pos + 1);
+                }
+            }
+        }, 10);
     }
 }
