@@ -24,7 +24,7 @@ function iblockDir($name)
         return $dir;
     }
 
-    foreach (app('site')->get('modules') as $modName => $module) {
+    foreach (app('modules')->get() as $modName => $module) {
         if (isset($module['iblocks']) && in_array($name, $module['iblocks'])) {
             return moduleDir($modName).'/iblocks/'.$name;
         }
