@@ -54,21 +54,6 @@ function moduleDir($name)
 }
 
 /**
- * Find path to module's assets.
- *
- * @param $module
- * @return false|string
- */
-function assetsPath($module)
-{
-    if ($dir = moduleDir($module)) {
-        return str_replace(app('dir.root'), '', $dir).'/assets';
-    }
-
-    return false;
-}
-
-/**
  * @param int    $code
  * @param string $message
  * @throws AppException

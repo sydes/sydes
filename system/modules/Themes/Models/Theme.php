@@ -85,7 +85,7 @@ class Theme
         ], $this->getConfig()->get('info'));
 
         if (empty($data['screenshot'])) {
-            $data['screenshot'] = assetsPath('themes').'/img/no-image.jpg';
+            $data['screenshot'] = '/system/modules/Themes/assets/img/no-image.jpg';
         } else {
             $data['screenshot'] = '/themes/'.$this->id.'/'.$data['screenshot'];
         }
