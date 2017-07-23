@@ -96,8 +96,11 @@ class Handlers
          */
         $events->on('assets.prepared', '*', function (&$files) {
             foreach ($files as &$file) {
-                if (($pos = strpos($file, ':')) !== false) {
-                    $file = substr_replace($file, assetsPath(substr($file, 0, $pos)).'/', 0, $pos + 1);
+                if ($file[0] != '/' && substr($file, 0, 4) != 'http' &&
+                    ($pos = strpos($file, ':')) !== false &&
+                    ($path = moduleDir(substr($file, 0, $pos))) !== false) {
+                    $path = str_replace(app('dir.root'), '', $path).'/assets/';
+                    $file = substr_replace($file, $path, 0, $pos + 1);
                 }
             }
         }, 10);
