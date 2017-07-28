@@ -42,6 +42,8 @@ class Base
         $this->document = $doc;
         $this->addAlerts();
         $this->addNotify();
+
+        $this->event->trigger('render.prepared', [$doc]);
     }
 
     protected function addAlerts()
@@ -80,6 +82,8 @@ class Base
             $this->head[] = '<link rel="stylesheet" href="'.$file.'" media="screen">';
         }
 
+        $this->head[] = implode("\n\n", $this->document->rawHead);
+
         $this->head[] = empty($this->document->styles) ? '' :
             '<style>'."\n".implode("\n\n", $this->document->styles)."\n".'</style>';
 
@@ -99,7 +103,7 @@ class Base
             $this->footer[] = $this->getToolbar();
         }
 
-        $this->footer[] = implode("\n\n", $this->document->code);
+        $this->footer[] = implode("\n\n", $this->document->rawFooter);
 
         $this->footer[] = "<script>\n".implode("\n\n", $this->document->scripts)."\n</script>";
 
