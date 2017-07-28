@@ -19,6 +19,7 @@ return array(
 
     'or' => 'или',
     'by' => 'От',
+    'and_more' => 'и еще {count}',
 
     'added' => 'Добавлено',
     'saved' => 'Сохранено',

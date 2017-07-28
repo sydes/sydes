@@ -19,6 +19,7 @@ return array(
 
     'or' => 'or',
     'by' => 'By',
+    'and_more' => 'and {count} more',
 
     'added' => 'Added',
     'saved' => 'Saved',
