@@ -7,6 +7,8 @@
 
 namespace Module\Entity\Models;
 
+use Module\Entity\Api\Builder;
+use Module\Entity\Api\Entity;
 use Sydes\Database\Connection;
 use Sydes\Database\Query\Builder as QueryBuilder;
 use Sydes\Database\Schema\Blueprint;
@@ -70,7 +72,7 @@ class Repository
     /**
      * Get all of the models from the database.
      *
-     * @param  array $columns
+     * @param array $columns
      * @return Collection
      */
     public function all($columns = ['*'])
@@ -170,7 +172,7 @@ class Repository
     /**
      * Destroy the models for the given IDs.
      *
-     * @param  array|int $ids
+     * @param array|int $ids
      * @return int
      */
     public function destroy($ids)
@@ -189,7 +191,7 @@ class Repository
         $schema = $this->db->getSchemaBuilder();
 
         $schema->create($table, function (Blueprint $t) {
-            $this->model->makeTable($t, $this->db);
+            $this->model->makeTable($t, $this->newQuery());
         });
 
         if ($this->model->hasLocalized()) {
@@ -227,7 +229,7 @@ class Repository
         $table = $this->model->getTable();
         $schema = $this->db->getSchemaBuilder();
 
-        $this->model->dropTable($this->db);
+        $this->model->dropTable($this->newQuery());
 
         if ($this->model->hasLocalized()) {
             $schema->drop($table.'_localized');
@@ -236,6 +238,19 @@ class Repository
             $schema->drop($table.'_eav');
         }
         $schema->drop($table);
+    }
+
+    /**
+     * Begin querying a model with eager loading.
+     *
+     * @param array|string $relations
+     * @return Builder
+     */
+    public function with($relations)
+    {
+        return $this->newQuery()->with(
+            is_string($relations) ? func_get_args() : $relations
+        );
     }
 
     /**

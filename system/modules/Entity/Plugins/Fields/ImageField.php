@@ -6,19 +6,19 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Models\Field;
+use Module\Entity\Api\Field;
 
 class ImageField extends Field
 {
     protected $contains = 'array';
 
-    public function input()
+    public function defaultInput()
     {
         // создать див с мини картинками и дроп2аплодом
         return \H::fileInput($this->name.'_new').\H::hiddenInput($this->name, $this->value);
     }
 
-    public function defaultFormatter()
+    public function defaultOutput()
     {
         $html = '';
 

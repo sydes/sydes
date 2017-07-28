@@ -5,13 +5,15 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Entity\Models;
+namespace Module\Entity\Api;
 
 use Sydes\Database\Connection;
 use Sydes\Database\Schema\Blueprint;
 
 class Entity implements EntityInterface
 {
+    use Concerns\HasFields;
+
     // Settings
     protected $table;
     protected $fields = [];
@@ -24,9 +26,7 @@ class Entity implements EntityInterface
     public $exists = false;
 
     // Private data
-    protected $changed = [];
-    protected $bootedFields = [];
-    protected $booted = false;
+    protected $builder;
 
     /**
      * Entity constructor
@@ -79,13 +79,18 @@ class Entity implements EntityInterface
     /**
      * Convert the model's data to an array for inserting to database
      *
-     * @return string
+     * @return array
      */
     public function toStorage()
     {
-        return collect($this->getFields())->map(function (Field $item) {
-            return $item->toString();
-        })->all();
+        $data = [];
+        foreach ($this->getFields() as $name => $field) {
+            if (($value = $field->toString()) !== null) {
+                $data[$name] = $value;
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -194,15 +199,17 @@ class Entity implements EntityInterface
 
     /**
      * @param array|\stdClass $attrs
+     * @param Builder $builder
      * @return Entity
      */
-    public function newFromStorage($attrs = [])
+    public function newFromStorage($attrs = [], Builder $builder = null)
     {
         $attrs = (array)$attrs;
 
         $model = clone $this;
         $model->exists = true;
         $model->id = array_remove($attrs, 'id');
+        $model->setBuilder($builder);
 
         foreach ($attrs as $key => $value) {
             $model->field($key)->fromString($value);
@@ -211,7 +218,7 @@ class Entity implements EntityInterface
         return $model;
     }
 
-    public function create($attrs = [])
+    public function make($attrs = [])
     {
         $model = clone $this;
 
@@ -222,14 +229,15 @@ class Entity implements EntityInterface
      * Fire event in fields on entity table creation
      *
      * @param Blueprint  $t
-     * @param Connection $db
+     * @param Builder $db
      */
-    public function makeTable(Blueprint $t, Connection $db)
+    public function makeTable(Blueprint $t, Builder $query)
     {
         $t->increments('id');
+        $this->setBuilder($query);
         foreach ($this->getFields() as $name => $field) {
             if (!in_array($name, $this->localized)) {
-                $field->onCreate($t, $db);
+                $field->onCreate($t, $query->getQuery()->connection);
             }
         }
     }
@@ -237,12 +245,13 @@ class Entity implements EntityInterface
     /**
      * Fire event in fields on entity table deletion
      *
-     * @param Connection $db
+     * @param Builder $db
      */
-    public function dropTable(Connection $db)
+    public function dropTable(Builder $query)
     {
+        $this->setBuilder($query);
         foreach ($this->getFields() as $field) {
-            $field->onDrop($db);
+            $field->onDrop($query->getQuery()->connection);
         }
     }
 
@@ -271,146 +280,19 @@ class Entity implements EntityInterface
         return true;
     }
 
-    /**
-     * Boot all fields and return them
-     *
-     * @param array $keys
-     * @return FieldInterface[]
-     */
-    public function getFields(array $keys = [])
+    public function setBuilder(Builder $builder)
     {
-        if (!$this->booted) {
-            $this->booted = true;
-            foreach ($this->fields as $name => $void) {
-                $this->field($name);
-            }
-        }
-
-        if (empty($keys)) {
-            return $this->bootedFields;
-        }
-
-        $keys = array_flip($keys);
-
-        return array_intersect_key(array_replace($keys, $this->bootedFields), $keys);
+        $this->builder = $builder;
     }
 
-    /**
-     * Init field and return him
-     *
-     * @param string $name
-     * @return FieldInterface
-     */
-    public function field($name)
+    public function getBuilder()
     {
-        if (!isset($this->bootedFields[$name])) {
-            $this->bootedFields[$name] = $this->bootField($name);
-        }
-
-        return $this->bootedFields[$name];
+        return $this->builder;
     }
 
-    /**
-     * @param $name
-     * @return FieldInterface
-     */
-    protected function bootField($name)
+    public function __call($key, $args)
     {
-        if (!isset($this->fields[$name])) {
-            throw new \InvalidArgumentException('Field '.$name.' not found in '.get_class($this));
-        }
-
-        $field = $this->fields[$name];
-
-        if (!isset($field['settings'])) {
-            $field['settings'] = [];
-        }
-
-        $class = app('form.fields')[$field['type']];
-
-        return new $class($name, null, $field['settings']);
-    }
-
-    /**
-     * Returns field list config
-     *
-     * @return array
-     */
-    public function getFieldList()
-    {
-        return $this->fields;
-    }
-
-    /**
-     * @param array $fields
-     * @return $this
-     */
-    public function setFields(array $fields)
-    {
-        $this->fields = $fields;
-
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @param array  $field with type, settings and position
-     * @return $this
-     */
-    public function addField($key, array $field)
-    {
-        $this->fields[$key] = $field;
-
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    public function hasField($key)
-    {
-        return isset($this->fields[$key]);
-    }
-
-    /**
-     * Determine if the model or given attribute(s) have been modified.
-     *
-     * @param  array|string|null $attrs
-     * @return bool
-     */
-    public function isDirty($attrs = null)
-    {
-        if (is_null($attrs)) {
-            return count($this->changed) > 0;
-        }
-
-        foreach ((array)$attrs as $attr) {
-            if (isset($this->changed[$attr])) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the model or given attribute(s) have remained the same.
-     *
-     * @param  array|string|null $attrs
-     * @return bool
-     */
-    public function isClean($attrs = null)
-    {
-        return !$this->isDirty($attrs);
-    }
-
-    /**
-     * Mark model as saved
-     */
-    public function clean()
-    {
-        $this->changed = [];
+        return empty($args) ? $this->field($key) : call_user_func_array([$this->field($key), 'output'], $args);
     }
 
     /**
@@ -419,7 +301,7 @@ class Entity implements EntityInterface
      */
     public function __get($key)
     {
-        return $this->field($key)->render();
+        return $this->field($key)->output();
     }
 
     /**
@@ -438,7 +320,7 @@ class Entity implements EntityInterface
      */
     public function __isset($key)
     {
-        return array_key_exists($key, $this->fields);
+        return $this->hasField($key);
     }
 
     /**
@@ -447,5 +329,15 @@ class Entity implements EntityInterface
     public function __unset($key)
     {
         $this->set($key, '');
+    }
+
+    /**
+     * Convert the model to its string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toJson();
     }
 }

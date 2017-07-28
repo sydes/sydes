@@ -6,11 +6,11 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Models\Field;
+use Module\Entity\Api\Field;
 
 class HiddenField extends Field
 {
-    public function input()
+    public function defaultInput()
     {
         return \H::hiddenInput($this->name, $this->value);
     }

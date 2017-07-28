@@ -6,37 +6,37 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Models\Field;
+use Module\Entity\Api\Field;
 use Sydes\Database\Connection;
 use Sydes\Database\Schema\Blueprint;
 
 class YesNoField extends Field
 {
-    public function input()
+    public function defaultInput()
     {
         return \H::yesNo($this->name, $this->value);
     }
 
     public function onCreate(Blueprint $t, Connection $db)
     {
-        $t->integer($this->name)->default($this->getSettings('default'));
+        $t->integer($this->name)->default($this->settings('default'));
     }
 
-    public function defaultFormatter()
+    public function defaultOutput()
     {
         $choice = [t('no'), t('yes')];
 
         return $choice[$this->value];
     }
 
-    public function tableFormatter()
+    public function tableOutput()
     {
         $choice = [t('no'), t('yes')];
 
         return $choice[$this->value];
     }
 
-    public function filterFormatter($value)
+    public function filterOutput($value)
     {
         $choice = ['' => t('any'), 1 => t('yes'), 0 => t('no')];
 

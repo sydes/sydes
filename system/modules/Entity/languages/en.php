@@ -12,7 +12,7 @@ return array(
     'field_color_picker' => 'Color',
     'field_color_picker_description' => 'Default color picker',
 
-    'empty_result' => 'Empty Result',
+    'empty_result' => 'No results were found',
 
     'table_settings' => 'Table Settings',
     'all_columns' => 'All Columns',

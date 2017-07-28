@@ -5,7 +5,7 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Entity\Models;
+namespace Module\Entity\Api;
 
 use Sydes\Database\Connection;
 use Sydes\Database\Schema\Blueprint;
@@ -19,7 +19,7 @@ interface FieldInterface
      * @param string $value
      * @param array  $settings
      */
-    public function __construct($name, $value, $settings = []);
+    public function __construct($name, $value, array $settings = []);
 
     /**
      * Sets value from database. Can unserialize to array
@@ -72,7 +72,7 @@ interface FieldInterface
      * @param string|null $key
      * @return array|mixed
      */
-    public function getSettings($key = null);
+    public function settings($key = null);
 
     /**
      * @param string|array $key
@@ -101,14 +101,14 @@ interface FieldInterface
      * @param callable $wrapper
      * @return string
      */
-    public function formInput($wrapper = null);
+    public function input($wrapper = null);
 
     /**
      * Gets only input
      *
      * @return string
      */
-    public function input();
+    public function defaultInput();
 
     /**
      * Gets form with settings for this field
@@ -126,7 +126,7 @@ interface FieldInterface
      * @param mixed $value
      * @return string
      */
-    public function render($formatter = null, $value = null);
+    public function output($formatter = null, $value = null);
 
     /**
      * Triggered on entity table creation

@@ -5,8 +5,9 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Entity\Models;
+namespace Module\Entity\Api;
 
+use Module\Entity\Models\Repository;
 use Module\Entity\Ui\Listing;
 use Sydes\Http\Request;
 
@@ -90,7 +91,7 @@ abstract class EntityController
             'title' => t($this->titles['create']),
             'header_actions' => \H::submitButton(t('save'), ['button' => 'primary', 'data-submit' => 'form-main']),
             'content' => view($this->views['form'], [
-                'model' => $this->repo->getModel()->create(),
+                'model' => $this->repo->getModel()->make(),
                 'options' => [
                     'method' => 'post',
                     'url' => $this->basePath,
@@ -104,7 +105,7 @@ abstract class EntityController
 
     public function store(Request $req)
     {
-        $model = $this->repo->getModel()->create($req->all());
+        $model = $this->repo->getModel()->make($req->all());
         $this->repo->save($model);
         notify(t('saved'));
 

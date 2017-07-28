@@ -28,7 +28,7 @@ class Controller
 
     public function storeTableSettings($key, Request $req)
     {
-        settings('entity-tables')->set($key, $req->input('select'))->save();
+        settings('entity-tables')->set($key, $req->input('select', []))->save();
 
         return back();
     }

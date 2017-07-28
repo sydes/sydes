@@ -6,12 +6,12 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Models\Field;
+use Module\Entity\Api\Field;
 
 class NumberField extends Field
 {
-    public function input()
+    public function defaultInput()
     {
-        return \H::numberInput($this->name, $this->value, ['required'=>$this->getSettings('required')]);
+        return \H::numberInput($this->name, $this->value, ['required'=>$this->settings('required')]);
     }
 }

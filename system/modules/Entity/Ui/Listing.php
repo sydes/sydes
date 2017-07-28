@@ -7,7 +7,7 @@
 
 namespace Module\Entity\Ui;
 
-use Module\Entity\Models\Entity;
+use Module\Entity\Api\Entity;
 use Sydes\Http\Request;
 
 class Listing
@@ -56,7 +56,7 @@ class Listing
         $html = '';
 
         foreach ($this->entity->getFields() as $key => $field) {
-            $html .= '<div class="col-sm-3">'.$field->render('filter', ifsetor($filter[$key], '')).'</div>';
+            $html .= '<div class="col-sm-3">'.$field->output('filter', ifsetor($filter[$key], '')).'</div>';
         }
 
         $html .= '<div class="col-sm-3"><label>&nbsp;</label><br>'.\H::submitButton(t('apply')).
@@ -192,7 +192,7 @@ class Listing
         }
 
         foreach ($fields as $field) {
-            $row .= '<td>'.$field->render('table').'</td>';
+            $row .= '<td>'.$field->output('table').'</td>';
         }
 
         $row .= '<td class="actions">'.$this->actions($item->id, $actions).'</td>';

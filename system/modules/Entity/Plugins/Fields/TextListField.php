@@ -6,18 +6,18 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Models\Field;
+use Module\Entity\Api\Field;
 
 class TextListField extends Field
 {
     protected $contains = 'array';
 
-    public function input()
+    public function defaultInput()
     {
-        return \H::textarea($this->name, implode("\n", $this->value), ['required'=>$this->getSettings('required')]);
+        return \H::textarea($this->name, implode("\n", $this->value), ['required'=>$this->settings('required')]);
     }
 
-    public function defaultFormatter()
+    public function defaultOutput()
     {
         return '<div>'.implode(', ', $this->value).'</div>';
     }

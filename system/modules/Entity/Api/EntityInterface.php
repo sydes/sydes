@@ -5,7 +5,7 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Entity\Models;
+namespace Module\Entity\Api;
 
 interface EntityInterface
 {

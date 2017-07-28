@@ -6,13 +6,13 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Models\Field;
+use Module\Entity\Api\Field;
 
 class EmailField extends Field
 {
-    public function input()
+    public function defaultInput()
     {
-        return \H::textInput($this->name, $this->value, ['required'=>$this->getSettings('required')]);
+        return \H::textInput($this->name, $this->value, ['required'=>$this->settings('required')]);
         // TODO with custom validation rules like comma separated many mails and {tokens}
     }
 }

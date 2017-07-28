@@ -6,18 +6,18 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Models\Field;
+use Module\Entity\Api\Field;
 
 class MapField extends Field
 {
     protected $contains = 'array';
 
-    public function input()
+    public function defaultInput()
     {
         return \H::textInput($this->name, $this->value, ['placeholder' => 'map coords']);
     }
 
-    public function defaultFormatter()
+    public function defaultOutput()
     {
         return '<div>'.$this->value['map']['lat'].' -'.$this->value['map']['lon'].'</div>';
     }

@@ -5,7 +5,7 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Entity\Models;
+namespace Module\Entity\Api;
 
 use Sydes\Database\Connection;
 use Sydes\Database\Schema\Blueprint;
@@ -26,7 +26,7 @@ abstract class Field implements FieldInterface
     /**
      * {@inheritDoc}
      */
-    public function __construct($name, $value, $settings = [])
+    public function __construct($name, $value, array $settings = [])
     {
         $this->name = $name;
         $this->settings = array_merge([
@@ -112,7 +112,7 @@ abstract class Field implements FieldInterface
     /**
      * {@inheritDoc}
      */
-    public function getSettings($key = null)
+    public function settings($key = null)
     {
         return !is_null($key) ? $this->settings[$key] : $this->settings;
     }
@@ -150,10 +150,10 @@ abstract class Field implements FieldInterface
     /**
      * {@inheritDoc}
      */
-    public function render($formatter = null, $value = null)
+    public function output($formatter = null, $value = null)
     {
         if ($formatter instanceof \Closure) {
-            return $formatter($this->name, $this->value, $this->settings);
+            return $formatter($this);
         }
 
         if ($formatter === null) {
@@ -165,15 +165,15 @@ abstract class Field implements FieldInterface
             throw new \RuntimeException('Field formatter for "'.$this->name.'" not found');
         }
 
-        return $this->{$formatter.'Formatter'}($value);
+        return $this->{$formatter.'Output'}($value);
     }
 
-    protected function defaultFormatter()
+    protected function defaultOutput()
     {
         return $this->value;
     }
 
-    protected function filterFormatter($value)
+    protected function filterOutput($value)
     {
         return \H::formGroup(
             $this->label(),
@@ -181,7 +181,7 @@ abstract class Field implements FieldInterface
         );
     }
 
-    protected function tableFormatter()
+    protected function tableOutput()
     {
         return $this->value;
     }
@@ -189,14 +189,14 @@ abstract class Field implements FieldInterface
     /**
      * {@inheritDoc}
      */
-    public function formInput($wrapper = null)
+    public function input($wrapper = null)
     {
         if (is_null($wrapper)) {
             $wrapper = function (FieldInterface $field) {
                 return \H::formGroup(
                     $field->label(),
-                    $field->input(),
-                    t($field->getSettings('helpText'))
+                    $field->defaultInput(),
+                    t($field->settings('helpText'))
                 );
             };
         }

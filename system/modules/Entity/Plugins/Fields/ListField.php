@@ -6,7 +6,7 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Models\Field;
+use Module\Entity\Api\Field;
 
 class ListField extends Field
 {
@@ -16,9 +16,9 @@ class ListField extends Field
         'items' => [],
     ];
 
-    public function input()
+    public function defaultInput()
     {
-        $display = $this->getSettings('display');
-        return \H::$display($this->name, $this->value, $this->getSettings('items'));
+        $display = $this->settings('display');
+        return \H::$display($this->name, $this->value, $this->settings('items'));
     }
 }

@@ -6,12 +6,12 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Models\Field;
+use Module\Entity\Api\Field;
 use Sydes\Database\Connection;
 
 class FileField extends Field
 {
-    public function input()
+    public function defaultInput()
     {
         return \H::fileInput($this->name.'_new').\H::hiddenInput($this->name, $this->value);
     }
@@ -21,7 +21,7 @@ class FileField extends Field
         // upload file and set path to value
     }
 
-    public function defaultFormatter()
+    public function defaultOutput()
     {
         $html = '';
 

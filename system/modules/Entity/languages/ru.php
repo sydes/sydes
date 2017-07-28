@@ -13,7 +13,7 @@ return array(
     'field_color_picker' => 'Цвет',
     'field_color_picker_description' => 'Дефолтный подборщик цвета',
 
-    'empty_result' => 'Пустой результат',
+    'empty_result' => 'Ничего не найдено',
 
     'table_settings' => 'Настройки таблицы',
     'all_columns' => 'Все колонки',

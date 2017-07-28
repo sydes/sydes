@@ -7,8 +7,8 @@
 
 namespace Module\Entity\Ui;
 
-use Module\Entity\Models\Entity;
-use Module\Entity\Models\FieldInterface;
+use Module\Entity\Api\Entity;
+use Module\Entity\Api\FieldInterface;
 
 class Form
 {
@@ -104,17 +104,17 @@ class Form
             $wrapper = $options['formatter'];
         } else {
             $wrapper = function (FieldInterface $field) {
-                $help = $field->getSettings('helpText') ?
-                    \H::tag('small', t($field->getSettings('helpText')), ['class'=>'form-text text-muted']) : '';
+                $help = $field->settings('helpText') ?
+                    \H::tag('small', t($field->settings('helpText')), ['class' =>'form-text text-muted']) : '';
 
                 return '<div class="form-group row">'.
                     '<label class="col-3 col-form-label">'.$field->label().'</label>'.
-                    '<div class="col-9">'.$field->input().$help.'</div></div>';
+                    '<div class="col-9">'.$field->defaultInput().$help.'</div></div>';
             };
         }
 
         foreach (self::$model->getFields() as $name => $field) {
-            $form .= $field->formInput($wrapper);
+            $form .= $field->input($wrapper);
         }
 
         if (isset($options['submit_button'])) {
@@ -135,7 +135,7 @@ class Form
     public static function input($name, $type = 'Text', array $opts = [])
     {
         if (self::$model !== null) {
-            return self::$model->field($name)->formInput();
+            return self::$model->field($name)->input();
         }
 
         if (!isset(self::$fields[$type])) {
@@ -146,6 +146,6 @@ class Form
         /** @var FieldInterface $field */
         $field = new self::$fields[$type]($name, $value, $opts);
 
-        return $field->formInput();
+        return $field->input();
     }
 }

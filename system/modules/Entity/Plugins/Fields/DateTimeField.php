@@ -7,7 +7,7 @@
 namespace Module\Entity\Plugins\Fields;
 
 use DateTime;
-use Module\Entity\Models\Field;
+use Module\Entity\Api\Field;
 use Sydes\Database\Connection;
 use Sydes\Database\Schema\Blueprint;
 
@@ -21,21 +21,21 @@ class DateTimeField extends Field
         'format' => 'Y-m-d H:i:s',
     ];
 
-    public function input()
+    public function defaultInput()
     {
         return \H::textInput(
             $this->name,
-            $this->value->format($this->getSettings('format')),
+            $this->value->format($this->settings('format')),
             [
-                'required' => $this->getSettings('required'),
+                'required' => $this->settings('required'),
                 'class'    => ['datetime-picker'],
             ]
         );
     }
 
-    public function defaultFormatter()
+    public function defaultOutput()
     {
-        return $this->value->format($this->getSettings('format'));
+        return $this->value->format($this->settings('format'));
     }
 
     public function fromString($value)
@@ -62,7 +62,7 @@ class DateTimeField extends Field
 
     public function set($value)
     {
-        $this->value = DateTime::createFromFormat($this->getSettings('format'), $value);
+        $this->value = DateTime::createFromFormat($this->settings('format'), $value);
     }
 
     public function onCreate(Blueprint $t, Connection $db)
@@ -72,14 +72,14 @@ class DateTimeField extends Field
 
     public function creating(Connection $db)
     {
-        if ($this->getSettings('touch_at') == 'creating') {
+        if ($this->settings('touch_at') == 'creating') {
             $this->value = new DateTime();
         }
     }
 
     public function updating(Connection $db)
     {
-        if ($this->getSettings('touch_at') == 'updating') {
+        if ($this->settings('touch_at') == 'updating') {
             $this->value = new DateTime();
         }
     }
