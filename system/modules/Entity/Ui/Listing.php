@@ -7,7 +7,7 @@
 
 namespace Module\Entity\Ui;
 
-use Module\Entity\Api\Entity;
+use Sydes\Database\Entity\Model;
 use Sydes\Http\Request;
 
 class Listing
@@ -15,7 +15,7 @@ class Listing
     private $request;
     private $options;
     private $items;
-    /** @var Entity */
+    /** @var Model */
     private $entity;
 
     public function __construct(Request $r)
@@ -24,12 +24,12 @@ class Listing
     }
 
     /**
-     * @param Entity   $entity
-     * @param Entity[] $items
+     * @param Model   $entity
+     * @param Model[] $items
      * @param array    $options
      * @return $this
      */
-    public function init(Entity $entity, $items, array $options = [])
+    public function init(Model $entity, $items, array $options = [])
     {
         $this->options = array_merge_recursive([
             'table' => [],
@@ -137,7 +137,7 @@ class Listing
         return '</table>';
     }
 
-    private function head(Entity $item, array $keys)
+    private function head(Model $item, array $keys)
     {
         $row = '<th style="width:25px" title="'.t('check_all').'">'.\H::checkbox('all', false, ['data-check-all' => true]).'</th>';
         $sort = [$this->request->input('by'), $this->request->input('order', 'desc')];
@@ -182,9 +182,9 @@ class Listing
         return '<th>'.\H::a($text, $query, ['class' => $class]).'</th>';
     }
 
-    private function row(Entity $item, array $keys, array $actions)
+    private function row(Model $item, array $keys, array $actions)
     {
-        $row = '<td>'.\H::checkbox('mass[]', false, ['value' => $item->id]).'</td>';
+        $row = '<td>'.\H::checkbox('mass[]', false, ['value' => $item->getKey()]).'</td>';
 
         $fields = $item->getFields($keys);
         if (empty($keys)) {
@@ -195,7 +195,7 @@ class Listing
             $row .= '<td>'.$field->output('table').'</td>';
         }
 
-        $row .= '<td class="actions">'.$this->actions($item->id, $actions).'</td>';
+        $row .= '<td class="actions">'.$this->actions($item->getKey(), $actions).'</td>';
 
         return '<tr>'.$row.'</tr>';
     }

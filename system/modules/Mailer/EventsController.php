@@ -6,9 +6,9 @@
  */
 namespace Module\Mailer;
 
-use Module\Entity\Models\EntityController;
-use Module\Entity\Models\Repository;
+use Module\Entity\Api\EntityController;
 use Module\Mailer\Models\EmailEvent;
+use Sydes\Database\Entity\Manager;
 
 class EventsController extends EntityController
 {
@@ -19,9 +19,9 @@ class EventsController extends EntityController
         'edit' => 'event_editing',
     ];
 
-    public function __construct(Repository $repo)
+    public function __construct(Manager $em)
     {
-        $this->repo = $repo->forEntity(EmailEvent::class);
+        $this->repo = $em->getRepository(EmailEvent::class);
 
         $this->indexHeaderActions = \H::a(t('mailer_templates'), '/admin/mailer', ['button' => 'secondary']).' '.
             \H::a(t('add'), '/admin/mailer/events/create', ['button' => 'primary']);

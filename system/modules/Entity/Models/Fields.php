@@ -26,6 +26,6 @@ class Fields
             return $fieldNames;
         }, 3600);
 
-        app()->set('form.fields', $fields);
+        app()->set('entity.fieldTypes', $fields);
     }
 }

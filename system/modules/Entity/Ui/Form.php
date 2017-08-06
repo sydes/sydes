@@ -7,12 +7,12 @@
 
 namespace Module\Entity\Ui;
 
-use Module\Entity\Api\Entity;
-use Module\Entity\Api\FieldInterface;
+use Sydes\Database\Entity\Field;
+use Sydes\Database\Entity\Model;
 
 class Form
 {
-    /** @var Entity */
+    /** @var Model */
     private static $model;
     private static $data;
     private static $fields;
@@ -73,18 +73,18 @@ class Form
     {
         self::$data = $data;
         if (self::$fields === null) {
-            self::$fields = app('form.fields');
+            self::$fields = app('entity.fieldTypes');
         }
 
         return self::open($options);
     }
 
     /**
-     * @param Entity $model
+     * @param Model $model
      * @param array $options
      * @return string
      */
-    public static function model(Entity $model, array $options = [])
+    public static function model(Model $model, array $options = [])
     {
         self::$model = $model;
 
@@ -92,18 +92,18 @@ class Form
     }
 
     /**
-     * @param Entity $model
+     * @param Model $model
      * @param array $options
      * @return string
      */
-    public static function auto(Entity $model, array $options = [])
+    public static function auto(Model $model, array $options = [])
     {
         $form = self::model($model, $options);
 
         if (isset($options['formatter']) && is_callable($options['formatter'])) {
             $wrapper = $options['formatter'];
         } else {
-            $wrapper = function (FieldInterface $field) {
+            $wrapper = function (Field $field) {
                 $help = $field->settings('helpText') ?
                     \H::tag('small', t($field->settings('helpText')), ['class' =>'form-text text-muted']) : '';
 
@@ -143,7 +143,7 @@ class Form
         }
 
         $value = ifsetor(self::$data[$name], '');
-        /** @var FieldInterface $field */
+        /** @var Field $field */
         $field = new self::$fields[$type]($name, $value, $opts);
 
         return $field->input();

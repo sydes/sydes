@@ -7,20 +7,23 @@
 
 namespace Module\Mailer\Models;
 
-use Module\Entity\Models\Entity;
+use Sydes\Database\Entity\Model;
 
-class EmailTemplate extends Entity
+class EmailTemplate extends Model
 {
     protected $fields = [
         'event'    => [
-            'type'     => 'EntityRef',
+            'type'     => 'EntityRelation',
             'settings' => [
                 'label'    => 'email_event',
+                'standalone' => 0,
+                'relation' => 'belongs_to',
                 'target'   => EmailEvent::class,
-                'many'     => false,
+                'on_key'   => 'code',
+                'title'    => 'name',
                 'required' => true,
             ],
-            'position' => 1,
+            'weight' => 1,
         ],
         'status'      => [
             'type'     => 'YesNo',
@@ -28,7 +31,7 @@ class EmailTemplate extends Entity
                 'label'   => 'status',
                 'default' => 1,
             ],
-            'position' => 2,
+            'weight' => 2,
         ],
         'from'        => [
             'type'     => 'Email',
@@ -37,7 +40,7 @@ class EmailTemplate extends Entity
                 'default'  => '{default_from}',
                 'required' => true,
             ],
-            'position' => 3,
+            'weight' => 3,
         ],
         'to'          => [
             'type'     => 'Email',
@@ -47,15 +50,16 @@ class EmailTemplate extends Entity
                 'multiple' => true,
                 'required' => true,
             ],
-            'position' => 4,
+            'weight' => 4,
         ],
         'subject'     => [
             'type'     => 'Text',
             'settings' => [
                 'label'    => 'email_subject',
                 'required' => true,
+                'translatable' => 1,
             ],
-            'position' => 5,
+            'weight' => 5,
         ],
         'message'     => [
             'type'     => 'Text',
@@ -63,8 +67,9 @@ class EmailTemplate extends Entity
                 'label'    => 'email_message',
                 'rows'     => 12,
                 'required' => true,
+                'translatable' => true,
             ],
-            'position' => 6,
+            'weight' => 6,
         ],
         'message_type' => [
             'type'     => 'List',
@@ -75,7 +80,7 @@ class EmailTemplate extends Entity
                     'html' => 'html',
                 ],
             ],
-            'position' => 7,
+            'weight' => 7,
         ],
         'cc'          => [
             'type'     => 'Email',
@@ -83,7 +88,7 @@ class EmailTemplate extends Entity
                 'label'    => 'email_cc',
                 'multiple' => true,
             ],
-            'position' => 3,
+            'weight' => 3,
         ],
         'bcc'         => [
             'type'     => 'Email',
@@ -91,14 +96,14 @@ class EmailTemplate extends Entity
                 'label'    => 'email_bcc',
                 'multiple' => true,
             ],
-            'position' => 3,
+            'weight' => 3,
         ],
         'reply_to'     => [
             'type'     => 'Email',
             'settings' => [
                 'label' => 'email_reply_to',
             ],
-            'position' => 3,
+            'weight' => 3,
         ],
     ];
 }

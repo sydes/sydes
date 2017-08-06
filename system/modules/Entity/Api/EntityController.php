@@ -7,8 +7,8 @@
 
 namespace Module\Entity\Api;
 
-use Module\Entity\Models\Repository;
 use Module\Entity\Ui\Listing;
+use Sydes\Database\Entity\Repository;
 use Sydes\Http\Request;
 
 abstract class EntityController
@@ -61,7 +61,7 @@ abstract class EntityController
             return redirect($this->basePath);
         }
 
-        $models = $query->forPage($page, $perPage)->get();
+        $models = $query->forPage($page, $perPage)->with($this->repo->getModel()->getRelationalFields())->get();
 
         $listing->init($this->repo->getModel(), $models->all(), [
             'show'       => settings('entity-tables')->get($this->repo->getModel()->getTable(), []),
@@ -91,7 +91,7 @@ abstract class EntityController
             'title' => t($this->titles['create']),
             'header_actions' => \H::submitButton(t('save'), ['button' => 'primary', 'data-submit' => 'form-main']),
             'content' => view($this->views['form'], [
-                'model' => $this->repo->getModel()->make(),
+                'model' => $this->repo->getModel()->cloneWith(),
                 'options' => [
                     'method' => 'post',
                     'url' => $this->basePath,
@@ -105,7 +105,7 @@ abstract class EntityController
 
     public function store(Request $req)
     {
-        $model = $this->repo->getModel()->make($req->all());
+        $model = $this->repo->getModel()->cloneWith($req->all());
         $this->repo->save($model);
         notify(t('saved'));
 

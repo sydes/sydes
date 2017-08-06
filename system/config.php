@@ -1,4 +1,7 @@
 <?php
+
+use Sydes\Database\Entity\Manager;
+use Sydes\Database\Entity\Model;
 use Sydes\Settings\Container as Settings;
 use Sydes\Settings\FileDriver;
 use Interop\Container\ContainerInterface;
@@ -21,6 +24,13 @@ return [
         $con = new Sydes\Database\SQLiteConnection($pdo, $path);
         $con->getSchemaBuilder()->enableForeignKeyConstraints();
         return $con;
+    },
+    'Sydes\Database\Entity\Manager' => function (ContainerInterface $c) {
+        Model::setFieldTypes($c->get('entity.fieldTypes'));
+
+        return new Manager(
+            $c->get('site')->get('locales'),
+            $c->get('db'));
     },
 
     'renderer' => function (DI\Container $c) {

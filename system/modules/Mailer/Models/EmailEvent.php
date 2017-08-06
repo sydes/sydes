@@ -7,18 +7,19 @@
 
 namespace Module\Mailer\Models;
 
-use Module\Entity\Models\Entity;
+use Sydes\Database\Entity\Model;
 
-class EmailEvent extends Entity
+class EmailEvent extends Model
 {
     protected $fields = [
         'code' => [
+            'primary' => true,
             'type' => 'Text',
             'settings' => [
                 'label' => 'event_code',
                 'required' => true,
             ],
-            'position' => 1,
+            'weight' => 1,
         ],
         'name' => [
             'type' => 'Text',
@@ -26,7 +27,7 @@ class EmailEvent extends Entity
                 'label' => 'event_name',
                 'required' => true,
             ],
-            'position' => 2,
+            'weight' => 2,
         ],
         'fields' => [
             'type' => 'Text',
@@ -35,7 +36,15 @@ class EmailEvent extends Entity
                 'rows' => 12,
                 'required' => true,
             ],
-            'position' => 3,
+            'weight' => 3,
+        ],
+        'templates' => [
+            'type' => 'EntityRelation',
+            'settings' => [
+                'relation' => 'has_many',
+                'target'   => EmailTemplate::class,
+            ],
+            'weight' => 3,
         ],
     ];
 }

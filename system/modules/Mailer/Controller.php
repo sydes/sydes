@@ -7,11 +7,11 @@
 
 namespace Module\Mailer;
 
-use Module\Entity\Models\EntityController;
-use Module\Entity\Models\Repository;
+use Module\Entity\Api\EntityController;
 use Module\Mailer\Models\EmailEvent;
 use Module\Mailer\Models\EmailTemplate;
 use Sydes\AdminMenu;
+use Sydes\Database\Entity\Manager;
 use Sydes\Http\Request;
 
 class Controller extends EntityController
@@ -22,32 +22,34 @@ class Controller extends EntityController
         'create' => 'template_creation',
         'edit' => 'template_editing',
     ];
+    private $em;
 
-    public function __construct(Repository $repo)
+    public function __construct(Manager $em)
     {
-        $this->repo = $repo->forEntity(EmailTemplate::class);
+        $this->em = $em;
+        $this->repo = $em->getRepository(EmailTemplate::class);
 
         $this->indexHeaderActions = \H::a(t('mailer_events'), '/admin/mailer/events', ['button' => 'secondary']).' '.
             \H::a(t('add'), '/admin/mailer/create', ['button' => 'primary']);
     }
 
-    public function install(AdminMenu $menu, Repository $repo)
+    public function install(AdminMenu $menu)
     {
         $menu->addItem('modules/services/mailer', [
             'title' => 'module_mailer',
             'url' => '/admin/mailer',
         ], 10);
 
-        $repo->forEntity(EmailTemplate::class)->makeTable();
-        $repo->forEntity(EmailEvent::class)->makeTable();
+        $this->em->getSchemaTool(EmailTemplate::class)->create();
+        $this->em->getSchemaTool(EmailEvent::class)->create();
     }
 
-    public function uninstall(AdminMenu $menu, Repository $repo)
+    public function uninstall(AdminMenu $menu)
     {
         $menu->removeItem('modules/services/mailer');
 
-        $repo->forEntity(EmailTemplate::class)->dropTable();
-        $repo->forEntity(EmailEvent::class)->dropTable();
+        $this->em->getSchemaTool(EmailTemplate::class)->drop();
+        $this->em->getSchemaTool(EmailEvent::class)->drop();
     }
 
     public function settings()
