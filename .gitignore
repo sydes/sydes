@@ -1,12 +1,10 @@
-/.idea
-/app
-/vendor
-
-/upload/_thumbs/Images/*
-/upload/images/*
-!/upload/images/no-image.jpg
+/.idea/
+/app/
+/vendor/
 
 !.gitkeep
 
 /themes/*
 !themes/default
+
+phpunit.phar
