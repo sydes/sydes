@@ -104,7 +104,7 @@ class Runner
     private function findSite()
     {
         if ($this->app->get('section') == 'admin' && isset($_SESSION['site'])) {
-            $this->app->set('siteId', $_SESSION['site']);
+            $this->app->set('site.id', $_SESSION['site']);
 
             return;
         }
@@ -124,6 +124,11 @@ class Runner
 
         $host = $this->app->get('request')->getUri()->getHost();
         if (!isset($domains[$host])) {
+            if ($this->app->get('section') == 'admin') {
+                $this->app->set('site.id', 1);
+
+                return;
+            }
             abort(400, 'Site not found');
         }
 
@@ -133,7 +138,7 @@ class Runner
         if ($this->app->get('section') == 'front' && $mainDomain != $host &&
             $this->app->get('site')->get('onlyMainDomain')
         ) {
-            throw new RedirectException('http://'.$mainDomain.$this->app->get('request')->getUri()->getPath());
+            throw new RedirectException((string)$this->app->get('request')->getUri()->withHost($mainDomain));
         }
     }
 

@@ -44,6 +44,8 @@ class Installer
 
     public function step3($params)
     {
+        app()->set('site.id', 1);
+
         if ($params['timeZone'] >= 0) {
             $params['timeZone'] = '+'.$params['timeZone'];
         }
@@ -64,8 +66,6 @@ class Installer
         model('Settings/App')->create([
             'timeZone' => 'Etc/GMT'.$params['timeZone'],
             'locale' => $params['locale'],
-            'mailer_defaultFrom' => 'robot@'.$params['domain'],
-            'mailer_defaultTo' => $params['email'],
         ]);
 
         $themes = str_replace(app('dir.theme').'/', '', glob(app('dir.theme').'/*', GLOB_ONLYDIR));
@@ -79,6 +79,17 @@ class Installer
             'localeIn' => 'url',
             'work' => 1,
         ]);
+
+        settings('mailer')->set([
+            'default_from' => 'robot@'.$params['domain'],
+            'default_to' => $params['email'],
+            'use_smtp' => 0,
+            'smtp_host' => '',
+            'smtp_port' => '',
+            'smtp_user' => '',
+            'smtp_password' => '',
+            'send_also' => '',
+        ])->save();
 
         return $user;
     }

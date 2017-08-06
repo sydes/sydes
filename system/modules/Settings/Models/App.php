@@ -51,12 +51,6 @@ class App
         $config = array_merge([
             'dateFormat' => 'd.m.Y',
             'timeFormat' => 'H:i',
-            'mailer_useSmtp' => '0',
-            'mailer_smtpHost' => '',
-            'mailer_smtpPort' => '25',
-            'mailer_smtpUser' => '',
-            'mailer_smtpPassword' => '',
-            'mailer_sendAlso' => '',
         ], $config);
 
         $this->save($config);
