@@ -56,7 +56,9 @@ class Listing
         $html = '';
 
         foreach ($this->entity->getFields() as $key => $field) {
-            $html .= '<div class="col-sm-3">'.$field->output('filter', ifsetor($filter[$key], '')).'</div>';
+            if (!empty($field->label())) {
+                $html .= '<div class="col-sm-3">'.$field->output('filter', ifsetor($filter[$key], '')).'</div>';
+            }
         }
 
         $html .= '<div class="col-sm-3"><label>&nbsp;</label><br>'.\H::submitButton(t('apply')).
@@ -148,7 +150,9 @@ class Listing
         }
 
         foreach ($fields as $field) {
-            $row .= $this->th($field->label(), $sort, $field->name());
+            if (!empty($label = $field->label())) {
+                $row .= $this->th($label, $sort, $field->name());
+            }
         }
 
         $settings = \H::dropdown([
@@ -192,7 +196,9 @@ class Listing
         }
 
         foreach ($fields as $field) {
-            $row .= '<td>'.$field->output('table').'</td>';
+            if (!empty($field->label())) {
+                $row .= '<td>'.$field->output('table').'</td>';
+            }
         }
 
         $row .= '<td class="actions">'.$this->actions($item->getKey(), $actions).'</td>';
@@ -237,7 +243,9 @@ class Listing
     {
         $all = [];
         foreach ($this->entity->getFields() as $key => $field) {
-            $all[$key] = $field->label();
+            if (!empty($label = $field->label())) {
+                $all[$key] = $label;
+            }
         }
 
         $body = view('entity/table-settings', [

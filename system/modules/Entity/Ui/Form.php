@@ -114,7 +114,9 @@ class Form
         }
 
         foreach (self::$model->getFields() as $name => $field) {
-            $form .= $field->input($wrapper);
+            if (!empty($field->label())) {
+                $form .= $field->input($wrapper);
+            }
         }
 
         if (isset($options['submit_button'])) {
