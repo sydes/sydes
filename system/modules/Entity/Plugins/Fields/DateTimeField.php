@@ -25,9 +25,9 @@ class DateTimeField extends Field
     {
         return \H::textInput(
             $this->name,
-            $this->value->format($this->settings('format')),
+            $this->value->format($this->settings['format']),
             [
-                'required' => $this->settings('required'),
+                'required' => $this->settings['required'],
                 'class'    => ['datetime-picker'],
             ]
         );
@@ -35,7 +35,7 @@ class DateTimeField extends Field
 
     public function defaultOutput()
     {
-        return $this->value->format($this->settings('format'));
+        return $this->value->format($this->settings['format']);
     }
 
     public function fromString($value)
@@ -62,25 +62,25 @@ class DateTimeField extends Field
 
     public function set($value)
     {
-        $this->value = DateTime::createFromFormat($this->settings('format'), $value);
+        $this->value = DateTime::createFromFormat($this->settings['format'], $value);
     }
 
-    public function onCreate(Blueprint $t, Connection $db)
+    public function getEventListeners(Event $events)
     {
-        $t->timestamp($this->name)->nullable();
-    }
+        $events->on('create', function (Blueprint $t) {
+            $t->timestamp($this->name)->nullable();
+        });
 
-    public function creating(Connection $db)
-    {
-        if ($this->settings('touch_at') == 'creating') {
-            $this->value = new DateTime();
+        if ($this->settings['touch_at'] == 'creating') {
+            $events->on('inserting', function () {
+                $this->value = new DateTime();
+            });
         }
-    }
 
-    public function updating(Connection $db)
-    {
-        if ($this->settings('touch_at') == 'updating') {
-            $this->value = new DateTime();
+        if ($this->settings['touch_at'] == 'updating') {
+            $events->on('updating', function () {
+                $this->value = new DateTime();
+            });
         }
     }
 }
