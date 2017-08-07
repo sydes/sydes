@@ -80,17 +80,6 @@ class Installer
             'work' => 1,
         ]);
 
-        settings('mailer')->set([
-            'default_from' => 'robot@'.$params['domain'],
-            'default_to' => $params['email'],
-            'use_smtp' => 0,
-            'smtp_host' => '',
-            'smtp_port' => '',
-            'smtp_user' => '',
-            'smtp_password' => '',
-            'send_also' => '',
-        ])->save();
-
         return $user;
     }
 

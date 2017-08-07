@@ -33,12 +33,23 @@ class Controller extends EntityController
             \H::a(t('add'), '/admin/mailer/create', ['button' => 'primary']);
     }
 
-    public function install(AdminMenu $menu)
+    public function install(AdminMenu $menu, Request $req)
     {
         $menu->addItem('modules/services/mailer', [
             'title' => 'module_mailer',
             'url' => '/admin/mailer',
         ], 10);
+
+        settings('mailer')->set([
+            'default_from' => 'robot@'.$req->getUri()->getHost(),
+            'default_to' => app('auth')->getUser('email'),
+            'use_smtp' => 0,
+            'smtp_host' => '',
+            'smtp_port' => '',
+            'smtp_user' => '',
+            'smtp_password' => '',
+            'send_also' => '',
+        ])->save();
 
         $this->em->getSchemaTool(EmailTemplate::class)->create();
         $this->em->getSchemaTool(EmailEvent::class)->create();
