@@ -7,86 +7,140 @@
 
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Api\Concerns\HasRelationships;
-use Module\Entity\Api\Entity;
-use Sydes\Database\Entity\Field;
-use Module\Entity\Api\Relations\Relation;
 use Sydes\Database\Connection;
+use Sydes\Database\Entity\Collection;
+use Sydes\Database\Entity\Event;
+use Sydes\Database\Entity\Field;
+use Sydes\Database\Entity\Model;
+use Sydes\Database\Entity\Relations\Relation;
 use Sydes\Database\Schema\Blueprint;
 
 class EntityRelationField extends Field
 {
-    use HasRelationships;
+    /**
+     * @var Collection|Model|null
+     */
+    protected $value;
+
+    /** @var Relation */
+    protected $relation;
 
     protected $settings = [
+        // Settings form
         'relations' => ['has_one', 'has_many', 'belongs_to', 'belongs_to_many'],
-        'input_widgets' => ['select', 'autocomplete'],
+        'input_widgets' => ['select', 'autocomplete', 'tree'],
 
-        'relation' => 'has_one',
-        'target'   => '', // class name of entity // TODO for reference use search token
-        'on_key'   => 'id',
-        'filter'   => [], // TODO ['type' => 'category', 'status' => '1']
-        'title'    => 'title',
+        // Relationship
+        'relation' => '', // One of relations
+        'target'   => '', // Entity class name / Node code in NodeRelationField
+        'on_key'   => '', // Primary or other column
+        'filter'   => [], // Predefined filter TODO ['type' => 'category', 'status' => '1']
+        'title'    => 'title', // Which field should use as title in output
+        'standalone' => 1, // Can exist without a parent
 
-        'count_in_table' => 3,
+        // Listing
+        'max_in_table' => 3, // How many previews show in cell
+        'hold_max'     => 0, // Can have a maximum of n elements
     ];
 
-    protected $related;
-    /** @var Entity */
-    protected $entity;
-
-    private $localTable;
-    private $pivotTable;
-    private $relatedTable;
-
-    public function init(Entity $entity)
+    public function getRelated()
     {
-        $this->query = $entity->getBuilder();
-        $this->entity = $entity;
-
-        if ($this->settings['relation'] == 'belongs_to_many') {
-            $this->localTable = $this->entity->getTable();
-            $this->relatedTable = (new $this->settings['target'])->getTable();
-            $this->pivotTable = $this->joiningTable($this->localTable, $this->relatedTable);
-        }
+        return new $this->settings['target'];
     }
 
-    public function input($wrapper = null)
+    /**
+     * @return Relation
+     */
+    public function relation()
     {
-        if (in_array($this->settings['relation'], ['has_one', 'has_many'])) {
-            return '';
+        return $this->relation;
+    }
+
+    public function setRelation(Relation $relation)
+    {
+        $this->relation = $relation;
+    }
+
+    public function value($key = null)
+    {
+        if ($this->value === false) {
+            $this->value = $this->relation->getResults();
         }
 
-        return parent::input($wrapper);
+        return $this->value;
     }
 
     public function defaultInput()
     {
-        if ($this->settings['relation'] == 'belongs_to_many' && $this->query) {
-            $results = [];
-            foreach ($this->relation()->getResults()->all() as $item) {
-                $results[] = $item->id;
-            }
-            $this->value = implode(',', $results);
-            // TODO change
+        if (in_array($this->settings['relation'], ['has_one', 'has_many'])) {
+            return $this->widgetHasMany($this->settings['relation'] == 'has_many');
         }
 
-        return \H::textInput($this->name, $this->value, ['required' => $this->settings['required']]);
-        // TODO $settings input_widgets
+        if ($this->settings['relation'] == 'belongs_to_many') {
+            return $this->widgetBelongsToMany();
+        }
+
+        return $this->widgetBelongsTo();
+    }
+
+    protected function widgetHasMany($many)
+    {
+        return $many ?
+            'has '.count($this->value()).'. [add] more' :
+            ($this->value() ? '[edit] this' : '[create] one');
+    }
+
+    protected function widgetBelongsToMany()
+    {
+        if ($this->value()) {
+            $results = [];
+            foreach ($this->value()->all() as $item) {
+                $results[] = $item->getKey();
+            }
+            $value = implode(',', $results);
+        } else {
+            $value = '';
+        }
+
+        return \H::textInput($this->name, $value, ['required' => $this->settings['required']]);
+        // TODO multiple select, can create?
+    }
+
+    protected function widgetBelongsTo()
+    {
+        $related = $this->getRelated();
+        $all = $this->relation->getQuery()->newQuery()->setModel($related)->get();
+        $values = $all->pluck($this->settings['title'], $related->getKeyName())->all();
+
+        if ($all->count() > 50) {
+            // TODO
+        } else {
+            return \H::select($this->name, $this->value() ? $this->value()->getKey() : '', $values, [
+                'required' => $this->settings['required']
+            ]);
+        }
+
+
+
+
+
+
+
+        return \H::textInput($this->name, $this->value() ? $this->value()->getKey() : '', ['required' => $this->settings['required']]);
     }
 
     public function tableOutput()
     {
-        // TODO with link to editing
+        // TODO with link to editing in NODES
         if (in_array($this->settings['relation'], ['has_one', 'belongs_to'])) {
-            if (!$result = $this->relation()->getResults()) {
+            if (!$result = $this->value()) {
                 return '';
             }
 
             return $result->{$this->settings['title']};
         }
 
-        if (!$results = $this->relation()->getResults()->all()) {
+        if (!$results = $this->value()->all()) {
             return '';
         }
 
@@ -96,9 +150,9 @@ class EntityRelationField extends Field
         }
 
         $and = '';
-        if (($count = count($items)) > $this->settings['count_in_table']) {
-            $items = array_slice($items, 0, $this->settings['count_in_table']);
-            $and = ' '.t('and_more', ['count' => $count - $this->settings['count_in_table']]);
+        if (($count = count($items)) > $this->settings['max_in_table']) {
+            $items = array_slice($items, 0, $this->settings['max_in_table']);
+            $and = ' '.t('and_more', ['count' => $count - $this->settings['max_in_table']]);
         }
 
         return implode(', ', $items).$and;
@@ -106,11 +160,13 @@ class EntityRelationField extends Field
 
     public function defaultOutput()
     {
-        if (in_array($this->settings['relation'], ['has_one', 'belongs_to'])) {
-            return $this->relation()->getResults()->{$this->settings['title']};
-        } else {
-            return $this->relation()->getResults();
+        if (!in_array($this->settings['relation'], ['has_one', 'belongs_to'])) {
+            return $this->value();
         }
+
+        $result = $this->value();
+
+        return $result ? $result->{$this->settings['title']} : '';
     }
 
     public function set($value)
@@ -127,159 +183,87 @@ class EntityRelationField extends Field
 
     public function toString()
     {
-        if ($this->settings['relation'] != 'belongs_to') {
-            return null;
+        if ($this->settings['relation'] == 'belongs_to') {
+            return $this->relation->getParent()->getAttribute($this->name);
         }
 
-        return parent::toString();
+        return null;
     }
 
-    public function onCreate(Blueprint $t, Connection $db)
+    public function getEventListeners(Event $events)
     {
         if ($this->settings['relation'] == 'belongs_to') {
-            $t->string($this->name);
 
-            $t->foreign($this->name)->references($this->settings['on_key'])
-                ->on($this->relatedTable)->onDelete('cascade');
-        } elseif ($this->settings['relation'] == 'belongs_to_many') {
-            $schema = $db->getSchemaBuilder();
+            $events->on('create', function (Blueprint $t) {
+                $t->string($this->name)->nullable();
 
-            if ($schema->hasTable($this->pivotTable)) {
-                return;
-            }
+                $onDelete = $this->settings['standalone'] ? 'set null' : 'cascade';
 
-            $schema->create($this->pivotTable, function (Blueprint $t) {
-                $t->integer($this->localTable.'_id')->unsigned();
-                $t->integer($this->relatedTable.'_id')->unsigned();
-                $t->integer('position');
-
-                $t->foreign($this->localTable.'_id')->references('id')->on($this->localTable)
-                    ->onDelete('cascade');
-                $t->foreign($this->relatedTable.'_id')->references('id')->on($this->relatedTable)
-                    ->onDelete('cascade');
-
-                $t->primary([$this->localTable.'_id', $this->relatedTable.'_id']);
+                $t->foreign($this->name)->references($this->settings['on_key'])
+                    ->on($this->relation->getRelated()->getTable())->onDelete($onDelete);
             });
+
+        } elseif ($this->settings['relation'] == 'belongs_to_many') {
+
+            $pivotTable = $this->relation->getTable();
+            $localForeign = $this->relation->getParent()->getForeignKey();
+
+            $events->on('create', function ($t, Connection $db) use ($pivotTable, $localForeign) {
+                $localTable = $this->relation->getParent()->getTable();
+                $relatedTable = $this->relation->getRelated()->getTable();
+                $relatedForeign = $this->relation->getRelated()->getForeignKey();
+                $schema = $db->getSchemaBuilder();
+
+                if ($schema->hasTable($pivotTable)) {
+                    return;
+                }
+
+                $schema->create($this->relation->getTable(),
+                    function (Blueprint $t) use ($localForeign, $relatedForeign, $localTable, $relatedTable) {
+                    $t->integer($localForeign)->unsigned();
+                    $t->integer($relatedForeign)->unsigned();
+                    $t->integer('position');
+
+                    $t->foreign($localForeign)->references('id')->on($localTable)
+                        ->onDelete('cascade');
+                    $t->foreign($relatedForeign)->references('id')->on($relatedTable)
+                        ->onDelete('cascade');
+
+                    $t->primary([$localForeign, $relatedForeign]);
+                });
+            });
+
+            $events->on('drop', function (Connection $db) {
+                $db->getSchemaBuilder()->drop($this->relation->getTable());
+            });
+
+            $events->on('inserted', function (Connection $db) {
+                $db->table($this->relation->getTable())->insert($this->makePivotAttrs($this->relation->getParent()));
+            });
+
+            $events->on('updated', function (Connection $db) use ($pivotTable, $localForeign) {
+                $parent = $this->relation->getParent();
+                $db->table($pivotTable)->where($localForeign, $parent->getKey())->delete();
+                $db->table($pivotTable)->insert($this->makePivotAttrs($parent));
+            });
+
         }
     }
 
-    public function onDrop(Connection $db)
-    {
-        if ($this->settings['relation'] == 'belongs_to_many') {
-            $db->getSchemaBuilder()->drop($this->pivotTable);
-        }
-    }
-
-    public function created(Connection $db)
-    {
-        if ($this->settings['relation'] == 'belongs_to_many') {
-            $db->table($this->pivotTable)->insert($this->makePivotAttrs());
-        }
-    }
-
-    public function updated(Connection $db)
-    {
-        if ($this->settings['relation'] == 'belongs_to_many') {
-            $db->table($this->pivotTable)->where($this->localTable.'_id', $this->entity->id)->delete();
-            $db->table($this->pivotTable)->insert($this->makePivotAttrs());
-        }
-    }
-
-    protected function makePivotAttrs()
+    protected function makePivotAttrs(Model $parent)
     {
         $attrs = [];
-        $local = $this->entity->id;
         $count = 1;
+        $values = explode(',', $this->relation->getParent()->getAttribute($this->name));
 
-        foreach ($this->value as $id) {
+        foreach ($values as $id) {
             $attrs[] = [
-                $this->localTable.'_id' => $local,
-                $this->relatedTable.'_id' => $id,
+                $parent->getForeignKey() => $parent->getKey(),
+                $this->relation->getRelated()->getForeignKey() => $id,
                 'position' => $count++,
             ];
         }
 
         return $attrs;
     }
-
-    /**
-     * @return Relation
-     */
-    public function relation()
-    {
-        if (!$this->related) {
-            $relation = camel_case($this->settings['relation']);
-
-            switch ($relation) {
-                case 'hasOne':
-                case 'hasMany':
-                    $this->related = $this->{$relation}(
-                        $this->settings['target'],
-                        $this->settings['on_key'],
-                        $this->name,
-                        $this->entity->id
-                    );
-                    break;
-                case 'belongsTo':
-                    $this->related = $this->{$relation}(
-                        $this->settings['target'],
-                        $this->name,
-                        $this->settings['on_key'],
-                        $this->value
-                    );
-                    break;
-                default: //belongsToMany
-                    $this->related = $this->{$relation}(
-                        $this->settings['target'],
-                        $this->entity
-                    )->orderBy($this->pivotTable.'.position', 'asc');
-            }
-        }
-
-        return $this->related;
-    }
-
-    /**
-     * Access to fields of related entity
-     *
-     * @param $key
-     * @param $params
-     * @return mixed
-     */
-    public function __call($key, $params)
-    {
-        return call_user_func_array([$this->relation()->getResults(), $key], $params);
-    }
-
-    /**
-     * Access to related entity's fields output
-     *
-     * @param $key
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        return $this->relation()->getResults()->$key;
-    }
-
 }
-
-/**
- * has_one, belongs_to - returns entity by saved id
- * has_many, belongs_to_many - returns repo with ent_id from other table or pivot
- *
- * belongs_to_many - require pivot table with user_id and role_id
- *
- * pivot name in alphabetical order of the related model names
- *
- * $table->foreign('todolist_id')
-->references('id')->on('todolists')
-->onDelete('cascade');
- *
- *
- * on init send repo to here
- *
- * load relations lazy and eager for collections
- *
- * $repo->forEntity('Product')->with(['category.parent'])->find(1)
- */
