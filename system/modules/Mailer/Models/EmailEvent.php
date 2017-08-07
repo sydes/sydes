@@ -13,11 +13,9 @@ class EmailEvent extends Model
 {
     protected $fields = [
         'code' => [
-            'primary' => true,
-            'type' => 'Text',
+            'type' => 'Primary',
             'settings' => [
                 'label' => 'event_code',
-                'required' => true,
             ],
             'weight' => 1,
         ],

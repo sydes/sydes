@@ -33,8 +33,7 @@ final class DatabaseEntityModelTest extends TestCase
         $model = Model::unserialize([
             'fields' => [
                 'code' => [
-                    'primary' => true,
-                    'type' => 'Text'
+                    'type' => 'Primary'
                 ]
             ]
         ]);
@@ -48,8 +47,7 @@ final class DatabaseEntityModelTest extends TestCase
             'table' => 'models',
             'fields' => [
                 'code' => [
-                    'primary' => true,
-                    'type' => 'Text'
+                    'type' => 'Primary'
                 ]
             ]
         ], $model->serialize());
