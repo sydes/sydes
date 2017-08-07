@@ -1,15 +1,14 @@
 <?php
 
-use Sydes\Database\Entity\Manager;
-use Sydes\Database\Entity\Model;
 use Sydes\Settings\Container as Settings;
 use Sydes\Settings\FileDriver;
 use Interop\Container\ContainerInterface;
 
 return [
     'providers' => [
-        'Sydes\Services\DefaultServicesProvider',
+        'Sydes\Database\DatabaseServicesProvider',
         'Sydes\Exception\ExceptionHandlersProvider',
+        'Sydes\Services\DefaultServicesProvider',
         'Sydes\View\ViewServiceProvider',
     ],
 
@@ -18,20 +17,6 @@ return [
     'Sydes\Auth' => DI\object()->constructor(DI\get('Module\Main\Models\User')),
     'Sydes\Cache' => DI\object()->constructor(DI\get('dir.cache')),
     'Sydes\L10n\Translator' => DI\object()->constructor(DI\string('{dir.l10n}/translations')),
-    'Sydes\Database\Connection' => function (ContainerInterface $c) {
-        $path = $c->get('dir.site.this').'/database.db';
-        $pdo = new PDO('sqlite:'.$path);
-        $con = new Sydes\Database\SQLiteConnection($pdo, $path);
-        $con->getSchemaBuilder()->enableForeignKeyConstraints();
-        return $con;
-    },
-    'Sydes\Database\Entity\Manager' => function (ContainerInterface $c) {
-        Model::setFieldTypes($c->get('entity.fieldTypes'));
-
-        return new Manager(
-            $c->get('site')->get('locales'),
-            $c->get('db'));
-    },
 
     'renderer' => function (DI\Container $c) {
         $class = 'System\Renderer\\'.ucfirst($c->get('section'));
