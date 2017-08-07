@@ -6,8 +6,8 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Api\Field;
 use Sydes\Database\Connection;
+use Sydes\Database\Entity\Field;
 use Sydes\Database\Schema\Blueprint;
 
 class YesNoField extends Field

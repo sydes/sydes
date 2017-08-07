@@ -6,7 +6,7 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Api\Field;
+use Sydes\Database\Entity\Field;
 
 class MapField extends Field
 {

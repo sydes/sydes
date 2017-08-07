@@ -9,7 +9,7 @@ namespace Module\Entity\Plugins\Fields;
 
 use Module\Entity\Api\Concerns\HasRelationships;
 use Module\Entity\Api\Entity;
-use Module\Entity\Api\Field;
+use Sydes\Database\Entity\Field;
 use Module\Entity\Api\Relations\Relation;
 use Sydes\Database\Connection;
 use Sydes\Database\Schema\Blueprint;

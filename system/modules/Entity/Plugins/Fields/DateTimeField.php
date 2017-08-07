@@ -7,8 +7,8 @@
 namespace Module\Entity\Plugins\Fields;
 
 use DateTime;
-use Module\Entity\Api\Field;
-use Sydes\Database\Connection;
+use Sydes\Database\Entity\Event;
+use Sydes\Database\Entity\Field;
 use Sydes\Database\Schema\Blueprint;
 
 class DateTimeField extends Field
