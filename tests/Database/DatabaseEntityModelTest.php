@@ -52,4 +52,24 @@ final class DatabaseEntityModelTest extends TestCase
             ]
         ], $model->serialize());
     }
+
+    public function testExtendedFields()
+    {
+        $model = Model::unserialize([
+            'fields' => [
+                'comments' => [
+                    'type' => 'EntityRelation',
+                ],
+                'title' => [
+                    'type' => 'Text',
+                    'settings' => [
+                        'translatable' => true,
+                    ],
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(['comments'], $model->getRelationalFields());
+        $this->assertEquals(['title'], $model->getTranslatableFields());
+    }
 }
