@@ -43,6 +43,7 @@ class EmailEvent extends Model
             'settings' => [
                 'relation' => 'has_many',
                 'target'   => EmailTemplate::class,
+                'on_key'   => 'event',
             ],
             'weight' => 3,
         ],

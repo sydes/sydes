@@ -18,18 +18,18 @@ class Controller extends EntityController
 {
     protected $basePath = '/admin/mailer';
     protected $titles = [
-        'index' => 'mailer_templates',
-        'create' => 'template_creation',
-        'edit' => 'template_editing',
+        'index' => 'mailer_events',
+        'create' => 'event_creation',
+        'edit' => 'event_editing',
     ];
     private $em;
 
     public function __construct(Manager $em)
     {
         $this->em = $em;
-        $this->repo = $em->getRepository(EmailTemplate::class);
+        $this->repo = $em->getRepository(EmailEvent::class);
 
-        $this->indexHeaderActions = \H::a(t('mailer_events'), '/admin/mailer/events', ['button' => 'secondary']).' '.
+        $this->indexHeaderActions = \H::a(t('mailer_templates'), '/admin/mailer/templates', ['button' => 'secondary']).' '.
             \H::a(t('add'), '/admin/mailer/create', ['button' => 'primary']);
     }
 

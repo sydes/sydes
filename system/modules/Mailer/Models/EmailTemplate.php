@@ -67,7 +67,7 @@ class EmailTemplate extends Model
                 'label'    => 'email_message',
                 'rows'     => 12,
                 'required' => true,
-                'translatable' => true,
+                'translatable' => 1,
             ],
             'weight' => 6,
         ],
