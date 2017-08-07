@@ -3,3 +3,10 @@
     border: 2px dashed #ddd;
     padding: .75rem;
 }
+
+.translation-tabs .nav-link {
+    padding: .2em 1em;
+}
+.translation-tabs .nav-item:only-of-type {
+    display:none;
+}
