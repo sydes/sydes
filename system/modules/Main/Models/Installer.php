@@ -62,6 +62,7 @@ class Installer
             'email' => $params['email'],
         ]);
         model('Main/User')->save($user);
+        app('auth')->login($user, true);
 
         model('Settings/App')->create([
             'timeZone' => 'Etc/GMT'.$params['timeZone'],
@@ -79,8 +80,6 @@ class Installer
             'localeIn' => 'url',
             'work' => 1,
         ]);
-
-        return $user;
     }
 
     public function uninstall()
