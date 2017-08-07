@@ -6,23 +6,87 @@
  */
 namespace Module\Entity\Plugins\Fields;
 
-use Module\Entity\Api\Field;
+use Sydes\Database\Entity\Field;
+use Sydes\Database\Entity\Model;
 
 class TextField extends Field
 {
     protected $settings = [
         'rows' => 1,
+        'translatable' => false,
     ];
+
+    /**
+     * Current locale
+     *
+     * @var string
+     */
+    private $locale;
+
+    /**
+     * Site locales
+     *
+     * @var array
+     */
+    private $locales = [];
+
+    public function __construct($name, $value, array $settings = [])
+    {
+        $this->locales = Model::getLocales();
+        parent::__construct($name, $value, $settings);
+    }
 
     public function defaultInput()
     {
-        if ($this->settings('rows') == 1) {
-            return \H::textInput($this->name, $this->value, ['required'=>$this->settings('required')]);
+        if ($this->settings['translatable']) {
+            $input = [];
+            foreach ($this->locales as $locale) {
+                $input[$locale] = [
+                    'title' => $locale,
+                    'content' => $this->getInput('['.$locale.']', ifsetor($this->value[$locale], '')),
+                ];
+            }
+
+            $input = \H::tabs($input, reset($this->locales), ['class' => ['translation-tabs']]);
         } else {
-            return \H::textarea($this->name, $this->value, [
-                'required' => $this->settings('required'),
-                'rows' => $this->settings('rows'),
+            $input = $this->getInput('', $this->value);
+        }
+
+        return $input;
+    }
+
+    private function getInput($append, $value)
+    {
+        if ($this->settings('rows') == 1) {
+            return \H::textInput($this->name.$append, $value, [
+                'required' => $this->settings['required'],
+            ]);
+        } else {
+            return \H::textarea($this->name.$append, $value, [
+                'required' => $this->settings['required'],
+                'rows' => $this->settings['rows'],
             ]);
         }
+    }
+
+    protected function defaultOutput()
+    {
+        if (!$this->settings['translatable']) {
+            return $this->value;
+        }
+
+        if ($this->locale && isset($this->value[$this->locale])) {
+            return $this->value[$this->locale];
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }
