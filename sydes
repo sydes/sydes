@@ -5,12 +5,21 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
 if (PHP_SAPI != 'cli') {
-    exit;
+    exit(1);
 }
 
-require __DIR__.'/vendor/autoload.php';
+$container = require __DIR__.'/system/bootstrap.php';
 
-$app = new Sydes\Console\Kernel();
+if (!class_exists('Silly\Application')) {
+    echo 'Install Silly first. composer require mnapoli/silly';
+    exit(1);
+}
 
-$app->run(is_array($argv) ? $argv : [], $argc);
+$app = new Silly\Application('SyDES CLI', 'v1');
+
+$finder = new Sydes\Console\CommandFinder($app, $container);
+$finder->find();
+
+$app->run();
