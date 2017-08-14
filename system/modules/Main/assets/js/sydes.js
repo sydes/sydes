@@ -104,6 +104,21 @@ syd.eval = function (code, doc) {
     doc.head.appendChild(script).parentNode.removeChild(script);
 };
 
+/**
+ * Show something to user when he should wait process
+ * You can redefine it in plugin/theme
+ */
+syd.wait = function () {
+    $('html').addClass('ajax-works');
+};
+
+/**
+ *  Hide thing shown above
+ */
+syd.done = function () {
+    $('html').removeClass('ajax-works');
+};
+
 syd.handleAction = function (event) {
     var e = $(this),
         method = e.data('method'),
@@ -176,3 +191,11 @@ $(document).on('submit', '.ajaxed', function () {
 });
 
 })(jQuery);
+
+function crossDomain(url) {
+    return (/^(^http)/i.test(url));
+}
+
+function csrfMethod(method) {
+    return (/^(POST|PUT|DELETE|PATCH)$/i.test(method));
+}

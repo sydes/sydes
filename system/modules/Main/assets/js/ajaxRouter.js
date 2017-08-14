@@ -6,7 +6,7 @@ $.ajaxPrefilter(function(s) {
 });
 
 $(document).ajaxSend(function () {
-    $('html').addClass('ajax-works');
+    syd.wait()
 }).ajaxSuccess(function (e, xhr, s) {
     if (localStorage['debug'] == 1) {
         console.log(xhr.responseText)
@@ -49,5 +49,5 @@ $(document).ajaxSend(function () {
 }).ajaxError(function () {
     syd.notify('AJAX Error', 'danger')
 }).ajaxComplete(function () {
-    $('html').removeClass('ajax-works');
+    syd.done()
 });

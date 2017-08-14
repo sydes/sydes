@@ -23,7 +23,6 @@ class Handlers
             $doc->addJs('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js', 0);
             $doc->addJs('sydes', 'main:js/sydes.js', 1);
             $doc->addJs('ajax-router', 'main:js/ajaxRouter.js', 2);
-            $doc->addJs('utils', 'main:js/utils.js', 3);
 
             $doc->addCss('main', 'main:css/main.css', 0);
 
@@ -80,9 +79,10 @@ class Handlers
             $doc->addCss('admin', 'main:css/admin.css', 14);
             $doc->addCss('skin', 'main:css/skin.black.css', 15);
 
+            $doc->addJs('utils', 'main:js/utils.js', 13);
             $doc->addJs('admin', 'main:js/admin.js', 14);
 
-            $doc->addPackage('jquery-ui', 'main:js/jquery-ui.min.js', 'main:css/jquery-ui.min.css', 9);
+            $doc->addPackage('jquery-ui', 'main:js/jquery-ui.min.js', 'main:css/jquery-ui.min.css', 0);
         });
 
         $events->on('route.found', 'admin/*', function () {

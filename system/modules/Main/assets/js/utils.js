@@ -1,4 +1,3 @@
-/*
 (function($) {
     $.widget("custom.combobox", {
         _create: function() {
@@ -56,41 +55,40 @@
         }
     });
 })(jQuery);
-*/
 
 (function($){
     var add, del,
         methods = {
         init : function(options){
             return this.each(function(){
-                var tbl = this, tbody = $(this).find('tbody'), cols = $('tr:first td', tbody).size()
-                add = '<td><a href="#" class="btn btn-default btn-sm btn-block append-row" title="'+options.append+'"><span class="glyphicon glyphicon-plus"></span></a></td>'
-                del = '<td><a href="#" class="btn btn-default btn-sm btn-block remove-row" title="'+options.remove+'"><span class="glyphicon glyphicon-remove"></span></a></td>'
-                $('thead tr', this).append($('<th>').css('width', '50'))
+                var tbl = this, tbody = $(this).find('tbody'), cols = $('tr:first td', tbody).size();
+                add = '<td><a href="#" class="btn btn-default btn-sm btn-block append-row" title="'+options.append+'"><span class="glyphicon glyphicon-plus"></span></a></td>';
+                del = '<td><a href="#" class="btn btn-default btn-sm btn-block remove-row" title="'+options.remove+'"><span class="glyphicon glyphicon-remove"></span></a></td>';
+                $('thead tr', this).append($('<th>').css('width', '50'));
                 for (i=0; i<$('tr', tbody).size() - 1; i++){
                     $('tr', tbody).eq(i).append(del)
                 }
-                $('tr:last', this).append('<td>')
-                $('<tr>').append('<td colspan="'+cols+'"></td>'+add).appendTo(tbody)
+                $('tr:last', this).append('<td>');
+                $('<tr>').append('<td colspan="'+cols+'"></td>'+add).appendTo(tbody);
 
                 $(this).on('click', '.append-row', function(){
                     methods.append(this, tbl)
-                })
+                });
                 $(this).on('click', '.remove-row', function(){
                     methods.remove(this, tbl)
                 })
             });
         },
         append : function(e, tbl){
-            var row = $(e).parents('tr').prev().clone()
-            row.find(':input').val('')
-            row.insertBefore($('tr:last', tbl))
-            $(e).parents('tr').prev().prev().find('td:last').replaceWith(del)
+            var row = $(e).parents('tr').prev().clone();
+            row.find(':input').val('');
+            row.insertBefore($('tr:last', tbl));
+            $(e).parents('tr').prev().prev().find('td:last').replaceWith(del);
             $(tbl).trigger('append.dt.row')
         },
         remove : function(e, tbl){
             if ($('tbody tr', tbl).size() > 2){
-                $(e).parents('tr').remove()
+                $(e).parents('tr').remove();
                 $(tbl).trigger('delete.dt.row')
             }
         }
@@ -124,12 +122,4 @@ function stickMenu(menu) {
         menu.css('top', pos);
         prev = $(this).scrollTop();
     });
-}
-
-function crossDomain(url) {
-    return (/^(^http)/i.test(url));
-}
-
-function csrfMethod(method) {
-    return (/^(POST|PUT|DELETE|PATCH)$/i.test(method));
 }
