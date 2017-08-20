@@ -75,7 +75,12 @@ class Controller
 
     public function redirect($url)
     {
-        return 'redirect '.$url;
+        return redirect($url);
+    }
+
+    public function view($view)
+    {
+        return view($view);
     }
 
     public function robots()
