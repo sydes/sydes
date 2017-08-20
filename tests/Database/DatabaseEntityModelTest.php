@@ -10,10 +10,42 @@ use Sydes\Database\Entity\Model;
  */
 final class DatabaseEntityModelTest extends TestCase
 {
-    public function testCanBeCreatedWithStructure()
+    public function testSerializable()
+    {
+        $structure = [
+            'table' => 'stub',
+            'fields' => [
+                'title' => [
+                    'type' => 'Text'
+                ]
+            ]
+        ];
+
+        $model = Model::unserialize($structure);
+
+        $this->assertInstanceOf(Model::class, $model);
+        $this->assertSame($structure, $model->serialize());
+    }
+
+    public function testTableName()
+    {
+        $post = new Post();
+        $this->assertSame('posts', $post->getTable());
+
+        $model = Model::unserialize([]);
+        $this->assertSame('models', $model->getTable());
+
+        $model = Model::unserialize(['table' => 'stub']);
+        $this->assertSame('stub', $model->getTable());
+
+        $model = new Model;
+        $model->setTable('test');
+        $this->assertSame('test', $model->getTable());
+    }
+
+    public function testPrimaryKey()
     {
         $model = Model::unserialize([
-            'table' => 'stub',
             'fields' => [
                 'title' => [
                     'type' => 'Text'
@@ -21,14 +53,8 @@ final class DatabaseEntityModelTest extends TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(Model::class, $model);
-
-        $this->assertEquals('stub', $model->getTable());
-
-        $this->assertEquals('id', $model->getKeyName());
+        $this->assertSame('id', $model->getKeyName());
         $this->assertTrue($model->hasIncrementing());
-
-        $this->assertTrue(isset($model->title));
 
         $model = Model::unserialize([
             'fields' => [
@@ -38,19 +64,21 @@ final class DatabaseEntityModelTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('models', $model->getTable());
-
-        $this->assertEquals('code', $model->getKeyName());
+        $this->assertSame('code', $model->getKeyName());
         $this->assertFalse($model->hasIncrementing());
+    }
 
-        $this->assertEquals([
-            'table' => 'models',
+    public function testFields()
+    {
+        $model = Model::unserialize([
             'fields' => [
-                'code' => [
-                    'type' => 'Primary'
+                'title' => [
+                    'type' => 'Text'
                 ]
             ]
-        ], $model->serialize());
+        ]);
+
+        $this->assertTrue($model->hasField('title'));
     }
 
     public function testExtendedFields()
@@ -69,7 +97,11 @@ final class DatabaseEntityModelTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals(['comments'], $model->getRelationalFields());
-        $this->assertEquals(['title'], $model->getTranslatableFields());
+        $this->assertSame(['comments'], $model->getRelationalFields());
+        $this->assertSame(['title'], $model->getTranslatableFields());
     }
+}
+
+class Post extends Model
+{
 }
