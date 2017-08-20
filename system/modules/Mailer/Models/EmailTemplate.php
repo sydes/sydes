@@ -22,6 +22,7 @@ class EmailTemplate extends Model
                 'on_key'   => 'code',
                 'title'    => 'name',
                 'required' => true,
+                'suggests' => 'mailer/events',
             ],
             'weight' => 1,
         ],

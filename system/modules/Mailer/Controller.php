@@ -91,4 +91,13 @@ class Controller extends EntityController
 
         return back();
     }
+
+    public function autoComplete($target, $title, Request $req, Manager $em)
+    {
+        if ($target != 'events') {
+            abort(404, t('page_not_found'));
+        }
+
+        return $em->getRepository(EmailEvent::class)->suggest($title, $req->input('term'));
+    }
 }
