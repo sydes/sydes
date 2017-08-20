@@ -232,17 +232,24 @@ class Runner
     public static function parseRoute($route)
     {
         $parts = explode('@', $route);
+        $action = explode('?', $parts[1]);
         $array = [
             'path'   => explode('/', $parts[0]),
-            'method' => $parts[1],
+            'method' => $action[0],
+            'params' => [],
         ];
+
+        if (isset($action[1])) {
+            parse_str($action[1], $array['params']);
+        }
+
         return $array;
     }
 
     /**
      * Executes passed handler with variables
      *
-     * @param array $params ['class@method', ['name' => 'var', ...]]
+     * @param array $params ['class@method?param=value', ['name' => 'var', ...]]
      * @return mixed
      * @throws \Exception
      */
@@ -250,7 +257,7 @@ class Runner
     {
         $route = self::parseRoute($params[0]);
 
-        if (!$path = moduleDir($route['path'][0])) {
+        if (!moduleDir($route['path'][0])) {
             throw new \Exception(t('error_module_folder_not_found', ['module' => $route['path'][0]]));
         }
 
@@ -272,7 +279,7 @@ class Runner
             ]));
         }
 
-        return $this->app->call([$instance, $route['method']], ifsetor($params[1], []));
+        return $this->app->call([$instance, $route['method']], array_merge($route['params'], ifsetor($params[1], [])));
     }
 
     private function prepare($content)
