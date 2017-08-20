@@ -46,7 +46,7 @@ return [
     'event'      => DI\get('Sydes\Event'),
     'mailer'     => DI\get('Sydes\Email\Sender'),
     'request'    => DI\get('Sydes\Http\Request'),
-    'router'     => DI\get('Sydes\Router\Router'),
+    'router'     => DI\get('Sydes\Routing\Router'),
     'translator' => DI\get('Sydes\L10n\Translator'),
 
     // directories
