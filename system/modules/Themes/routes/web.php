@@ -1,5 +1,5 @@
 <?php
-use Sydes\router\Route;
+use Sydes\Routing\Route;
 
 $r->addGroup('/admin/theme', function (Route $r) {
     $r->get('s', 'Themes@index');
