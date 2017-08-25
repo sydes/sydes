@@ -82,6 +82,10 @@ class Base
             $this->head[] = '<link rel="stylesheet" href="'.$file.'" media="screen">';
         }
 
+        foreach ($this->document->links as $link) {
+            $this->head[] = '<link'.\H::attr($link).'>';
+        }
+
         $this->head[] = implode("\n\n", $this->document->rawHead);
 
         $this->head[] = empty($this->document->styles) ? '' :

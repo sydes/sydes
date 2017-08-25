@@ -41,11 +41,6 @@ class Front extends Base
         }
 
         $this->fillHead();
-
-        foreach ($doc->links as $link) {
-            $this->head[] = '<link'.\H::attr($link).'>';
-        }
-
         $this->fillFooter();
 
         $toReplace = array_merge($doc->data, [
