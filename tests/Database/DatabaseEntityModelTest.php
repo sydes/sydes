@@ -3,13 +3,31 @@
 namespace Sydes\Tests\Database;
 
 use PHPUnit\Framework\TestCase;
+use Sydes\Database\Connection;
+use Sydes\Database\Entity\Manager;
 use Sydes\Database\Entity\Model;
+use Mockery as M;
 
 /**
  * @covers Model
  */
 final class DatabaseEntityModelTest extends TestCase
 {
+    /** @var Manager */
+    private $em;
+
+    public function setUp()
+    {
+        /** @var Connection $conn */
+        $conn = M::mock(Connection::class);
+        $this->em = new Manager($conn);
+    }
+
+    public function tearDown()
+    {
+        M::close();
+    }
+
     public function testSerializable()
     {
         $structure = [
@@ -21,10 +39,10 @@ final class DatabaseEntityModelTest extends TestCase
             ]
         ];
 
-        $model = Model::unserialize($structure);
+        $model = $this->em->make($structure);
 
         $this->assertInstanceOf(Model::class, $model);
-        $this->assertSame($structure, $model->serialize());
+        $this->assertSame($structure, $this->em->getStructure($model));
     }
 
     public function testTableName()
@@ -32,10 +50,10 @@ final class DatabaseEntityModelTest extends TestCase
         $post = new Post();
         $this->assertSame('posts', $post->getTable());
 
-        $model = Model::unserialize([]);
+        $model = $this->em->make([]);
         $this->assertSame('models', $model->getTable());
 
-        $model = Model::unserialize(['table' => 'stub']);
+        $model = $this->em->make(['table' => 'stub']);
         $this->assertSame('stub', $model->getTable());
 
         $model = new Model;
@@ -45,7 +63,7 @@ final class DatabaseEntityModelTest extends TestCase
 
     public function testPrimaryKey()
     {
-        $model = Model::unserialize([
+        $model = $this->em->make([
             'fields' => [
                 'title' => [
                     'type' => 'Text'
@@ -56,7 +74,7 @@ final class DatabaseEntityModelTest extends TestCase
         $this->assertSame('id', $model->getKeyName());
         $this->assertTrue($model->hasIncrementing());
 
-        $model = Model::unserialize([
+        $model = $this->em->make([
             'fields' => [
                 'code' => [
                     'type' => 'Primary'
@@ -70,7 +88,7 @@ final class DatabaseEntityModelTest extends TestCase
 
     public function testFields()
     {
-        $model = Model::unserialize([
+        $model = $this->em->make([
             'fields' => [
                 'title' => [
                     'type' => 'Text'
@@ -83,7 +101,7 @@ final class DatabaseEntityModelTest extends TestCase
 
     public function testExtendedFields()
     {
-        $model = Model::unserialize([
+        $model = $this->em->make([
             'fields' => [
                 'comments' => [
                     'type' => 'EntityRelation',
