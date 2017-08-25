@@ -21,6 +21,10 @@
     "sydes/framework": "^1.0",
     "phpmailer/phpmailer": "~6.0@dev"
   },
+  "require-dev": {
+    "mockery/mockery": "~0.9.4",
+    "phpunit/phpunit": "~5.4"
+  },
   "autoload": {
     "psr-4": {
       "Locales\\": "app/l10n/locales",
