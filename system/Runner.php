@@ -109,18 +109,26 @@ class Runner
             return;
         }
 
-        $domains = $this->app->get('cache')->remember('domains', function () {
-            $sites = glob(app('dir.site').'/*', GLOB_ONLYDIR);
+        $dir = $this->app->get('dir.site');
+        $domains = $this->app->get('cache')->remember('domains', function () use ($dir) {
+            $sites = glob($dir.'/*', GLOB_ONLYDIR);
             $domains = [];
             foreach ($sites as $sitePath) {
                 $config = include $sitePath.'/config.php';
-                $site = str_replace(app('dir.site').'/', '', $sitePath);
+                $site = str_replace($dir.'/', '', $sitePath);
                 foreach ($config['domains'] as $domain) {
                     $domains[$domain] = $site;
                 }
             }
+
             return $domains;
         }, 31536000);
+
+        if (empty($domains)) {
+            $this->app->set('site.id', 1);
+
+            return;
+        }
 
         $host = $this->app->get('request')->getUri()->getHost();
         if (!isset($domains[$host])) {
