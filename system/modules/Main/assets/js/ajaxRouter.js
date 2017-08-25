@@ -45,6 +45,18 @@ $(document).ajaxSend(function () {
         if ('console' in response) {
             console.log(response.console)
         }
+
+        if ('css' in response) {
+            if ('path' in response.css) {
+                syd.loadCss(response.css.path, response.css.media)
+            } else {
+                syd.loadCss(response.css)
+            }
+        }
+
+        if ('js' in response) {
+            syd.loadJs(response.js)
+        }
     }
 }).ajaxError(function () {
     syd.notify('AJAX Error', 'danger')

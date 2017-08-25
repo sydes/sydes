@@ -119,6 +119,38 @@ syd.done = function () {
     $('html').removeClass('ajax-works');
 };
 
+/**
+ * Dynamically load css file(s)
+ * @param {string|Array} paths
+ * @param {string} media
+ */
+syd.loadCss = function (paths, media) {
+    paths = typeof paths == 'string' ? [paths] : paths;
+    media = media || 'screen';
+
+    paths.forEach(function(path) {
+        $('head').append($('<link>', {
+            rel: 'stylesheet',
+            href: path,
+            media: media
+        }));
+    });
+};
+
+/**
+ * Dynamically load js file(s)
+ * @param {string|Array} paths
+ */
+syd.loadJs = function (paths) {
+    paths = typeof paths == 'string' ? [paths] : paths;
+
+    paths.forEach(function(path) {
+        $('body').append($('<script>', {
+            href: path
+        }));
+    });
+};
+
 syd.handleAction = function (event) {
     var e = $(this),
         method = e.data('method'),
