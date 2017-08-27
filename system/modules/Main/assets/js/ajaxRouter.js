@@ -20,43 +20,11 @@ $(document).ajaxSend(function () {
     if (xhr.getResponseHeader('Content-Type') == 'application/json') {
         var response = JSON.parse(xhr.responseText);
 
-        if ('notify' in response) {
-            syd.notify(response.notify.message, response.notify.status)
+        if (response.script && !s.crossDomain) {
+            syd.eval(response.script);
         }
 
-        if ('alerts' in response) {
-            response.alerts.forEach(function(alert) {
-                syd.alert(alert.message, alert.status)
-            })
-        }
-
-        if ('redirect' in response) {
-            location.href = response.redirect
-        }
-
-        if ('modal' in response) {
-            syd.modal(response.modal)
-        }
-
-        if ('script' in response && !s.crossDomain) {
-            syd.eval(response.script)
-        }
-
-        if ('console' in response) {
-            console.log(response.console)
-        }
-
-        if ('css' in response) {
-            if ('path' in response.css) {
-                syd.loadCss(response.css.path, response.css.media)
-            } else {
-                syd.loadCss(response.css)
-            }
-        }
-
-        if ('js' in response) {
-            syd.loadJs(response.js)
-        }
+        syd.ajaxCallbacks.fire(response);
     }
 }).ajaxError(function () {
     syd.notify('AJAX Error', 'danger')
