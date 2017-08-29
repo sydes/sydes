@@ -234,36 +234,74 @@ final class HtmlBaseTest extends TestCase
 
     public function testTreeList()
     {
-        $treeArray = [
-            [
-                'name' => 'foo',
-                'level' => '1',
-                'attr' => ['class' => 'item']
-            ], [
-                'name' => 'skipped',
-                'skip' => true,
-                'level' => '1',
-                'attr' => ['class' => 'item']
-            ], [
-                'name' => 'bar',
-                'level' => '2',
-                'attr' => ['class' => 'item']
+        $cases = [
+            'flat' => [
+                [
+                    ['name' => 'foo', 'level' => '1',],
+                    ['name' => 'bar', 'level' => '1',],
+                ],
+                '<ul>'.
+                    '<li><a>foo</a></li>'.
+                    '<li><a>bar</a></li>'.
+                '</ul>'
+            ],
+
+            'hump' => [
+                [
+                    ['name' => 'foo', 'level' => '1',],
+                    ['name' => 'bar', 'level' => '2',],
+                    ['name' => 'baz', 'level' => '1',],
+                ],
+                '<ul>'.
+                    '<li>'.
+                        '<a>foo</a>'.
+                        '<ul>'.
+                            '<li><a>bar</a></li>'.
+                        '</ul>'.
+                    '</li>'.
+                    '<li><a>baz</a></li>'.
+                '</ul>'
+            ],
+
+            'stairs' => [
+                [
+                    ['name' => 'foo', 'level' => '1',],
+                    ['name' => 'bar', 'level' => '2',],
+                    ['name' => 'baz', 'level' => '3',],
+                ],
+                '<ul>'.
+                    '<li>'.
+                        '<a>foo</a>'.
+                        '<ul>'.
+                            '<li>'.
+                                '<a>bar</a>'.
+                                '<ul>'.
+                                    '<li><a>baz</a></li>'.
+                                '</ul>'.
+                            '</li>'.
+                        '</ul>'.
+                    '</li>'.
+                '</ul>'
+            ],
+
+            'misc' => [
+                [
+                    ['name' => 'foo', 'level' => '1', 'skip' => true,],
+                    ['name' => 'bar', 'level' => '1', 'attr' => ['class' => 'item']],
+                    ['name' => 'baz', 'level' => '1',],
+                ],
+                '<ul>'.
+                    '<li class="item"><a>bar</a></li>'.
+                    '<li><a>baz</a></li>'.
+                '</ul>'
             ]
         ];
 
-        $html =
-        '<ul>'.
-            '<li class="item">'.
-                '<a>foo</a>'.
-                '<ul>'.
-                    '<li class="item"><a>bar</a></li>'.
-                '</ul>'.
-            '</li>'.
-        '</ul>';
-
-        $this->assertSame($html, Base::treeList($treeArray, function ($item) {
-            return '<a>'.$item['name'].'</a>';
-        }));
+        foreach ($cases as $case) {
+            $this->assertSame($case[1], Base::treeList($case[0], function ($item) {
+                return '<a>'.$item['name'].'</a>';
+            }));
+        }
     }
 
     public function testFlatNav()
