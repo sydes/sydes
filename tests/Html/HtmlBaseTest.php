@@ -181,6 +181,9 @@ final class HtmlBaseTest extends TestCase
             $this->assertSame('<input class="span2" type="'.$input.'" name="foo" value="">',
                 Base::$method('foo', null, ['class' => 'span2']));
         }
+
+        $this->assertSame('<input multiple type="file" name="foo[]" value="">',
+            Base::fileInput('foo', ['multiple' => true]));
     }
 
     public function testBooleanInput()
