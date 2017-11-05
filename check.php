@@ -8,7 +8,7 @@ $reqRewrite = function_exists('apache_get_modules') ? in_array('mod_rewrite', ap
 $reqOuterContent = ((function_exists('file_get_contents') && function_exists('ini_get') && ini_get('allow_url_fopen')) || function_exists('curl_init')) ? true : false;
 $reqZip = class_exists('ZipArchive', false);
 
-$errors = version_compare(PHP_VERSION, '5.4.0') < 0 ? '<li>php older than 5.4</li>' : '';
+$errors = version_compare(PHP_VERSION, '5.6.0') < 0 ? '<li>php older than 5.6</li>' : '';
 $errors .= !$reqPdo     ? '<li>pdo not supported</li>' : '';
 $errors .= !$reqSqlite  ? '<li>sqlite driver for PDO not found</li>' : '';
 $errors .= !$reqJson    ? '<li>json not supported</li>' : '';
