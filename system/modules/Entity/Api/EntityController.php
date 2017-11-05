@@ -9,7 +9,7 @@ namespace Module\Entity\Api;
 
 use Module\Entity\Ui\Listing;
 use Sydes\Database\Entity\Repository;
-use Sydes\Http\Request;
+use Sydes\Contracts\Http\Request;
 
 abstract class EntityController
 {

@@ -8,7 +8,7 @@
 namespace Module\Entity\Ui;
 
 use Sydes\Database\Entity\Model;
-use Sydes\Http\Request;
+use Sydes\Contracts\Http\Request;
 
 class Listing
 {

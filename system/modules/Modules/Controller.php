@@ -7,6 +7,7 @@
 namespace Module\Modules;
 
 use Sydes\AdminMenu;
+use Sydes\Contracts\Http\Request;
 
 class Controller
 {
@@ -108,10 +109,10 @@ class Controller
         return $d;
     }
 
-    public function upload()
+    public function upload(Request $req)
     {
-        $url = app('request')->input('url');
-        $file = app('request')->file('file');
+        $url = $req->input('url');
+        $file = $req->file('file');
 
         if (!empty($url)) {
             $name = model('Modules')->uploadByUrl($url);
@@ -123,7 +124,7 @@ class Controller
 
         notify(t('uploaded'));
 
-        if (app('request')->has('install')) {
+        if ($req->has('install')) {
             model('Modules')->install($name);
             notify(t('installed'));
         }

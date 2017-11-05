@@ -12,7 +12,7 @@ use Module\Mailer\Models\EmailEvent;
 use Module\Mailer\Models\EmailTemplate;
 use Sydes\AdminMenu;
 use Sydes\Database\Entity\Manager;
-use Sydes\Http\Request;
+use Sydes\Contracts\Http\Request;
 
 class Controller extends EntityController
 {
@@ -88,6 +88,8 @@ class Controller extends EntityController
         settings('mailer')->set($req->only(['default_from',
             'default_to', 'use_smtp', 'smtp_host', 'smtp_port',
             'smtp_user', 'smtp_password', 'send_also']))->save();
+
+        notify(t('saved'));
 
         return back();
     }

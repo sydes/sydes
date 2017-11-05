@@ -86,7 +86,7 @@ class Handlers
         });
 
         $events->on('route.found', 'admin/*', function () {
-            if (app('request')->isDelete() && !app('request')->has('confirmed')) {
+            if (app('request')->isMethod('delete') && !app('request')->has('confirmed')) {
                 throw new ConfirmationException;
             }
         }, 15);

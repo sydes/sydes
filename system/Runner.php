@@ -218,7 +218,7 @@ class Runner
         }
         $routeInfo = $router->dispatch(
             $files,
-            $this->app->get('request')->getMethod(),
+            $this->app->get('request')->method(),
             $path
         );
 
@@ -292,7 +292,7 @@ class Runner
 
     private function prepare($content)
     {
-        if ($content instanceof Redirect && app('request')->isAjax()) {
+        if ($content instanceof Redirect && app('request')->ajax()) {
             return json(['redirect' => $content->getUri()]);
         } elseif ($content instanceof Response) {
             return $content;

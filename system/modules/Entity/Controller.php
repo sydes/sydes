@@ -6,7 +6,7 @@
  */
 namespace Module\Entity;
 
-use Sydes\Http\Request;
+use Sydes\Contracts\Http\Request;
 
 class Controller
 {
