@@ -4,7 +4,8 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Fileman;
+
+namespace Module\Media;
 
 use Sydes\AdminMenu;
 
@@ -12,8 +13,8 @@ class Controller
 {
     public function install(AdminMenu $menu)
     {
-        $menu->addItem('modules/fileman', [
-            'title' => 'module_fileman',
+        $menu->addItem('modules/media', [
+            'title' => 'module_media',
         ], 0);
     }
 }
