@@ -154,29 +154,32 @@ class Runner
     {
         if ($this->app->get('section') == 'admin') {
             $this->app->set('locale', $this->app->get('app')->get('locale'));
-        } else {
-            $locales = $this->app->get('site')->get('locales');
-            $this->app->set('locale', $locales[0]);
 
-            if (count($locales) > 1) {
+            return;
+        }
 
-                if ($this->app->get('site')->get('localeIn') == 'url') {
-                    if ($path == '/') {
-                        throw new RedirectException('/'.$locales[0]);
-                    }
+        $siteConf = $this->app->get('site');
+        $locales = $siteConf->get('locales');
+        $this->app->set('locale', $locales[0]);
 
-                    $pathParts = explode('/', $path, 3);
+        if (count($locales) > 1) {
+            if ($siteConf->get('localeIn') == 'url') {
+                if ($path == '/') {
+                    throw new RedirectException('/'.$locales[0]);
+                }
 
-                    if (in_array($pathParts[1], $locales)) {
-                        $this->app->set('locale', $pathParts[1]);
-                        unset($pathParts[1]);
-                        $path = count($pathParts) > 1 ? implode('/', $pathParts) : '/';
-                    }
-                } else {
-                    $host = $this->app->get('request')->getUri()->getHost();
-                    if (isset($this->app->get('site')->get('host2locale')[$host])) {
-                        $this->app->set('locale', $this->app->get('site')->get('host2locale')[$host]);
-                    }
+                $pathParts = explode('/', $path, 3);
+
+                if (in_array($pathParts[1], $locales)) {
+                    $this->app->set('locale', $pathParts[1]);
+                    unset($pathParts[1]);
+                    $path = count($pathParts) > 1 ? implode('/', $pathParts) : '/';
+                }
+            } else {
+                $host = $this->app->get('request')->getUri()->getHost();
+                $h2l = $siteConf->get('host2locale');
+                if (isset($h2l[$host])) {
+                    $this->app->set('locale', $h2l[$host]);
                 }
             }
         }
