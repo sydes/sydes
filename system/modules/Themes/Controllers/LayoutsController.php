@@ -4,7 +4,8 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Themes;
+
+namespace Module\Themes\Controllers;
 
 class LayoutsController
 {

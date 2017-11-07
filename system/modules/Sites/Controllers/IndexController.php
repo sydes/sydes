@@ -5,12 +5,12 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Sites;
+namespace Module\Sites\Controllers;
 
 use Sydes\AdminMenu;
 use Sydes\Contracts\Http\Request;
 
-class Controller
+class IndexController
 {
     public function install(AdminMenu $menu)
     {

@@ -5,7 +5,7 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Mailer;
+namespace Module\Mailer\Controllers;
 
 use Module\Entity\Api\EntityController;
 use Module\Mailer\Models\EmailEvent;
@@ -14,7 +14,7 @@ use Sydes\AdminMenu;
 use Sydes\Database\Entity\Manager;
 use Sydes\Contracts\Http\Request;
 
-class Controller extends EntityController
+class IndexController extends EntityController
 {
     protected $basePath = '/admin/mailer';
     protected $titles = [

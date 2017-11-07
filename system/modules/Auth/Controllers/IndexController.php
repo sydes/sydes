@@ -5,11 +5,11 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Auth;
+namespace Module\Auth\Controllers;
 
 use Sydes\Contracts\Http\Request;
 
-class Controller
+class IndexController
 {
     public function loginForm()
     {

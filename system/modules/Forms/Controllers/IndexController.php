@@ -4,26 +4,26 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Iblocks;
+
+namespace Module\Forms\Controllers;
 
 use Sydes\AdminMenu;
 
-class Controller
+class IndexController
 {
     public function install(AdminMenu $menu)
     {
-        $menu->addItem('system/iblocks', [
-            'title' => 'module_iblocks',
-            'url' => '/admin/iblocks',
-        ], 0);
+        $menu->addItem('modules/constructors/forms', [
+            'title' => 'module_forms',
+            'url' => '/admin/forms',
+        ], 10);
     }
 
     public function index()
     {
         $d = document([
-            'content' => 'list of registered, user and theme iblocks',
+            'content' => 'forms index',
         ]);
-        $d->title = 'Index page of module';
         return $d;
     }
 }

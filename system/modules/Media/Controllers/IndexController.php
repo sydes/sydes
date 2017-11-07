@@ -5,11 +5,11 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Media;
+namespace Module\Media\Controllers;
 
 use Sydes\AdminMenu;
 
-class Controller
+class IndexController
 {
     public function install(AdminMenu $menu)
     {

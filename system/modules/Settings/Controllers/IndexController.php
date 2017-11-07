@@ -5,14 +5,14 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Settings;
+namespace Module\Settings\Controllers;
 
 use Sydes\AdminMenu;
 use Sydes\Contracts\Http\Request;
 use Sydes\Database\Connection;
 use Sydes\Database\Schema\Blueprint;
 
-class Controller
+class IndexController
 {
     public function install(AdminMenu $menu, Connection $db)
     {

@@ -4,11 +4,12 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Import;
+
+namespace Module\Import\Controllers;
 
 use Sydes\AdminMenu;
 
-class Controller
+class IndexController
 {
     public function install(AdminMenu $menu)
     {

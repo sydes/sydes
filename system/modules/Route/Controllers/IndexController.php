@@ -4,9 +4,10 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Route;
 
-class Controller
+namespace Module\Route\Controllers;
+
+class IndexController
 {
     public function install(Models\Route $model)
     {

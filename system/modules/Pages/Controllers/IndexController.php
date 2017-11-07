@@ -4,11 +4,12 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
-namespace Module\Pages;
+
+namespace Module\Pages\Controllers;
 
 use Sydes\AdminMenu;
 
-class Controller
+class IndexController
 {
     public function install(AdminMenu $menu)
     {
@@ -26,6 +27,22 @@ class Controller
     public function index()
     {
         return 'page index or tree';
+
+        /*
+            $schema->create('pages_optional', function (Blueprint $t) {
+                $t->increments('id');
+                $t->integer('page_id')->unsigned();
+                $t->string('key');
+                $t->string('value')->nullable();
+
+                $t->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
+                $t->unique(['page_id', 'key']);
+            });
+         */
+
+        /*
+         * поле parent сделать внешнм ключом, что бы все потомки удалялись каскадно
+         */
     }
 
     public function view($path)

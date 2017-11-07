@@ -5,7 +5,7 @@
  * @license   GNU GPL v3 or later; see LICENSE
  */
 
-namespace Module\Mailer;
+namespace Module\Mailer\Controllers;
 
 use Module\Entity\Api\EntityController;
 use Module\Mailer\Models\EmailTemplate;

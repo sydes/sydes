@@ -250,6 +250,10 @@ class Runner
             'params' => [],
         ];
 
+        if (!isset($array['path'][1])) {
+            $array['path'][1] = 'Index';
+        }
+
         if (isset($action[1])) {
             parse_str($action[1], $array['params']);
         }
@@ -272,11 +276,7 @@ class Runner
             throw new \Exception(t('error_module_folder_not_found', ['module' => $route['path'][0]]));
         }
 
-        if (count($route['path']) > 1) {
-            $class = 'Module\\'.implode('\\', $route['path']).'Controller';
-        } else {
-            $class = 'Module\\'.$route['path'][0].'\Controller';
-        }
+        $class = 'Module\\'.$route['path'][0].'\Controllers\\'.$route['path'][1].'Controller';
 
         if (!class_exists($class)) {
             throw new \Exception(t('error_class_not_found', ['class' => $class]));
