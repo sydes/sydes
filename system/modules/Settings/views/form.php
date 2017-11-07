@@ -1,24 +1,39 @@
-<?=Form::fromArray($data, $options);?>
 <div class="card box">
     <div class="card-block">
+        <?=Form::fromArray($data, $options);?>
+
         <div class="row">
             <div class="col-sm-6">
-                <?=H::formGroup(t('app_time_zone'), Form::field('Text', 'timeZone', null, ['required' => true]));?>
+                <?=Form::input('timeZone', 'Text', [
+                    'required' => true,
+                    'label' => 'app_time_zone',
+                ]);?>
             </div>
             <div class="col-sm-6">
 
             </div>
             <div class="col-sm-6">
-                <?=H::formGroup(t('app_date_format'), Form::field('Text', 'dateFormat', null, ['required' => true]));?>
+                <?=Form::input('dateFormat', 'Text', [
+                    'required' => true,
+                    'label' => 'app_date_format',
+                ]);?>
             </div>
             <div class="col-sm-6">
-                <?=H::formGroup(t('app_time_format'), Form::field('Text', 'timeFormat', null, ['required' => true]));?>
+                <?=Form::input('timeFormat', 'Text', [
+                    'required' => true,
+                    'label' => 'app_time_format',
+                ]);?>
             </div>
             <div class="col-sm-6">
-                <?=H::formGroup(t('app_locale'), Form::field('Text', 'locale', null, ['required' => true]));?>
+                <?=Form::input('locale', 'Text', [
+                    'required' => true,
+                    'label' => 'app_locale',
+                ]);?>
             </div>
         </div>
+
+        <?=Form::close();?>
     </div>
 </div>
 
-<?=Form::close();?>
+
