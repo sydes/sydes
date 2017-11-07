@@ -4,7 +4,10 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
 namespace Module\Profile;
+
+use Sydes\Contracts\Http\Request;
 
 class Controller
 {
@@ -18,9 +21,8 @@ class Controller
         return $d;
     }
 
-    public function update()
+    public function update(Request $r)
     {
-        $r = app('request');
         $user = app('auth')->getUser();
         $user->set('username', $r->input('username'))
             ->set('email', $r->input('email'))
@@ -34,9 +36,8 @@ class Controller
         return back();
     }
 
-    public function updatePassword()
+    public function updatePassword(Request $r)
     {
-        $r = app('request');
         if ($r->input('password') != $r->input('password2')) {
             alert(t('password_mismatch'), 'warning');
 

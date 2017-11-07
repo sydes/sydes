@@ -4,9 +4,11 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
 namespace Module\Settings;
 
 use Sydes\AdminMenu;
+use Sydes\Contracts\Http\Request;
 use Sydes\Database\Connection;
 use Sydes\Database\Schema\Blueprint;
 
@@ -52,10 +54,11 @@ class Controller
         return $d;
     }
 
-    public function updateApp()
+    public function updateApp(Request $r)
     {
-        $data = app('request')->only('timeZone', 'dateFormat', 'timeFormat', 'locale');
-        model('Settings/App')->save($data);
+        model('Settings/App')->save(
+            $r->only('timeZone', 'dateFormat', 'timeFormat', 'locale')
+        );
 
         notify(t('saved'));
 

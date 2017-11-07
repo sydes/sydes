@@ -4,17 +4,19 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
 namespace Module\Main;
+
+use Sydes\Contracts\Http\Request;
 
 class Controller
 {
-    public function installer()
+    public function installer(Request $r)
     {
         if (model('Settings/App')->isCreated()) {
             return text('Site already installed');
         }
 
-        $r = app('request');
         $num = $r->input('step', 1);
         $installer = model('Main/Installer');
 

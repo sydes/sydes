@@ -4,7 +4,10 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
 namespace Module\Auth;
+
+use Sydes\Contracts\Http\Request;
 
 class Controller
 {
@@ -17,10 +20,8 @@ class Controller
         ]);
     }
 
-    public function login()
+    public function login(Request $r)
     {
-        $r = app('request');
-
         if (!app('auth')->attempt($r->input('username'), $r->input('password'), $r->has('remember'))) {
             return back();
         }

@@ -4,9 +4,11 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
 namespace Module\Sites;
 
 use Sydes\AdminMenu;
+use Sydes\Contracts\Http\Request;
 
 class Controller
 {
@@ -31,7 +33,7 @@ class Controller
         return $d;
     }
 
-    public function create()
+    public function create(Request $r)
     {
         $themes = [];
         foreach (model('Themes')->getAll() as $theme => $data) {
@@ -43,7 +45,7 @@ class Controller
             'header_actions' => \H::submitButton(t('save'), ['button' => 'primary', 'data-submit' => 'form-main']),
             'content' => view('sites/form', [
                 'site' => [
-                    'domains' => [app('request')->getUri()->getHost()],
+                    'domains' => [$r->getUri()->getHost()],
                     'onlyMainDomain' => 1,
                     'work' => 1,
                 ],
@@ -61,9 +63,9 @@ class Controller
         return $d;
     }
 
-    public function store()
+    public function store(Request $r)
     {
-        $data = app('request')->only('name', 'theme', 'domains',
+        $data = $r->only('name', 'theme', 'domains',
             'onlyMainDomain', 'locales', 'localeIn', 'host2locale', 'work');
 
         $data['domains'] = explode("\r\n", $data['domains']);
@@ -106,9 +108,9 @@ class Controller
         return $d;
     }
 
-    public function update($id)
+    public function update(Request $r, $id)
     {
-        $data = app('request')->only('name', 'theme', 'domains',
+        $data = $r->only('name', 'theme', 'domains',
             'onlyMainDomain', 'locales', 'localeIn', 'host2locale', 'work');
 
         $data['domains'] = explode("\r\n", $data['domains']);
