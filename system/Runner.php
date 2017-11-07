@@ -65,7 +65,7 @@ class Runner
 
         $route = $this->findRoute($path);
 
-        $module = self::parseRoute($route[0]);
+        $module = $this->parseRoute($route[0]);
         $this->app->get('translator')->loadFrom('module', $module['path'][0]);
 
         $events->setContext(strtolower($this->app->get('section').'/'.
@@ -73,7 +73,7 @@ class Runner
 
         $events->trigger('route.found', [&$route]);
 
-        $result = $this->execute($route);
+        $result = $this->execute([$module, $route[1]]);
         $events->trigger('module.executed', [&$result]);
 
         $response = $this->prepare($result);
@@ -237,7 +237,7 @@ class Runner
      * @param string $route
      * @return array
      */
-    public static function parseRoute($route)
+    public function parseRoute($route)
     {
         $parts = explode('@', $route);
         $action = explode('?', $parts[1]);
@@ -263,7 +263,7 @@ class Runner
      */
     public function execute($params)
     {
-        $route = self::parseRoute($params[0]);
+        $route = $params[0];
 
         if (!moduleDir($route['path'][0])) {
             throw new \Exception(t('error_module_folder_not_found', ['module' => $route['path'][0]]));
