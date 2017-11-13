@@ -58,9 +58,15 @@ class TextField extends Field
     private function getInput($append, $value)
     {
         if ($this->settings('rows') == 1) {
-            return \H::textInput($this->name.$append, $value, [
+            $attrs = [
                 'required' => $this->settings['required'],
-            ]);
+            ];
+
+            if (isset($this->settings['attr'])) {
+                $attrs += $this->settings['attr'];
+            }
+
+            return \H::textInput($this->name.$append, $value, $attrs);
         } else {
             return \H::textarea($this->name.$append, $value, [
                 'required' => $this->settings['required'],
