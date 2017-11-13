@@ -1,5 +1,5 @@
 <div class="card box">
-    <div class="card-block">
+    <div class="card-body">
         <h4 class="card-title"><?=t('mailer_settings');?></h4>
 
         <?=Form::fromArray($data, $options);?>

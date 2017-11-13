@@ -1,5 +1,5 @@
 <div class="card box">
-    <div class="card-block">
+    <div class="card-body">
         <?=Form::auto($model, $options);?>
     </div>
 </div>

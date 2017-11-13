@@ -10,7 +10,7 @@ $all = [
     if (empty($group)) continue;
 ?>
 <div class="card box">
-    <div class="card-block">
+    <div class="card-body">
     <h5><?=t('modules_'.$groupName);?></h5>
     <table class="table table-hover table-sm">
         <tbody>

@@ -1,5 +1,5 @@
 <div class="card box">
-    <div class="card-block">
+    <div class="card-body">
         <?=Form::open($options);?>
         <div class="row">
             <div class="col-sm-5">

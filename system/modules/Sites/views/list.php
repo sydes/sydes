@@ -1,5 +1,5 @@
 <div class="card box">
-    <div class="card-block">
+    <div class="card-body">
     <h5><?=t('sites');?></h5>
     <table class="table table-hover table-sm">
         <tbody>

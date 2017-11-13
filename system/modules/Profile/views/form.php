@@ -1,5 +1,5 @@
 <div class="card box">
-    <div class="card-block">
+    <div class="card-body">
         <?=Form::fromArray($data, ['method' => 'put', 'url' => '/admin/profile', 'form' => 'main']);?>
         <div class="row">
             <div class="col-sm-6">
@@ -24,7 +24,7 @@
 </div>
 
 <div class="card box">
-    <div class="card-block">
+    <div class="card-body">
         <?=Form::open(['method' => 'put', 'url' => '/admin/profile/pass', 'form' => 'pass']);?>
         <div class="row">
             <div class="col-sm-6">

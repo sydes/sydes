@@ -15,7 +15,7 @@
                 <a href="/admin/theme/<?=$themeName;?>">
                     <img class="card-img-top" src="<?=$item['screenshot'];?>" alt="<?=$item['name'];?>">
                 </a>
-                <div class="card-block">
+                <div class="card-body">
                     <h5 class="card-title"><?=$item['name'];?> <small>v<?=$item['version'];?></small></h5>
                     <div class="authors"><?=themeRenderAuthors($item['authors'], 2);?></div>
                     <div>
