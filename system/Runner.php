@@ -153,7 +153,7 @@ class Runner
     private function findLocale(&$path)
     {
         if ($this->app->get('section') == 'admin') {
-            $this->app->set('locale', $this->app->get('app')->get('locale'));
+            $this->app->set('locale', $this->app->get('app')->get('adminLanguage'));
 
             return;
         }

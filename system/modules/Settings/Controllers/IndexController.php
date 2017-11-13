@@ -20,7 +20,7 @@ class IndexController
                 'title' => 'module_settings',
             ], 40)
             ->addItem('system/settings/app', [
-                'title' => 'app_settings',
+                'title' => 'admin_settings',
                 'url' => '/admin/app',
             ], 0);
 
@@ -46,18 +46,52 @@ class IndexController
                     'url' => '/admin/app',
                     'form' => 'main',
                 ],
+                'timeZones' => [
+                    'Etc/GMT-12' => 'UTC+12',
+                    'Etc/GMT-11' => 'UTC+11',
+                    'Etc/GMT-10' => 'UTC+10',
+                    'Etc/GMT-9' => 'UTC+9',
+                    'Etc/GMT-8' => 'UTC+8',
+                    'Etc/GMT-7' => 'UTC+7',
+                    'Etc/GMT-6' => 'UTC+6',
+                    'Etc/GMT-5' => 'UTC+5',
+                    'Etc/GMT-4' => 'UTC+4',
+                    'Etc/GMT-3' => 'UTC+3',
+                    'Etc/GMT-2' => 'UTC+2',
+                    'Etc/GMT-1' => 'UTC+1',
+                    'UTC' => 'UTC',
+                    'Etc/GMT+1' => 'UTC-1',
+                    'Etc/GMT+2' => 'UTC-2',
+                    'Etc/GMT+3' => 'UTC-3',
+                    'Etc/GMT+4' => 'UTC-4',
+                    'Etc/GMT+5' => 'UTC-5',
+                    'Etc/GMT+6' => 'UTC-6',
+                    'Etc/GMT+7' => 'UTC-7',
+                    'Etc/GMT+8' => 'UTC-8',
+                    'Etc/GMT+9' => 'UTC-9',
+                    'Etc/GMT+10' => 'UTC-10',
+                    'Etc/GMT+11' => 'UTC-11',
+                    'Etc/GMT+12' => 'UTC-12',
+                ],
+                'translations' => model('Main/Translations')->getAvailable('Main'),
             ]),
         ]);
-
-        $d->addJs('settings.js', 'settings:js/settings.js');
 
         return $d;
     }
 
     public function updateApp(Request $r)
     {
-        model('Settings/App')->save(
-            $r->only('timeZone', 'dateFormat', 'timeFormat', 'locale')
+        $settings = model('Settings/App');
+        $translations = model('Main/Translations');
+        $newLang = $r->input('adminLanguage');
+
+        if ($newLang != $settings->get('adminLanguage') && !$translations->installed('Main', $newLang)) {
+            $translations->download(array_keys(app('modules')->get()), $newLang);
+        }
+
+        $settings->save(
+            $r->only('timeZone', 'dateFormat', 'timeFormat', 'adminLanguage')
         );
 
         notify(t('saved'));

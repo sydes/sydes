@@ -3,10 +3,13 @@ return array(
     'module_settings' => 'Настройки',
     'module_settings_description' => 'Базовые настройки приложения',
 
-    'app_settings' => 'Приложение',
+    'admin_settings' => 'Админка',
 
-    'app_time_zone' => 'Временная зона',
-    'app_date_format' => 'Формат дат',
-    'app_time_format' => 'Формат времени',
-    'app_locale' => 'Локаль приложения',
+    'date_and_time' => 'Дата и время',
+    'admin_time_zone' => 'Временная зона',
+    'admin_date_format' => 'Формат даты',
+    'admin_time_format' => 'Формат времени',
+    'admin_language' => 'Язык админки',
+
+    'language' => 'Язык',
 );
