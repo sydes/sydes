@@ -22,31 +22,17 @@ class IndexController
 
         $stepData = [];
         if ($num == 1) {
-            $installed = str_replace([app('dir.l10n').'/locales/', '.php'], '', glob(app('dir.l10n').'/locales/*.php'));
-
-            if (empty($installed)) {
-                $data = app('api')->getTranslations('Main');
-                if (!$data) {
-                    return text('Api server down. Please, download language package manually and unzip into /app/l10n');
-                }
-
-                $all = app('api')->getLocales();
-                foreach ($data as $d) {
-                    $stepData['locales'][$d] = $all[$d];
-                }
-            } else {
-                foreach ($installed as $key) {
-                    $className = 'Locales\\'.$key;
-                    $class = new $className;
-                    $stepData['locales'][$class->getisoCode()] = $class->getNativeName();
-                }
-            }
-
             $installer->step1();
+
+            if (!$stepData['locales'] = model('Main/Translations')->getAvailable('Main')) {
+                return text('Api server down. Please, download language package manually and unzip into /app/languages');
+            }
         } elseif ($num == 2) {
             $stepData['locale'] = $r->input('locale');
 
-            $installer->step2($stepData['locale']);
+            if ($stepData['locale'] != 'en') {
+                $installer->step2($stepData['locale']);
+            }
 
             app('translator')->init($stepData['locale']);
         } elseif ($num == 3) {

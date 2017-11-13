@@ -16,7 +16,7 @@ return [
     'Sydes\Api' => DI\object()->constructor(SYDES_VERSION, 'http://api.sydes.ru/'),
     'Sydes\Auth' => DI\object()->constructor(DI\get('Module\Main\Models\User')),
     'Sydes\Cache' => DI\object()->constructor(DI\get('dir.cache')),
-    'Sydes\L10n\Translator' => DI\object()->constructor(DI\string('{dir.l10n}/translations')),
+    'Sydes\L10n\Translator' => DI\object()->constructor(DI\get('dir.l10n')),
 
     'renderer' => function (DI\Container $c) {
         $class = 'System\Renderer\\'.ucfirst($c->get('section'));
@@ -58,7 +58,7 @@ return [
     'dir.cache'   => DI\string('{dir.app}/cache'),
     'dir.cache.route' => DI\string('{dir.cache}/routes.{site.id}.cache'),
     'dir.iblock'  => DI\string('{dir.app}/iblocks'),
-    'dir.l10n'    => DI\string('{dir.app}/l10n'),
+    'dir.l10n'    => DI\string('{dir.app}/languages'),
     'dir.logs'    => DI\string('{dir.app}/logs'),
     'dir.module'  => DI\string('{dir.app}/modules'),
     'dir.site'    => DI\string('{dir.app}/sites'),

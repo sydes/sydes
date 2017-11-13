@@ -12,11 +12,13 @@ class Installer
 {
     public function step1()
     {
-        $folders = ['', '/cache', '/iblocks', '/l10n/locales', '/l10n/translations', '/logs',
+        $folders = ['', '/cache', '/iblocks', '/languages', '/logs',
             '/modules', '/sites', '/storage', '/temp', '/thumbs'];
+        $appDir = app('dir.app');
+
         foreach ($folders as $folder) {
-            if (!file_exists(app('dir.app').$folder)) {
-                mkdir(app('dir.app').$folder, 0777, true);
+            if (!file_exists($appDir.$folder)) {
+                mkdir($appDir.$folder, 0777, true);
             }
         }
     }
@@ -24,22 +26,13 @@ class Installer
     public function step2($locale)
     {
         app()->set('site.id', 1);
-        $model = new Locales;
-        $locales = ['en', $locale];
-        foreach ($locales as $locale) {
-            $model->downloadLocale($locale);
 
-            if ($locale == 'en') {
-                continue;
-            }
-
-            $dir = app('dir.l10n').'/translations/'.$locale.'/modules';
-            if (!file_exists($dir)) {
-                mkdir($dir, 0777, true);
-            }
-
-            $model->downloadTranslations(model('Modules')->filter('default'), $locale);
+        $dir = app('dir.l10n').'/'.$locale.'/modules';
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
         }
+
+        model('Main/Translations')->download(model('Modules')->filter('default'), $locale);
     }
 
     public function step3($params)
@@ -50,8 +43,7 @@ class Installer
             $params['timeZone'] = '+'.$params['timeZone'];
         }
 
-        $locales = app('api')->getLocales();
-        if (!isset($locales[$params['locale']])) {
+        if (!class_exists('Sydes\L10n\Locales\\'.ucfirst($params['locale']))) {
             $params['locale'] = 'en';
         }
 
@@ -66,7 +58,7 @@ class Installer
 
         model('Settings/App')->create([
             'timeZone' => 'Etc/GMT'.$params['timeZone'],
-            'locale' => $params['locale'],
+            'adminLanguage' => $params['locale'],
         ]);
 
         $themes = str_replace(app('dir.theme').'/', '', glob(app('dir.theme').'/*', GLOB_ONLYDIR));
