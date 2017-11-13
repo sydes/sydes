@@ -4,6 +4,7 @@
  * @copyright 2011-2017, ArtyGrand <artygrand.ru>
  * @license   GNU GPL v3 or later; see LICENSE
  */
+
 namespace Module\Settings\Models;
 
 class App
@@ -20,9 +21,13 @@ class App
     /**
      * @return array
      */
-    public function get()
+    public function get($key = null)
     {
-        return $this->config;
+        if (is_null($key)) {
+            return $this->config;
+        }
+
+        return $this->config[$key];
     }
 
     /**
