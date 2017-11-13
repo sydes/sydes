@@ -43,7 +43,7 @@ class Installer
             $params['timeZone'] = '+'.$params['timeZone'];
         }
 
-        if (!class_exists('Sydes\L10n\Locales\\'.ucfirst($params['locale']))) {
+        if (!class_exists('Sydes\L10n\Locales\\'.ucfirst($params['locale']).'Locale')) {
             $params['locale'] = 'en';
         }
 

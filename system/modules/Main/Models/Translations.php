@@ -89,7 +89,7 @@ class Translations
         ];
 
         foreach ($list as $key) {
-            $className = 'Sydes\L10n\Locales\\'.ucfirst($key);
+            $className = 'Sydes\L10n\Locales\\'.ucfirst($key).'Locale';
             /** @var Locale $class */
             $class = new $className;
             $ret[$class->getisoCode()] = $class->getNativeName();
