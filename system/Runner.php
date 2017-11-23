@@ -188,11 +188,12 @@ class Runner
     private function includeModules($modules)
     {
         $events = $this->app->get('event');
+
         foreach ($modules as $name => $module) {
             $dir = moduleDir($name);
 
-            if (isset($module['handlers']) && file_exists($dir.'/Handlers.php')) {
-                $class = 'Module\\'.$name.'\\Handlers';
+            $class = 'Module\\'.$name.'\\EventSubscriber';
+            if (isset($module['events']) && class_exists($class)) {
                 new $class($events);
             }
 
