@@ -4,7 +4,7 @@ namespace Module\Updater;
 
 use Sydes\Event;
 
-class Handlers
+class EventSubscriber
 {
     public function __construct(Event $events)
     {

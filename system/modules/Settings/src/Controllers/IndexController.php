@@ -86,6 +86,7 @@ class IndexController
         $translations = model('Main/Translations');
         $newLang = $r->input('adminLanguage');
 
+        // TODO test it
         if ($newLang != $settings->get('adminLanguage') && !$translations->installed('Main', $newLang)) {
             $translations->download(array_keys(app('modules')->get()), $newLang);
         }

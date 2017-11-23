@@ -56,8 +56,8 @@ class Modules
             $data['files'] = $files;
         }
 
-        if (file_exists($dir.'/Handlers.php')) {
-            $data['handlers'] = true;
+        if (file_exists($dir.'/src/EventSubscriber.php')) {
+            $data['events'] = true;
         }
 
         $modules[$name] = $data;

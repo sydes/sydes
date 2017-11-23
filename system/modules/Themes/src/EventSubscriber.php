@@ -4,7 +4,7 @@ namespace Module\Themes;
 use Sydes\Event;
 use Sydes\View\View;
 
-class Handlers
+class EventSubscriber
 {
     public function __construct(Event $events)
     {

@@ -8,10 +8,14 @@
 define('APP_START', microtime(true));
 define('SYDES_VERSION', '3.0.0-b2');
 
-require __DIR__.'/../vendor/autoload.php';
+$loader = require __DIR__.'/../vendor/autoload.php';
+
+$modules = array_merge(glob(__DIR__.'/modules/*', GLOB_ONLYDIR), glob(dirname(__DIR__).'/app/modules/*', GLOB_ONLYDIR));
+foreach ($modules as $module) {
+    $loader->addPsr4('Module\\'.basename($module).'\\', $module.'/src');
+}
 
 class_alias('Sydes\Html\BS4', 'H');
-class_alias('Module\Entity\Ui\Form', 'Form');
 
 mb_internal_encoding('UTF-8');
 
@@ -23,6 +27,8 @@ $config = require __DIR__.'/config.php';
 $builder = new DI\ContainerBuilder;
 $builder->addDefinitions($config);
 $app = $builder->build();
+
+$app->set('autoloader', $loader);
 
 $serviceLoader = $app->get('Sydes\Services\ServiceLoader');
 foreach ($config['providers'] as $provider) {

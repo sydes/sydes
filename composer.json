@@ -27,10 +27,6 @@
   },
   "autoload": {
     "psr-4": {
-      "Module\\": [
-        "app/modules",
-        "system/modules"
-      ],
       "System\\": "system"
     },
     "files": [

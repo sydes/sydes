@@ -4,7 +4,7 @@ namespace Module\Auth;
 use Sydes\Event;
 use Sydes\Exception\RedirectException;
 
-class Handlers
+class EventSubscriber
 {
     public function __construct(Event $events)
     {

@@ -4,7 +4,7 @@ namespace Module\Profile;
 use Sydes\Document;
 use Sydes\Event;
 
-class Handlers
+class EventSubscriber
 {
     public function __construct(Event $events)
     {

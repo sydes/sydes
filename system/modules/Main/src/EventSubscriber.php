@@ -5,7 +5,7 @@ use Sydes\Document;
 use Sydes\Event;
 use Sydes\Exception\ConfirmationException;
 
-class Handlers
+class EventSubscriber
 {
     public function __construct(Event $events)
     {
@@ -104,5 +104,12 @@ class Handlers
                 }
             }
         }, 10);
+
+        /**
+         * Trim Strings and Convert Empty Strings To Null
+         */
+        $events->on('site.found', '*', function () {
+            //TODO upd request data
+        }, 5);
     }
 }
